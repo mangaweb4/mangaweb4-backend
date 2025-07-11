@@ -2,7 +2,6 @@ __debug_bin*
 .DS_Store
 .env
 .idea
-.vscode
 cache
 *-private/
 *-private.*

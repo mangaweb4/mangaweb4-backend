@@ -361,6 +361,118 @@ func (x *TagThumbnailResponse) GetData() []byte {
 	return nil
 }
 
+type TagSetFavoriteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	Tag           string                 `protobuf:"bytes,2,opt,name=Tag,proto3" json:"Tag,omitempty"`
+	Favorite      bool                   `protobuf:"varint,3,opt,name=Favorite,proto3" json:"Favorite,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TagSetFavoriteRequest) Reset() {
+	*x = TagSetFavoriteRequest{}
+	mi := &file_tag_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TagSetFavoriteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TagSetFavoriteRequest) ProtoMessage() {}
+
+func (x *TagSetFavoriteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TagSetFavoriteRequest.ProtoReflect.Descriptor instead.
+func (*TagSetFavoriteRequest) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TagSetFavoriteRequest) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *TagSetFavoriteRequest) GetTag() string {
+	if x != nil {
+		return x.Tag
+	}
+	return ""
+}
+
+func (x *TagSetFavoriteRequest) GetFavorite() bool {
+	if x != nil {
+		return x.Favorite
+	}
+	return false
+}
+
+type TagSetFavoriteResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tag           string                 `protobuf:"bytes,1,opt,name=Tag,proto3" json:"Tag,omitempty"`
+	Favorite      bool                   `protobuf:"varint,2,opt,name=Favorite,proto3" json:"Favorite,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TagSetFavoriteResponse) Reset() {
+	*x = TagSetFavoriteResponse{}
+	mi := &file_tag_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TagSetFavoriteResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TagSetFavoriteResponse) ProtoMessage() {}
+
+func (x *TagSetFavoriteResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TagSetFavoriteResponse.ProtoReflect.Descriptor instead.
+func (*TagSetFavoriteResponse) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *TagSetFavoriteResponse) GetTag() string {
+	if x != nil {
+		return x.Tag
+	}
+	return ""
+}
+
+func (x *TagSetFavoriteResponse) GetFavorite() bool {
+	if x != nil {
+		return x.Favorite
+	}
+	return false
+}
+
 var File_tag_proto protoreflect.FileDescriptor
 
 const file_tag_proto_rawDesc = "" +
@@ -392,10 +504,18 @@ const file_tag_proto_rawDesc = "" +
 	"\x04Name\x18\x01 \x01(\tR\x04Name\"L\n" +
 	"\x14TagThumbnailResponse\x12 \n" +
 	"\vContentType\x18\x01 \x01(\tR\vContentType\x12\x12\n" +
-	"\x04Data\x18\x02 \x01(\fR\x04Data2n\n" +
+	"\x04Data\x18\x02 \x01(\fR\x04Data\"Y\n" +
+	"\x15TagSetFavoriteRequest\x12\x12\n" +
+	"\x04User\x18\x01 \x01(\tR\x04User\x12\x10\n" +
+	"\x03Tag\x18\x02 \x01(\tR\x03Tag\x12\x1a\n" +
+	"\bFavorite\x18\x03 \x01(\bR\bFavorite\"F\n" +
+	"\x16TagSetFavoriteResponse\x12\x10\n" +
+	"\x03Tag\x18\x01 \x01(\tR\x03Tag\x12\x1a\n" +
+	"\bFavorite\x18\x02 \x01(\bR\bFavorite2\xb0\x01\n" +
 	"\x03Tag\x12+\n" +
 	"\x04List\x12\x0f.TagListRequest\x1a\x10.TagListResponse\"\x00\x12:\n" +
-	"\tThumbnail\x12\x14.TagThumbnailRequest\x1a\x15.TagThumbnailResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
+	"\tThumbnail\x12\x14.TagThumbnailRequest\x1a\x15.TagThumbnailResponse\"\x00\x12@\n" +
+	"\vSetFavorite\x12\x16.TagSetFavoriteRequest\x1a\x17.TagSetFavoriteResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
 
 var (
 	file_tag_proto_rawDescOnce sync.Once
@@ -409,28 +529,32 @@ func file_tag_proto_rawDescGZIP() []byte {
 	return file_tag_proto_rawDescData
 }
 
-var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_tag_proto_goTypes = []any{
-	(*TagListRequest)(nil),       // 0: TagListRequest
-	(*TagListResponse)(nil),      // 1: TagListResponse
-	(*TagListResponseItem)(nil),  // 2: TagListResponseItem
-	(*TagThumbnailRequest)(nil),  // 3: TagThumbnailRequest
-	(*TagThumbnailResponse)(nil), // 4: TagThumbnailResponse
-	(Filter)(0),                  // 5: mangaweb4.types.Filter
-	(SortField)(0),               // 6: mangaweb4.types.SortField
-	(SortOrder)(0),               // 7: mangaweb4.types.SortOrder
+	(*TagListRequest)(nil),         // 0: TagListRequest
+	(*TagListResponse)(nil),        // 1: TagListResponse
+	(*TagListResponseItem)(nil),    // 2: TagListResponseItem
+	(*TagThumbnailRequest)(nil),    // 3: TagThumbnailRequest
+	(*TagThumbnailResponse)(nil),   // 4: TagThumbnailResponse
+	(*TagSetFavoriteRequest)(nil),  // 5: TagSetFavoriteRequest
+	(*TagSetFavoriteResponse)(nil), // 6: TagSetFavoriteResponse
+	(Filter)(0),                    // 7: mangaweb4.types.Filter
+	(SortField)(0),                 // 8: mangaweb4.types.SortField
+	(SortOrder)(0),                 // 9: mangaweb4.types.SortOrder
 }
 var file_tag_proto_depIdxs = []int32{
-	5, // 0: TagListRequest.Filter:type_name -> mangaweb4.types.Filter
-	6, // 1: TagListRequest.Sort:type_name -> mangaweb4.types.SortField
-	7, // 2: TagListRequest.Order:type_name -> mangaweb4.types.SortOrder
+	7, // 0: TagListRequest.Filter:type_name -> mangaweb4.types.Filter
+	8, // 1: TagListRequest.Sort:type_name -> mangaweb4.types.SortField
+	9, // 2: TagListRequest.Order:type_name -> mangaweb4.types.SortOrder
 	2, // 3: TagListResponse.Items:type_name -> TagListResponseItem
 	0, // 4: Tag.List:input_type -> TagListRequest
 	3, // 5: Tag.Thumbnail:input_type -> TagThumbnailRequest
-	1, // 6: Tag.List:output_type -> TagListResponse
-	4, // 7: Tag.Thumbnail:output_type -> TagThumbnailResponse
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
+	5, // 6: Tag.SetFavorite:input_type -> TagSetFavoriteRequest
+	1, // 7: Tag.List:output_type -> TagListResponse
+	4, // 8: Tag.Thumbnail:output_type -> TagThumbnailResponse
+	6, // 9: Tag.SetFavorite:output_type -> TagSetFavoriteResponse
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
@@ -448,7 +572,7 @@ func file_tag_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tag_proto_rawDesc), len(file_tag_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
