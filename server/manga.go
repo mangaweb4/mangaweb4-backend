@@ -1,0 +1,412 @@
+package server
+
+import (
+	"bytes"
+	"context"
+	"io"
+	"path/filepath"
+	"strings"
+
+	"github.com/disintegration/imaging"
+	"github.com/mangaweb4/mangaweb4-backend/container"
+	"github.com/mangaweb4/mangaweb4-backend/database"
+	ent_meta "github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/grpc"
+	"github.com/mangaweb4/mangaweb4-backend/meta"
+	"github.com/mangaweb4/mangaweb4-backend/tag"
+	"github.com/mangaweb4/mangaweb4-backend/user"
+	"github.com/rs/zerolog/log"
+)
+
+type MangaServer struct{}
+
+func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err != nil {
+		return
+	}
+
+	var filter meta.Filter
+	switch req.Filter {
+	case grpc.Filter_FILTER_UNKNOWN:
+		filter = meta.FilterNone
+
+	case grpc.Filter_FILTER_FAVORITE_ITEMS:
+		filter = meta.FilterFavoriteItem
+
+	case grpc.Filter_FILTER_FAVORITE_TAGS:
+		filter = meta.FilterFavoriteTag
+	}
+
+	var sort meta.SortField
+	switch req.Sort {
+	case grpc.SortField_SORT_FIELD_CREATION_TIME:
+		sort = meta.SortFieldCreateTime
+
+	case grpc.SortField_SORT_FIELD_NAME:
+		sort = meta.SortFieldName
+
+	case grpc.SortField_SORT_FIELD_PAGECOUNT:
+		sort = meta.SortFieldPageCount
+	}
+
+	var order meta.SortOrder
+	switch req.Order {
+	case grpc.SortOrder_SORT_ORDER_ASCENDING:
+		order = meta.SortOrderAscending
+
+	case grpc.SortOrder_SORT_ORDER_DESCENDING:
+		order = meta.SortOrderDescending
+	}
+
+	allMeta, err := meta.ReadPage(ctx,
+		client,
+		u,
+		meta.QueryParams{
+			SearchName:  req.Search,
+			Filter:      filter,
+			SearchTag:   req.Tag,
+			SortBy:      sort,
+			SortOrder:   order,
+			Page:        int(req.Page),
+			ItemPerPage: int(req.ItemPerPage),
+		})
+	if err != nil {
+		return
+	}
+
+	items := make([]*grpc.MangaListResponseItem, len(allMeta))
+	for i, m := range allMeta {
+		items[i] = &grpc.MangaListResponseItem{
+			Id:         int32(m.ID),
+			Name:       m.Name,
+			IsFavorite: u.QueryFavoriteItems().Where(ent_meta.ID(m.ID)).ExistX(ctx),
+			IsRead:     u.QueryHistories().QueryItem().Where(ent_meta.ID(m.ID)).ExistX(ctx),
+			PageCount:  int32(len(m.FileIndices)),
+		}
+
+		tags, e := m.QueryTags().All(ctx)
+		if e != nil {
+			err = e
+			return
+		}
+
+		for _, t := range tags {
+			if u.QueryFavoriteTags().Where(ent_tag.ID(t.ID)).ExistX(ctx) {
+				items[i].HasFavoriteTag = true
+				break
+			}
+		}
+	}
+
+	count, err := meta.Count(ctx,
+		client,
+		u,
+		meta.QueryParams{
+			SearchName:  req.Search,
+			Filter:      filter,
+			SearchTag:   req.Tag,
+			SortBy:      sort,
+			SortOrder:   order,
+			Page:        0,
+			ItemPerPage: 0,
+		})
+	if err != nil {
+		return
+	}
+
+	pageCount := int32(count) / req.ItemPerPage
+	if int32(count)%req.ItemPerPage > 0 {
+		pageCount++
+	}
+
+	if req.Page > pageCount || req.Page < 0 {
+		req.Page = 0
+	}
+
+	log.Info().
+		Interface("request", req).
+		Msg("Browse")
+
+	resp = &grpc.MangaListResponse{
+		Items:     items,
+		TotalPage: pageCount,
+	}
+
+	if req.Tag != "" {
+		tagObj, e := tag.Read(ctx, client, req.Tag)
+		if e != nil {
+			err = e
+			return
+		}
+
+		resp.TagFavorite = u.QueryFavoriteTags().Where(ent_tag.ID(tagObj.ID)).ExistX(ctx)
+	}
+
+	return
+}
+
+func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) (resp *grpc.MangaDetailResponse, err error) {
+	item := req.Name
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	m, err := meta.Read(ctx, client, item)
+	if err != nil {
+		return
+	}
+
+	if !m.Read {
+		m.Read = true
+		meta.Write(ctx, client, m)
+	}
+
+	log.Info().
+		Interface("request", req).
+		Msg("View Item")
+
+	tags, err := m.QueryTags().All(ctx)
+	if err != nil {
+		return
+	}
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err != nil {
+		return
+	}
+
+	progress, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+
+	currentPage := 0
+	if progress != nil {
+		currentPage = progress.Page
+	}
+
+	grpcTags := make([]*grpc.MangaDetailResponseTagItem, len(tags))
+	for i := range tags {
+		grpcTags[i] = &grpc.MangaDetailResponseTagItem{
+			ID:         int32(tags[i].ID),
+			Name:       tags[i].Name,
+			IsFavorite: tags[i].Favorite,
+			IsHidden:   tags[i].Hidden,
+		}
+	}
+
+	resp = &grpc.MangaDetailResponse{
+		Name:        item,
+		Favorite:    u.QueryFavoriteItems().Where(ent_meta.ID(m.ID)).ExistX(ctx),
+		Tags:        grpcTags,
+		PageCount:   int32(len(m.FileIndices)),
+		CurrentPage: int32(currentPage),
+	}
+
+	client.History.Create().
+		SetUser(u).
+		SetItem(m).
+		Save(ctx)
+
+	return
+}
+
+func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailRequest) (resp *grpc.MangaThumbnailResponse, err error) {
+	item := req.Name
+	log.Info().
+		Str("name", item).
+		Msg("Thumbnail")
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	m, err := meta.Read(ctx, client, item)
+	if err != nil {
+		return
+	}
+
+	thumbnail, err := meta.GetThumbnailBytes(m)
+	if err != nil {
+		return
+	}
+
+	resp.ContentType = "image/jpeg"
+	resp.Data = thumbnail
+
+	return
+}
+
+func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavoriteRequest) (resp *grpc.MangaSetFavoriteResponse, err error) {
+	item := req.Name
+
+	log.Info().
+		Interface("request", req).
+		Msg("Set Favorite Item.")
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err != nil {
+		return
+	}
+
+	m, err := meta.Read(ctx, client, item)
+	if err != nil {
+		return
+	}
+
+	if req.Favorite {
+		_, err = u.Update().AddFavoriteItems(m).Save(ctx)
+	} else {
+		_, err = u.Update().RemoveFavoriteItems(m).Save(ctx)
+	}
+
+	if err != nil {
+		return
+	}
+
+	resp = &grpc.MangaSetFavoriteResponse{
+		Favorite: req.Favorite,
+		Name:     req.Name,
+	}
+
+	return
+}
+
+func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCoverRequest) (resp *grpc.MangaUpdateCoverResponse, err error) {
+	log.Info().
+		Interface("request", req).
+		Msg("Update cover.")
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	m, err := meta.Read(ctx, client, req.Name)
+	if err != nil {
+		return
+	}
+
+	m.ThumbnailIndex = int(req.Index)
+	m.ThumbnailHeight = int(req.Height)
+	m.ThumbnailWidth = int(req.Width)
+	m.ThumbnailX = int(req.X)
+	m.ThumbnailY = int(req.Y)
+
+	err = meta.DeleteThumbnail(m)
+	if err != nil {
+		return
+	}
+
+	err = meta.Write(ctx, client, m)
+	if err != nil {
+		return
+	}
+
+	resp = &grpc.MangaUpdateCoverResponse{
+		Success: true,
+	}
+
+	return
+}
+
+func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageRequest) (resp *grpc.MangaPageImageResponse, err error) {
+	log.Info().
+		Interface("request", req).
+		Msg("Get image")
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	m, err := meta.Read(ctx, client, req.Name)
+	if err != nil {
+		return
+	}
+
+	c, err := container.CreateContainer(m)
+	if err != nil {
+		return
+	}
+
+	steam, f, err := c.OpenItem(context.Background(), int(req.Index))
+	if err != nil {
+		return
+	}
+
+	data, err := io.ReadAll(steam)
+	if err != nil {
+		return
+	}
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err == nil {
+		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+
+		if progressRec == nil {
+			_, err = client.Progress.Create().
+				SetPage(int(req.Index)).
+				SetItem(m).
+				SetUser(u).
+				Save(ctx)
+		} else {
+			_, err = progressRec.Update().
+				SetPage(int(req.Index)).
+				SetItem(m).
+				SetUser(u).
+				Save(ctx)
+		}
+
+		if err != nil {
+			return
+		}
+	}
+	if req.Width == 0 && req.Height == 0 {
+		var contentType string
+		switch filepath.Ext(strings.ToLower(f)) {
+		case ".jpg", ".jpeg":
+			contentType = "image/jpeg"
+		case ".png":
+			contentType = "image/png"
+		case ".webp":
+			contentType = "image/webp"
+		}
+
+		resp = &grpc.MangaPageImageResponse{
+			ContentType: contentType,
+			Data:        data,
+		}
+
+		return
+	}
+
+	reader := bytes.NewBuffer(data)
+
+	img, err := imaging.Decode(reader, imaging.AutoOrientation(true))
+	if err != nil {
+		return
+	}
+
+	if img.Bounds().Dx() > int(req.Width) || img.Bounds().Dy() > int(req.Height) {
+		resized := imaging.Fit(img, int(req.Width), int(req.Height), imaging.MitchellNetravali)
+		img = resized
+	}
+
+	var buf bytes.Buffer
+
+	err = imaging.Encode(&buf, img, imaging.JPEG)
+
+	if err != nil {
+		return
+	}
+
+	resp = &grpc.MangaPageImageResponse{
+		ContentType: "image/jpeg",
+		Data:        buf.Bytes(),
+	}
+
+	return
+}

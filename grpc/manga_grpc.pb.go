@@ -24,7 +24,7 @@ const (
 	Manga_Thumbnail_FullMethodName   = "/Manga/Thumbnail"
 	Manga_SetFavorite_FullMethodName = "/Manga/SetFavorite"
 	Manga_UpdateCover_FullMethodName = "/Manga/UpdateCover"
-	Manga_Page_FullMethodName        = "/Manga/Page"
+	Manga_PageImage_FullMethodName   = "/Manga/PageImage"
 )
 
 // MangaClient is the client API for Manga service.
@@ -36,7 +36,7 @@ type MangaClient interface {
 	Thumbnail(ctx context.Context, in *MangaThumbnailRequest, opts ...grpc.CallOption) (*MangaThumbnailResponse, error)
 	SetFavorite(ctx context.Context, in *MangaSetFavoriteRequest, opts ...grpc.CallOption) (*MangaSetFavoriteResponse, error)
 	UpdateCover(ctx context.Context, in *MangaUpdateCoverRequest, opts ...grpc.CallOption) (*MangaUpdateCoverResponse, error)
-	Page(ctx context.Context, in *MangaPageRequest, opts ...grpc.CallOption) (*MangaPageResponse, error)
+	PageImage(ctx context.Context, in *MangaPageImageRequest, opts ...grpc.CallOption) (*MangaPageImageResponse, error)
 }
 
 type mangaClient struct {
@@ -97,10 +97,10 @@ func (c *mangaClient) UpdateCover(ctx context.Context, in *MangaUpdateCoverReque
 	return out, nil
 }
 
-func (c *mangaClient) Page(ctx context.Context, in *MangaPageRequest, opts ...grpc.CallOption) (*MangaPageResponse, error) {
+func (c *mangaClient) PageImage(ctx context.Context, in *MangaPageImageRequest, opts ...grpc.CallOption) (*MangaPageImageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MangaPageResponse)
-	err := c.cc.Invoke(ctx, Manga_Page_FullMethodName, in, out, cOpts...)
+	out := new(MangaPageImageResponse)
+	err := c.cc.Invoke(ctx, Manga_PageImage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ type MangaServer interface {
 	Thumbnail(context.Context, *MangaThumbnailRequest) (*MangaThumbnailResponse, error)
 	SetFavorite(context.Context, *MangaSetFavoriteRequest) (*MangaSetFavoriteResponse, error)
 	UpdateCover(context.Context, *MangaUpdateCoverRequest) (*MangaUpdateCoverResponse, error)
-	Page(context.Context, *MangaPageRequest) (*MangaPageResponse, error)
+	PageImage(context.Context, *MangaPageImageRequest) (*MangaPageImageResponse, error)
 	mustEmbedUnimplementedMangaServer()
 }
 
@@ -142,8 +142,8 @@ func (UnimplementedMangaServer) SetFavorite(context.Context, *MangaSetFavoriteRe
 func (UnimplementedMangaServer) UpdateCover(context.Context, *MangaUpdateCoverRequest) (*MangaUpdateCoverResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCover not implemented")
 }
-func (UnimplementedMangaServer) Page(context.Context, *MangaPageRequest) (*MangaPageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Page not implemented")
+func (UnimplementedMangaServer) PageImage(context.Context, *MangaPageImageRequest) (*MangaPageImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageImage not implemented")
 }
 func (UnimplementedMangaServer) mustEmbedUnimplementedMangaServer() {}
 func (UnimplementedMangaServer) testEmbeddedByValue()               {}
@@ -256,20 +256,20 @@ func _Manga_UpdateCover_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Manga_Page_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MangaPageRequest)
+func _Manga_PageImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MangaPageImageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MangaServer).Page(ctx, in)
+		return srv.(MangaServer).PageImage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Manga_Page_FullMethodName,
+		FullMethod: Manga_PageImage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MangaServer).Page(ctx, req.(*MangaPageRequest))
+		return srv.(MangaServer).PageImage(ctx, req.(*MangaPageImageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -302,8 +302,8 @@ var Manga_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Manga_UpdateCover_Handler,
 		},
 		{
-			MethodName: "Page",
-			Handler:    _Manga_Page_Handler,
+			MethodName: "PageImage",
+			Handler:    _Manga_PageImage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
