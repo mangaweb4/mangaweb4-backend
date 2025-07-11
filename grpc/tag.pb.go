@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.31.1
-// source: browse.proto
+// source: tag.proto
 
 package grpc
 
@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type BrowseListRequest struct {
+type TagListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
 	Tag           string                 `protobuf:"bytes,2,opt,name=Tag,proto3" json:"Tag,omitempty"`
@@ -35,21 +35,21 @@ type BrowseListRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BrowseListRequest) Reset() {
-	*x = BrowseListRequest{}
-	mi := &file_browse_proto_msgTypes[0]
+func (x *TagListRequest) Reset() {
+	*x = TagListRequest{}
+	mi := &file_tag_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BrowseListRequest) String() string {
+func (x *TagListRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BrowseListRequest) ProtoMessage() {}
+func (*TagListRequest) ProtoMessage() {}
 
-func (x *BrowseListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_browse_proto_msgTypes[0]
+func (x *TagListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,91 +60,91 @@ func (x *BrowseListRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BrowseListRequest.ProtoReflect.Descriptor instead.
-func (*BrowseListRequest) Descriptor() ([]byte, []int) {
-	return file_browse_proto_rawDescGZIP(), []int{0}
+// Deprecated: Use TagListRequest.ProtoReflect.Descriptor instead.
+func (*TagListRequest) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *BrowseListRequest) GetUser() string {
+func (x *TagListRequest) GetUser() string {
 	if x != nil {
 		return x.User
 	}
 	return ""
 }
 
-func (x *BrowseListRequest) GetTag() string {
+func (x *TagListRequest) GetTag() string {
 	if x != nil {
 		return x.Tag
 	}
 	return ""
 }
 
-func (x *BrowseListRequest) GetFilter() Filter {
+func (x *TagListRequest) GetFilter() Filter {
 	if x != nil {
 		return x.Filter
 	}
 	return Filter_FILTER_UNKNOWN
 }
 
-func (x *BrowseListRequest) GetPage() int32 {
+func (x *TagListRequest) GetPage() int32 {
 	if x != nil {
 		return x.Page
 	}
 	return 0
 }
 
-func (x *BrowseListRequest) GetItemPerPage() int32 {
+func (x *TagListRequest) GetItemPerPage() int32 {
 	if x != nil {
 		return x.ItemPerPage
 	}
 	return 0
 }
 
-func (x *BrowseListRequest) GetSearch() string {
+func (x *TagListRequest) GetSearch() string {
 	if x != nil {
 		return x.Search
 	}
 	return ""
 }
 
-func (x *BrowseListRequest) GetSort() SortField {
+func (x *TagListRequest) GetSort() SortField {
 	if x != nil {
 		return x.Sort
 	}
 	return SortField_SORT_FIELD_NAME
 }
 
-func (x *BrowseListRequest) GetOrder() SortOrder {
+func (x *TagListRequest) GetOrder() SortOrder {
 	if x != nil {
 		return x.Order
 	}
 	return SortOrder_SORT_ORDER_ASCENDING
 }
 
-type BrowseListResponse struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	TagFavorite   bool                      `protobuf:"varint,1,opt,name=TagFavorite,proto3" json:"TagFavorite,omitempty"`
-	TotalPage     int32                     `protobuf:"varint,2,opt,name=TotalPage,proto3" json:"TotalPage,omitempty"`
-	Items         []*BrowseListResponseItem `protobuf:"bytes,3,rep,name=Items,proto3" json:"Items,omitempty"`
+type TagListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TagFavorite   bool                   `protobuf:"varint,1,opt,name=TagFavorite,proto3" json:"TagFavorite,omitempty"`
+	TotalPage     int32                  `protobuf:"varint,2,opt,name=TotalPage,proto3" json:"TotalPage,omitempty"`
+	Items         []*TagListResponseItem `protobuf:"bytes,3,rep,name=Items,proto3" json:"Items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BrowseListResponse) Reset() {
-	*x = BrowseListResponse{}
-	mi := &file_browse_proto_msgTypes[1]
+func (x *TagListResponse) Reset() {
+	*x = TagListResponse{}
+	mi := &file_tag_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BrowseListResponse) String() string {
+func (x *TagListResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BrowseListResponse) ProtoMessage() {}
+func (*TagListResponse) ProtoMessage() {}
 
-func (x *BrowseListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_browse_proto_msgTypes[1]
+func (x *TagListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -155,33 +155,33 @@ func (x *BrowseListResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BrowseListResponse.ProtoReflect.Descriptor instead.
-func (*BrowseListResponse) Descriptor() ([]byte, []int) {
-	return file_browse_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use TagListResponse.ProtoReflect.Descriptor instead.
+func (*TagListResponse) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *BrowseListResponse) GetTagFavorite() bool {
+func (x *TagListResponse) GetTagFavorite() bool {
 	if x != nil {
 		return x.TagFavorite
 	}
 	return false
 }
 
-func (x *BrowseListResponse) GetTotalPage() int32 {
+func (x *TagListResponse) GetTotalPage() int32 {
 	if x != nil {
 		return x.TotalPage
 	}
 	return 0
 }
 
-func (x *BrowseListResponse) GetItems() []*BrowseListResponseItem {
+func (x *TagListResponse) GetItems() []*TagListResponseItem {
 	if x != nil {
 		return x.Items
 	}
 	return nil
 }
 
-type BrowseListResponseItem struct {
+type TagListResponseItem struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Id             int32                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	Name           string                 `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
@@ -193,21 +193,21 @@ type BrowseListResponseItem struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *BrowseListResponseItem) Reset() {
-	*x = BrowseListResponseItem{}
-	mi := &file_browse_proto_msgTypes[2]
+func (x *TagListResponseItem) Reset() {
+	*x = TagListResponseItem{}
+	mi := &file_tag_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BrowseListResponseItem) String() string {
+func (x *TagListResponseItem) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BrowseListResponseItem) ProtoMessage() {}
+func (*TagListResponseItem) ProtoMessage() {}
 
-func (x *BrowseListResponseItem) ProtoReflect() protoreflect.Message {
-	mi := &file_browse_proto_msgTypes[2]
+func (x *TagListResponseItem) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -218,75 +218,75 @@ func (x *BrowseListResponseItem) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BrowseListResponseItem.ProtoReflect.Descriptor instead.
-func (*BrowseListResponseItem) Descriptor() ([]byte, []int) {
-	return file_browse_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use TagListResponseItem.ProtoReflect.Descriptor instead.
+func (*TagListResponseItem) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *BrowseListResponseItem) GetId() int32 {
+func (x *TagListResponseItem) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *BrowseListResponseItem) GetName() string {
+func (x *TagListResponseItem) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *BrowseListResponseItem) GetIsFavorite() bool {
+func (x *TagListResponseItem) GetIsFavorite() bool {
 	if x != nil {
 		return x.IsFavorite
 	}
 	return false
 }
 
-func (x *BrowseListResponseItem) GetIsRead() bool {
+func (x *TagListResponseItem) GetIsRead() bool {
 	if x != nil {
 		return x.IsRead
 	}
 	return false
 }
 
-func (x *BrowseListResponseItem) GetPageCount() int32 {
+func (x *TagListResponseItem) GetPageCount() int32 {
 	if x != nil {
 		return x.PageCount
 	}
 	return 0
 }
 
-func (x *BrowseListResponseItem) GetHasFavoriteTag() bool {
+func (x *TagListResponseItem) GetHasFavoriteTag() bool {
 	if x != nil {
 		return x.HasFavoriteTag
 	}
 	return false
 }
 
-type BrowseThumbnailRequest struct {
+type TagThumbnailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BrowseThumbnailRequest) Reset() {
-	*x = BrowseThumbnailRequest{}
-	mi := &file_browse_proto_msgTypes[3]
+func (x *TagThumbnailRequest) Reset() {
+	*x = TagThumbnailRequest{}
+	mi := &file_tag_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BrowseThumbnailRequest) String() string {
+func (x *TagThumbnailRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BrowseThumbnailRequest) ProtoMessage() {}
+func (*TagThumbnailRequest) ProtoMessage() {}
 
-func (x *BrowseThumbnailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_browse_proto_msgTypes[3]
+func (x *TagThumbnailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -297,19 +297,19 @@ func (x *BrowseThumbnailRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BrowseThumbnailRequest.ProtoReflect.Descriptor instead.
-func (*BrowseThumbnailRequest) Descriptor() ([]byte, []int) {
-	return file_browse_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use TagThumbnailRequest.ProtoReflect.Descriptor instead.
+func (*TagThumbnailRequest) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *BrowseThumbnailRequest) GetName() string {
+func (x *TagThumbnailRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type BrowseThumbnailResponse struct {
+type TagThumbnailResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ContentType   string                 `protobuf:"bytes,1,opt,name=ContentType,proto3" json:"ContentType,omitempty"`
 	Data          []byte                 `protobuf:"bytes,2,opt,name=Data,proto3" json:"Data,omitempty"`
@@ -317,21 +317,21 @@ type BrowseThumbnailResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BrowseThumbnailResponse) Reset() {
-	*x = BrowseThumbnailResponse{}
-	mi := &file_browse_proto_msgTypes[4]
+func (x *TagThumbnailResponse) Reset() {
+	*x = TagThumbnailResponse{}
+	mi := &file_tag_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BrowseThumbnailResponse) String() string {
+func (x *TagThumbnailResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BrowseThumbnailResponse) ProtoMessage() {}
+func (*TagThumbnailResponse) ProtoMessage() {}
 
-func (x *BrowseThumbnailResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_browse_proto_msgTypes[4]
+func (x *TagThumbnailResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -342,31 +342,31 @@ func (x *BrowseThumbnailResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BrowseThumbnailResponse.ProtoReflect.Descriptor instead.
-func (*BrowseThumbnailResponse) Descriptor() ([]byte, []int) {
-	return file_browse_proto_rawDescGZIP(), []int{4}
+// Deprecated: Use TagThumbnailResponse.ProtoReflect.Descriptor instead.
+func (*TagThumbnailResponse) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *BrowseThumbnailResponse) GetContentType() string {
+func (x *TagThumbnailResponse) GetContentType() string {
 	if x != nil {
 		return x.ContentType
 	}
 	return ""
 }
 
-func (x *BrowseThumbnailResponse) GetData() []byte {
+func (x *TagThumbnailResponse) GetData() []byte {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-var File_browse_proto protoreflect.FileDescriptor
+var File_tag_proto protoreflect.FileDescriptor
 
-const file_browse_proto_rawDesc = "" +
+const file_tag_proto_rawDesc = "" +
 	"\n" +
-	"\fbrowse.proto\x1a\vtypes.proto\"\x9a\x02\n" +
-	"\x11BrowseListRequest\x12\x12\n" +
+	"\ttag.proto\x1a\vtypes.proto\"\x97\x02\n" +
+	"\x0eTagListRequest\x12\x12\n" +
 	"\x04User\x18\x01 \x01(\tR\x04User\x12\x10\n" +
 	"\x03Tag\x18\x02 \x01(\tR\x03Tag\x12/\n" +
 	"\x06Filter\x18\x03 \x01(\x0e2\x17.mangaweb4.types.FilterR\x06Filter\x12\x12\n" +
@@ -374,12 +374,12 @@ const file_browse_proto_rawDesc = "" +
 	"\vItemPerPage\x18\x05 \x01(\x05R\vItemPerPage\x12\x16\n" +
 	"\x06Search\x18\x06 \x01(\tR\x06Search\x12.\n" +
 	"\x04Sort\x18\a \x01(\x0e2\x1a.mangaweb4.types.SortFieldR\x04Sort\x120\n" +
-	"\x05Order\x18\b \x01(\x0e2\x1a.mangaweb4.types.SortOrderR\x05Order\"\x83\x01\n" +
-	"\x12BrowseListResponse\x12 \n" +
+	"\x05Order\x18\b \x01(\x0e2\x1a.mangaweb4.types.SortOrderR\x05Order\"}\n" +
+	"\x0fTagListResponse\x12 \n" +
 	"\vTagFavorite\x18\x01 \x01(\bR\vTagFavorite\x12\x1c\n" +
-	"\tTotalPage\x18\x02 \x01(\x05R\tTotalPage\x12-\n" +
-	"\x05Items\x18\x03 \x03(\v2\x17.BrowseListResponseItemR\x05Items\"\xba\x01\n" +
-	"\x16BrowseListResponseItem\x12\x0e\n" +
+	"\tTotalPage\x18\x02 \x01(\x05R\tTotalPage\x12*\n" +
+	"\x05Items\x18\x03 \x03(\v2\x14.TagListResponseItemR\x05Items\"\xb7\x01\n" +
+	"\x13TagListResponseItem\x12\x0e\n" +
 	"\x02Id\x18\x01 \x01(\x05R\x02Id\x12\x12\n" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x1e\n" +
 	"\n" +
@@ -387,48 +387,48 @@ const file_browse_proto_rawDesc = "" +
 	"IsFavorite\x12\x16\n" +
 	"\x06IsRead\x18\x04 \x01(\bR\x06IsRead\x12\x1c\n" +
 	"\tPageCount\x18\x05 \x01(\x05R\tPageCount\x12&\n" +
-	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\",\n" +
-	"\x16BrowseThumbnailRequest\x12\x12\n" +
-	"\x04Name\x18\x01 \x01(\tR\x04Name\"O\n" +
-	"\x17BrowseThumbnailResponse\x12 \n" +
+	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\")\n" +
+	"\x13TagThumbnailRequest\x12\x12\n" +
+	"\x04Name\x18\x01 \x01(\tR\x04Name\"L\n" +
+	"\x14TagThumbnailResponse\x12 \n" +
 	"\vContentType\x18\x01 \x01(\tR\vContentType\x12\x12\n" +
-	"\x04Data\x18\x02 \x01(\fR\x04Data2}\n" +
-	"\x06Browse\x121\n" +
-	"\x04List\x12\x12.BrowseListRequest\x1a\x13.BrowseListResponse\"\x00\x12@\n" +
-	"\tThumbnail\x12\x17.BrowseThumbnailRequest\x1a\x18.BrowseThumbnailResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
+	"\x04Data\x18\x02 \x01(\fR\x04Data2n\n" +
+	"\x03Tag\x12+\n" +
+	"\x04List\x12\x0f.TagListRequest\x1a\x10.TagListResponse\"\x00\x12:\n" +
+	"\tThumbnail\x12\x14.TagThumbnailRequest\x1a\x15.TagThumbnailResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
 
 var (
-	file_browse_proto_rawDescOnce sync.Once
-	file_browse_proto_rawDescData []byte
+	file_tag_proto_rawDescOnce sync.Once
+	file_tag_proto_rawDescData []byte
 )
 
-func file_browse_proto_rawDescGZIP() []byte {
-	file_browse_proto_rawDescOnce.Do(func() {
-		file_browse_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_browse_proto_rawDesc), len(file_browse_proto_rawDesc)))
+func file_tag_proto_rawDescGZIP() []byte {
+	file_tag_proto_rawDescOnce.Do(func() {
+		file_tag_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_tag_proto_rawDesc), len(file_tag_proto_rawDesc)))
 	})
-	return file_browse_proto_rawDescData
+	return file_tag_proto_rawDescData
 }
 
-var file_browse_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_browse_proto_goTypes = []any{
-	(*BrowseListRequest)(nil),       // 0: BrowseListRequest
-	(*BrowseListResponse)(nil),      // 1: BrowseListResponse
-	(*BrowseListResponseItem)(nil),  // 2: BrowseListResponseItem
-	(*BrowseThumbnailRequest)(nil),  // 3: BrowseThumbnailRequest
-	(*BrowseThumbnailResponse)(nil), // 4: BrowseThumbnailResponse
-	(Filter)(0),                     // 5: mangaweb4.types.Filter
-	(SortField)(0),                  // 6: mangaweb4.types.SortField
-	(SortOrder)(0),                  // 7: mangaweb4.types.SortOrder
+var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tag_proto_goTypes = []any{
+	(*TagListRequest)(nil),       // 0: TagListRequest
+	(*TagListResponse)(nil),      // 1: TagListResponse
+	(*TagListResponseItem)(nil),  // 2: TagListResponseItem
+	(*TagThumbnailRequest)(nil),  // 3: TagThumbnailRequest
+	(*TagThumbnailResponse)(nil), // 4: TagThumbnailResponse
+	(Filter)(0),                  // 5: mangaweb4.types.Filter
+	(SortField)(0),               // 6: mangaweb4.types.SortField
+	(SortOrder)(0),               // 7: mangaweb4.types.SortOrder
 }
-var file_browse_proto_depIdxs = []int32{
-	5, // 0: BrowseListRequest.Filter:type_name -> mangaweb4.types.Filter
-	6, // 1: BrowseListRequest.Sort:type_name -> mangaweb4.types.SortField
-	7, // 2: BrowseListRequest.Order:type_name -> mangaweb4.types.SortOrder
-	2, // 3: BrowseListResponse.Items:type_name -> BrowseListResponseItem
-	0, // 4: Browse.List:input_type -> BrowseListRequest
-	3, // 5: Browse.Thumbnail:input_type -> BrowseThumbnailRequest
-	1, // 6: Browse.List:output_type -> BrowseListResponse
-	4, // 7: Browse.Thumbnail:output_type -> BrowseThumbnailResponse
+var file_tag_proto_depIdxs = []int32{
+	5, // 0: TagListRequest.Filter:type_name -> mangaweb4.types.Filter
+	6, // 1: TagListRequest.Sort:type_name -> mangaweb4.types.SortField
+	7, // 2: TagListRequest.Order:type_name -> mangaweb4.types.SortOrder
+	2, // 3: TagListResponse.Items:type_name -> TagListResponseItem
+	0, // 4: Tag.List:input_type -> TagListRequest
+	3, // 5: Tag.Thumbnail:input_type -> TagThumbnailRequest
+	1, // 6: Tag.List:output_type -> TagListResponse
+	4, // 7: Tag.Thumbnail:output_type -> TagThumbnailResponse
 	6, // [6:8] is the sub-list for method output_type
 	4, // [4:6] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -436,9 +436,9 @@ var file_browse_proto_depIdxs = []int32{
 	0, // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_browse_proto_init() }
-func file_browse_proto_init() {
-	if File_browse_proto != nil {
+func init() { file_tag_proto_init() }
+func file_tag_proto_init() {
+	if File_tag_proto != nil {
 		return
 	}
 	file_types_proto_init()
@@ -446,17 +446,17 @@ func file_browse_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_browse_proto_rawDesc), len(file_browse_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tag_proto_rawDesc), len(file_tag_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_browse_proto_goTypes,
-		DependencyIndexes: file_browse_proto_depIdxs,
-		MessageInfos:      file_browse_proto_msgTypes,
+		GoTypes:           file_tag_proto_goTypes,
+		DependencyIndexes: file_tag_proto_depIdxs,
+		MessageInfos:      file_tag_proto_msgTypes,
 	}.Build()
-	File_browse_proto = out.File
-	file_browse_proto_goTypes = nil
-	file_browse_proto_depIdxs = nil
+	File_tag_proto = out.File
+	file_tag_proto_goTypes = nil
+	file_tag_proto_depIdxs = nil
 }
