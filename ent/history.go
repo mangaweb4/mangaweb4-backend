@@ -9,9 +9,9 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/wutipong/mangaweb3-backend/ent/history"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent/history"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // History is the model entity for the History schema.

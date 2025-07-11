@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/wutipong/mangaweb3-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
 	// required by schema hooks.
-	_ "github.com/wutipong/mangaweb3-backend/ent/runtime"
+	_ "github.com/mangaweb4/mangaweb4-backend/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/wutipong/mangaweb3-backend/ent/migrate"
+	"github.com/mangaweb4/mangaweb4-backend/ent/migrate"
 )
 
 type (

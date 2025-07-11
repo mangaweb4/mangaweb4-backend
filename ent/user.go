@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // User is the model entity for the User schema.

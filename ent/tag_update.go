@@ -10,10 +10,10 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
-	"github.com/wutipong/mangaweb3-backend/ent/predicate"
-	"github.com/wutipong/mangaweb3-backend/ent/tag"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
+	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // TagUpdate is the builder for updating Tag entities.

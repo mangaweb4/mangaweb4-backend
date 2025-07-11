@@ -10,9 +10,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
-	"github.com/wutipong/mangaweb3-backend/ent/progress"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // ProgressCreate is the builder for creating a Progress entity.

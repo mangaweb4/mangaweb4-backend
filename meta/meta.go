@@ -14,11 +14,11 @@ import (
 	"time"
 
 	"github.com/disintegration/imaging"
-	"github.com/wutipong/mangaweb3-backend/configuration"
-	"github.com/wutipong/mangaweb3-backend/container"
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
-	tag_util "github.com/wutipong/mangaweb3-backend/tag"
+	"github.com/mangaweb4/mangaweb4-backend/configuration"
+	"github.com/mangaweb4/mangaweb4-backend/container"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	tag_util "github.com/mangaweb4/mangaweb4-backend/tag"
 
 	"golang.org/x/exp/slices"
 	_ "golang.org/x/image/webp"

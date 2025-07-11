@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 )
 
 type Container interface {

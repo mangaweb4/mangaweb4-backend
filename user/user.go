@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 const (

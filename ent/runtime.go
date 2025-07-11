@@ -5,12 +5,12 @@ package ent
 import (
 	"time"
 
-	"github.com/wutipong/mangaweb3-backend/ent/history"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
-	"github.com/wutipong/mangaweb3-backend/ent/progress"
-	"github.com/wutipong/mangaweb3-backend/ent/schema"
-	"github.com/wutipong/mangaweb3-backend/ent/tag"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent/history"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/schema"
+	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // The init function reads all schema descriptors with runtime code

@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/mangaweb4/mangaweb4-backend/database"
+	"github.com/mangaweb4/mangaweb4-backend/handler"
+	"github.com/mangaweb4/mangaweb4-backend/meta"
 	"github.com/rs/zerolog/log"
-	"github.com/wutipong/mangaweb3-backend/database"
-	"github.com/wutipong/mangaweb3-backend/handler"
-	"github.com/wutipong/mangaweb3-backend/meta"
 )
 
 type updateCoverRequest struct {

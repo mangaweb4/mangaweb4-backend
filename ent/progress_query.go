@@ -11,10 +11,10 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
-	"github.com/wutipong/mangaweb3-backend/ent/predicate"
-	"github.com/wutipong/mangaweb3-backend/ent/progress"
-	"github.com/wutipong/mangaweb3-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
+	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // ProgressQuery is the builder for querying Progress entities.

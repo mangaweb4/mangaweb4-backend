@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/wutipong/mangaweb3-backend/configuration"
-	"github.com/wutipong/mangaweb3-backend/container"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/configuration"
+	"github.com/mangaweb4/mangaweb4-backend/container"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 )
 
 type Container struct {

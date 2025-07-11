@@ -5,7 +5,7 @@ package progress
 import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/wutipong/mangaweb3-backend/ent/predicate"
+	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

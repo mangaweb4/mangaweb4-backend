@@ -826,8 +826,16 @@
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
+                "item_id": {
+                    "description": "ItemID holds the value of the \"item_id\" field.",
+                    "type": "integer"
+                },
                 "page": {
                     "description": "Page holds the value of the \"page\" field.",
+                    "type": "integer"
+                },
+                "user_id": {
+                    "description": "UserID holds the value of the \"user_id\" field.",
                     "type": "integer"
                 }
             }

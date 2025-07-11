@@ -11,8 +11,8 @@ import (
 	"sort"
 
 	"github.com/facette/natsort"
-	"github.com/wutipong/mangaweb3-backend/configuration"
-	"github.com/wutipong/mangaweb3-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/configuration"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
 )
 
 type ZipContainer struct {

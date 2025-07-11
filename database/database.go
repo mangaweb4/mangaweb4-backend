@@ -8,11 +8,11 @@ import (
 	dialect_sql "entgo.io/ent/dialect/sql"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/mangaweb4/mangaweb4-backend/configuration"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent/migrate"
+	"github.com/mangaweb4/mangaweb4-backend/errors"
 	"github.com/rs/zerolog/log"
-	"github.com/wutipong/mangaweb3-backend/configuration"
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/ent/migrate"
-	"github.com/wutipong/mangaweb3-backend/errors"
 	_ "modernc.org/sqlite"
 )
 

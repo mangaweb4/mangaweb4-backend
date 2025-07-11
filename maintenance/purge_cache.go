@@ -3,7 +3,7 @@ package maintenance
 import (
 	"os"
 
-	"github.com/wutipong/mangaweb3-backend/configuration"
+	"github.com/mangaweb4/mangaweb4-backend/configuration"
 )
 
 func PurgeCache() error {

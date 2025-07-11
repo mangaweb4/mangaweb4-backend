@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/wutipong/mangaweb3-backend/ent/runtime.go
+// The schema-stitching logic is generated in github.com/mangaweb4/mangaweb4-backend/ent/runtime.go
 
 const (
 	Version = "v0.14.4"                                         // Version of ent codegen.

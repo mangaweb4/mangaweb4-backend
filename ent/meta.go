@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/wutipong/mangaweb3-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 )
 
 // Meta is the model entity for the Meta schema.

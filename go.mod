@@ -1,4 +1,4 @@
-module github.com/wutipong/mangaweb3-backend
+module github.com/mangaweb4/mangaweb4-backend
 
 go 1.23.0
 
@@ -53,6 +53,7 @@ require (
 	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/tools v0.32.0 // indirect
+	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/libc v1.62.1 // indirect
 	modernc.org/mathutil v1.7.1 // indirect

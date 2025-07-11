@@ -3,9 +3,9 @@ package maintenance
 import (
 	"context"
 
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/meta"
 	"github.com/rs/zerolog/log"
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/meta"
 )
 
 func UpdateTags(client *ent.Client) error {

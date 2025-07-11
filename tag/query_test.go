@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	dialect_sql "entgo.io/ent/dialect/sql"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent/enttest"
 	"github.com/stretchr/testify/suite"
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/ent/enttest"
 	_ "modernc.org/sqlite"
 )
 

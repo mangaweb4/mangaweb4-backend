@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/wutipong/mangaweb3-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
 )
 
 // The HistoryFunc type is an adapter to allow the use of ordinary

@@ -3,8 +3,8 @@ package maintenance
 import (
 	"context"
 
-	"github.com/wutipong/mangaweb3-backend/ent"
-	"github.com/wutipong/mangaweb3-backend/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/meta"
 )
 
 func RebuildThumbnail(client *ent.Client) error {

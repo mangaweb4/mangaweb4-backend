@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/wutipong/mangaweb3-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 )
 
 // Tag is the model entity for the Tag schema.

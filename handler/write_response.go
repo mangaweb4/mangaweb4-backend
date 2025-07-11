@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/mangaweb4/mangaweb4-backend/errors"
 	"github.com/rs/zerolog/log"
-	"github.com/wutipong/mangaweb3-backend/errors"
 )
 
 func WriteResponse(w http.ResponseWriter, v any) {
