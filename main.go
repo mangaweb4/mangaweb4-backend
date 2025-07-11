@@ -3,25 +3,21 @@ package main
 import (
 	"context"
 	"flag"
-	"net/http"
+	"net"
 	"os"
 	"strconv"
 
 	"entgo.io/ent/dialect"
 	"github.com/joho/godotenv"
-	"github.com/julienschmidt/httprouter"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/database"
 	_ "github.com/mangaweb4/mangaweb4-backend/docs"
-	"github.com/mangaweb4/mangaweb4-backend/handler/browse"
-	maintenanceHandler "github.com/mangaweb4/mangaweb4-backend/handler/maintenance"
-	"github.com/mangaweb4/mangaweb4-backend/handler/tag"
-	"github.com/mangaweb4/mangaweb4-backend/handler/view"
+	m4_grpc "github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/maintenance"
-	"github.com/rs/cors"
+	"github.com/mangaweb4/mangaweb4-backend/server"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	httpSwagger "github.com/swaggo/http-swagger/v2"
+	"google.golang.org/grpc"
 )
 
 var versionString string = "development"
@@ -131,31 +127,24 @@ func main() {
 
 	go maintenance.UpdateLibrary(context.Background())
 
-	router := httprouter.New()
-	RegisterHandler(router, debugMode)
-
 	log.Info().Msg("Server starts.")
 
-	handler := cors.AllowAll().Handler(router)
-	if err := http.ListenAndServe(address, handler); err != nil {
+	listener, err := net.Listen("tcp", address)
+	if err != nil {
+		log.Error().AnErr("error", err).Str("address", address).Msg("failed to listen")
+	}
+	var opts []grpc.ServerOption
+
+	grpcServer := grpc.NewServer(opts...)
+	m4_grpc.RegisterHistoryServer(grpcServer, &server.HistoryServer{})
+	m4_grpc.RegisterMaintenanceServer(grpcServer, &server.MaintenanceServer{})
+	m4_grpc.RegisterMangaServer(grpcServer, &server.MangaServer{})
+	m4_grpc.RegisterTagServer(grpcServer, &server.TagServer{})
+
+	if err := grpcServer.Serve(listener); err != nil {
 		log.Error().AnErr("error", err).Msg("Starting server fails")
 		return
 	}
 
 	log.Info().Msg("Server shutdown.")
-}
-
-func RegisterHandler(router *httprouter.Router, debugMode bool) {
-	browse.Register(router)
-	tag.Register(router)
-	view.Register(router)
-	maintenanceHandler.Register(router)
-
-	if debugMode {
-		router.GET("/doc/:any", swaggerHandler)
-	}
-}
-
-func swaggerHandler(res http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	httpSwagger.WrapHandler(res, req)
 }

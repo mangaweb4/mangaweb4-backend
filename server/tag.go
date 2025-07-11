@@ -14,6 +14,7 @@ import (
 )
 
 type TagServer struct {
+	grpc.UnimplementedTagServer
 }
 
 func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *grpc.TagListResponse, err error) {

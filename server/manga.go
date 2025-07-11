@@ -20,7 +20,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type MangaServer struct{}
+type MangaServer struct {
+	grpc.UnimplementedMangaServer
+}
 
 func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
 

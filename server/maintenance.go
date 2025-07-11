@@ -9,6 +9,7 @@ import (
 )
 
 type MaintenanceServer struct {
+	grpc.UnimplementedMaintenanceServer
 }
 
 func (s *MaintenanceServer) PurgeCache(ctx context.Context, req *grpc.MaintenancePurgeCacheRequest) (resp *grpc.MaintenancePurgeCacheResponse, err error) {

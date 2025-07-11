@@ -14,7 +14,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type HistoryServer struct{}
+type HistoryServer struct {
+	grpc.UnimplementedHistoryServer
+}
 
 func (s *HistoryServer) List(ctx context.Context, req *grpc.HistoryListRequest) (resp *grpc.HistoryListResponse, err error) {
 	client := database.CreateEntClient()
