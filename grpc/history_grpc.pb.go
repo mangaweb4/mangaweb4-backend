@@ -19,8 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	History_List_FullMethodName      = "/History/List"
-	History_Thumbnail_FullMethodName = "/History/Thumbnail"
+	History_List_FullMethodName = "/History/List"
 )
 
 // HistoryClient is the client API for History service.
@@ -28,7 +27,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HistoryClient interface {
 	List(ctx context.Context, in *HistoryListRequest, opts ...grpc.CallOption) (*HistoryListResponse, error)
-	Thumbnail(ctx context.Context, in *HistoryThumbnailRequest, opts ...grpc.CallOption) (*HistoryThumbnailResponse, error)
 }
 
 type historyClient struct {
@@ -49,22 +47,11 @@ func (c *historyClient) List(ctx context.Context, in *HistoryListRequest, opts .
 	return out, nil
 }
 
-func (c *historyClient) Thumbnail(ctx context.Context, in *HistoryThumbnailRequest, opts ...grpc.CallOption) (*HistoryThumbnailResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(HistoryThumbnailResponse)
-	err := c.cc.Invoke(ctx, History_Thumbnail_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // HistoryServer is the server API for History service.
 // All implementations must embed UnimplementedHistoryServer
 // for forward compatibility.
 type HistoryServer interface {
 	List(context.Context, *HistoryListRequest) (*HistoryListResponse, error)
-	Thumbnail(context.Context, *HistoryThumbnailRequest) (*HistoryThumbnailResponse, error)
 	mustEmbedUnimplementedHistoryServer()
 }
 
@@ -77,9 +64,6 @@ type UnimplementedHistoryServer struct{}
 
 func (UnimplementedHistoryServer) List(context.Context, *HistoryListRequest) (*HistoryListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedHistoryServer) Thumbnail(context.Context, *HistoryThumbnailRequest) (*HistoryThumbnailResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Thumbnail not implemented")
 }
 func (UnimplementedHistoryServer) mustEmbedUnimplementedHistoryServer() {}
 func (UnimplementedHistoryServer) testEmbeddedByValue()                 {}
@@ -120,24 +104,6 @@ func _History_List_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _History_Thumbnail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HistoryThumbnailRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(HistoryServer).Thumbnail(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: History_Thumbnail_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HistoryServer).Thumbnail(ctx, req.(*HistoryThumbnailRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // History_ServiceDesc is the grpc.ServiceDesc for History service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -148,10 +114,6 @@ var History_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _History_List_Handler,
-		},
-		{
-			MethodName: "Thumbnail",
-			Handler:    _History_Thumbnail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -226,102 +226,6 @@ func (x *HistoryListResponseItem) GetHasFavoriteTag() bool {
 	return false
 }
 
-type HistoryThumbnailRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *HistoryThumbnailRequest) Reset() {
-	*x = HistoryThumbnailRequest{}
-	mi := &file_history_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *HistoryThumbnailRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*HistoryThumbnailRequest) ProtoMessage() {}
-
-func (x *HistoryThumbnailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_history_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use HistoryThumbnailRequest.ProtoReflect.Descriptor instead.
-func (*HistoryThumbnailRequest) Descriptor() ([]byte, []int) {
-	return file_history_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *HistoryThumbnailRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type HistoryThumbnailResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ContentType   string                 `protobuf:"bytes,1,opt,name=ContentType,proto3" json:"ContentType,omitempty"`
-	Data          []byte                 `protobuf:"bytes,2,opt,name=Data,proto3" json:"Data,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *HistoryThumbnailResponse) Reset() {
-	*x = HistoryThumbnailResponse{}
-	mi := &file_history_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *HistoryThumbnailResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*HistoryThumbnailResponse) ProtoMessage() {}
-
-func (x *HistoryThumbnailResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_history_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use HistoryThumbnailResponse.ProtoReflect.Descriptor instead.
-func (*HistoryThumbnailResponse) Descriptor() ([]byte, []int) {
-	return file_history_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *HistoryThumbnailResponse) GetContentType() string {
-	if x != nil {
-		return x.ContentType
-	}
-	return ""
-}
-
-func (x *HistoryThumbnailResponse) GetData() []byte {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
 var File_history_proto protoreflect.FileDescriptor
 
 const file_history_proto_rawDesc = "" +
@@ -345,15 +249,9 @@ const file_history_proto_rawDesc = "" +
 	"\n" +
 	"AccessTime\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"AccessTime\x12&\n" +
-	"\x0eHasFavoriteTag\x18\a \x01(\bR\x0eHasFavoriteTag\"-\n" +
-	"\x17HistoryThumbnailRequest\x12\x12\n" +
-	"\x04Name\x18\x01 \x01(\tR\x04Name\"P\n" +
-	"\x18HistoryThumbnailResponse\x12 \n" +
-	"\vContentType\x18\x01 \x01(\tR\vContentType\x12\x12\n" +
-	"\x04Data\x18\x02 \x01(\fR\x04Data2\x82\x01\n" +
+	"\x0eHasFavoriteTag\x18\a \x01(\bR\x0eHasFavoriteTag2>\n" +
 	"\aHistory\x123\n" +
-	"\x04List\x12\x13.HistoryListRequest\x1a\x14.HistoryListResponse\"\x00\x12B\n" +
-	"\tThumbnail\x12\x18.HistoryThumbnailRequest\x1a\x19.HistoryThumbnailResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
+	"\x04List\x12\x13.HistoryListRequest\x1a\x14.HistoryListResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
 
 var (
 	file_history_proto_rawDescOnce sync.Once
@@ -367,24 +265,20 @@ func file_history_proto_rawDescGZIP() []byte {
 	return file_history_proto_rawDescData
 }
 
-var file_history_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_history_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_history_proto_goTypes = []any{
-	(*HistoryListRequest)(nil),       // 0: HistoryListRequest
-	(*HistoryListResponse)(nil),      // 1: HistoryListResponse
-	(*HistoryListResponseItem)(nil),  // 2: HistoryListResponseItem
-	(*HistoryThumbnailRequest)(nil),  // 3: HistoryThumbnailRequest
-	(*HistoryThumbnailResponse)(nil), // 4: HistoryThumbnailResponse
-	(*timestamppb.Timestamp)(nil),    // 5: google.protobuf.Timestamp
+	(*HistoryListRequest)(nil),      // 0: HistoryListRequest
+	(*HistoryListResponse)(nil),     // 1: HistoryListResponse
+	(*HistoryListResponseItem)(nil), // 2: HistoryListResponseItem
+	(*timestamppb.Timestamp)(nil),   // 3: google.protobuf.Timestamp
 }
 var file_history_proto_depIdxs = []int32{
 	2, // 0: HistoryListResponse.Items:type_name -> HistoryListResponseItem
-	5, // 1: HistoryListResponseItem.AccessTime:type_name -> google.protobuf.Timestamp
+	3, // 1: HistoryListResponseItem.AccessTime:type_name -> google.protobuf.Timestamp
 	0, // 2: History.List:input_type -> HistoryListRequest
-	3, // 3: History.Thumbnail:input_type -> HistoryThumbnailRequest
-	1, // 4: History.List:output_type -> HistoryListResponse
-	4, // 5: History.Thumbnail:output_type -> HistoryThumbnailResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
+	1, // 3: History.List:output_type -> HistoryListResponse
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -401,7 +295,7 @@ func file_history_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_history_proto_rawDesc), len(file_history_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
