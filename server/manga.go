@@ -491,7 +491,7 @@ func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.Se
 			Filename:    filename,
 			ContentType: "application/zip",
 			Data:        bytes[i:end],
-			Size:        int32(length),
+			Size:        int32(end - i),
 		})
 
 		if err != nil {
