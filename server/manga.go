@@ -485,7 +485,7 @@ func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.Se
 	const MESSAGE_SIZE = 1024 * 1024
 	length := len(bytes)
 
-	for i := 0; i < length; i = MESSAGE_SIZE {
+	for i := 0; i < length; i += MESSAGE_SIZE {
 		end := min(i+MESSAGE_SIZE, length)
 		err = stream.Send(&grpc.MangaDownloadResponse{
 			Filename:    filename,
