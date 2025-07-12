@@ -236,8 +236,10 @@ func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailReq
 		return
 	}
 
-	resp.ContentType = "image/jpeg"
-	resp.Data = thumbnail
+	resp = &grpc.MangaThumbnailResponse{
+		ContentType: "image/jpeg",
+		Data:        thumbnail,
+	}
 
 	return
 }
