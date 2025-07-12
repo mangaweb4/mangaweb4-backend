@@ -26,7 +26,7 @@ func main() {
 	ctx := context.Background()
 
 	flag.Usage = func() {
-		os.Stderr.WriteString("Usage: mangaweb3-backend [options]\n\n")
+		os.Stderr.WriteString("Usage: mangaweb4-backend [options]\n\n")
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
