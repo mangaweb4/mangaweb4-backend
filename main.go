@@ -11,12 +11,13 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/database"
-	m4_grpc "github.com/mangaweb4/mangaweb4-backend/grpc"
+	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/maintenance"
 	"github.com/mangaweb4/mangaweb4-backend/server"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"google.golang.org/grpc"
+
+	grpclib "google.golang.org/grpc"
 )
 
 var versionString string = "development"
@@ -124,13 +125,13 @@ func main() {
 	if err != nil {
 		log.Error().AnErr("error", err).Str("address", address).Msg("failed to listen")
 	}
-	var opts []grpc.ServerOption
+	var opts []grpclib.ServerOption
 
-	grpcServer := grpc.NewServer(opts...)
-	m4_grpc.RegisterHistoryServer(grpcServer, &server.HistoryServer{})
-	m4_grpc.RegisterMaintenanceServer(grpcServer, &server.MaintenanceServer{})
-	m4_grpc.RegisterMangaServer(grpcServer, &server.MangaServer{})
-	m4_grpc.RegisterTagServer(grpcServer, &server.TagServer{})
+	grpcServer := grpclib.NewServer(opts...)
+	grpc.RegisterHistoryServer(grpcServer, &server.HistoryServer{})
+	grpc.RegisterMaintenanceServer(grpcServer, &server.MaintenanceServer{})
+	grpc.RegisterMangaServer(grpcServer, &server.MangaServer{})
+	grpc.RegisterTagServer(grpcServer, &server.TagServer{})
 
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Error().AnErr("error", err).Msg("Starting server fails")
