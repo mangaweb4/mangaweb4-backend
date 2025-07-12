@@ -11,7 +11,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/database"
-	_ "github.com/mangaweb4/mangaweb4-backend/docs"
 	m4_grpc "github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/maintenance"
 	"github.com/mangaweb4/mangaweb4-backend/server"
@@ -22,14 +21,6 @@ import (
 
 var versionString string = "development"
 
-//go:generate go run -mod=mod github.com/swaggo/swag/cmd/swag@latest init
-
-// @title           Mangaweb3 API
-// @version         3.0
-// @description     API Server for Mangaweb
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	ctx := context.Background()
 
