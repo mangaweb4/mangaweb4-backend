@@ -127,8 +127,10 @@ func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest
 		return
 	}
 
-	resp.Data = thumbnail
-	resp.ContentType = "image/jpeg"
+	resp = &grpc.TagThumbnailResponse{
+		Data:        thumbnail,
+		ContentType: "image/jpeg",
+	}
 
 	return
 }
