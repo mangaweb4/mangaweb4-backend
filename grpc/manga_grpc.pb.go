@@ -25,6 +25,8 @@ const (
 	Manga_SetFavorite_FullMethodName = "/Manga/SetFavorite"
 	Manga_UpdateCover_FullMethodName = "/Manga/UpdateCover"
 	Manga_PageImage_FullMethodName   = "/Manga/PageImage"
+	Manga_Repair_FullMethodName      = "/Manga/Repair"
+	Manga_Download_FullMethodName    = "/Manga/Download"
 )
 
 // MangaClient is the client API for Manga service.
@@ -37,6 +39,8 @@ type MangaClient interface {
 	SetFavorite(ctx context.Context, in *MangaSetFavoriteRequest, opts ...grpc.CallOption) (*MangaSetFavoriteResponse, error)
 	UpdateCover(ctx context.Context, in *MangaUpdateCoverRequest, opts ...grpc.CallOption) (*MangaUpdateCoverResponse, error)
 	PageImage(ctx context.Context, in *MangaPageImageRequest, opts ...grpc.CallOption) (*MangaPageImageResponse, error)
+	Repair(ctx context.Context, in *MangaRepairRequest, opts ...grpc.CallOption) (*MangaRepairResponse, error)
+	Download(ctx context.Context, in *MangaDownloadRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[MangaDownloadResponse], error)
 }
 
 type mangaClient struct {
@@ -107,6 +111,35 @@ func (c *mangaClient) PageImage(ctx context.Context, in *MangaPageImageRequest, 
 	return out, nil
 }
 
+func (c *mangaClient) Repair(ctx context.Context, in *MangaRepairRequest, opts ...grpc.CallOption) (*MangaRepairResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MangaRepairResponse)
+	err := c.cc.Invoke(ctx, Manga_Repair_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mangaClient) Download(ctx context.Context, in *MangaDownloadRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[MangaDownloadResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Manga_ServiceDesc.Streams[0], Manga_Download_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[MangaDownloadRequest, MangaDownloadResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Manga_DownloadClient = grpc.ServerStreamingClient[MangaDownloadResponse]
+
 // MangaServer is the server API for Manga service.
 // All implementations must embed UnimplementedMangaServer
 // for forward compatibility.
@@ -117,6 +150,8 @@ type MangaServer interface {
 	SetFavorite(context.Context, *MangaSetFavoriteRequest) (*MangaSetFavoriteResponse, error)
 	UpdateCover(context.Context, *MangaUpdateCoverRequest) (*MangaUpdateCoverResponse, error)
 	PageImage(context.Context, *MangaPageImageRequest) (*MangaPageImageResponse, error)
+	Repair(context.Context, *MangaRepairRequest) (*MangaRepairResponse, error)
+	Download(*MangaDownloadRequest, grpc.ServerStreamingServer[MangaDownloadResponse]) error
 	mustEmbedUnimplementedMangaServer()
 }
 
@@ -144,6 +179,12 @@ func (UnimplementedMangaServer) UpdateCover(context.Context, *MangaUpdateCoverRe
 }
 func (UnimplementedMangaServer) PageImage(context.Context, *MangaPageImageRequest) (*MangaPageImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageImage not implemented")
+}
+func (UnimplementedMangaServer) Repair(context.Context, *MangaRepairRequest) (*MangaRepairResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Repair not implemented")
+}
+func (UnimplementedMangaServer) Download(*MangaDownloadRequest, grpc.ServerStreamingServer[MangaDownloadResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method Download not implemented")
 }
 func (UnimplementedMangaServer) mustEmbedUnimplementedMangaServer() {}
 func (UnimplementedMangaServer) testEmbeddedByValue()               {}
@@ -274,6 +315,35 @@ func _Manga_PageImage_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Manga_Repair_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MangaRepairRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MangaServer).Repair(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Manga_Repair_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MangaServer).Repair(ctx, req.(*MangaRepairRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Manga_Download_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(MangaDownloadRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MangaServer).Download(m, &grpc.GenericServerStream[MangaDownloadRequest, MangaDownloadResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Manga_DownloadServer = grpc.ServerStreamingServer[MangaDownloadResponse]
+
 // Manga_ServiceDesc is the grpc.ServiceDesc for Manga service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -305,7 +375,17 @@ var Manga_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "PageImage",
 			Handler:    _Manga_PageImage_Handler,
 		},
+		{
+			MethodName: "Repair",
+			Handler:    _Manga_Repair_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Download",
+			Handler:       _Manga_Download_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "manga.proto",
 }

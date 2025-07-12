@@ -18,6 +18,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/tag"
 	"github.com/mangaweb4/mangaweb4-backend/user"
 	"github.com/rs/zerolog/log"
+	grpclib "google.golang.org/grpc"
 )
 
 type MangaServer struct {
@@ -413,4 +414,90 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 	}
 
 	return
+}
+
+func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) (resp *grpc.MangaRepairResponse, err error) {
+	log.Info().
+		Interface("request", req).
+		Msg("Fix metadata")
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	m, err := meta.Read(ctx, client, req.Name)
+	if err != nil {
+		return
+	}
+
+	if m, _, err = meta.PopulateTags(ctx, client, m); err != nil {
+		return
+	}
+
+	if err = meta.GenerateImageIndices(m); err != nil {
+		return
+	}
+
+	if err = meta.DeleteThumbnail(m); err != nil {
+		return
+	}
+
+	if err = meta.Write(ctx, client, m); err != nil {
+		return
+	}
+
+	resp = &grpc.MangaRepairResponse{
+		Name:      req.Name,
+		IsSuccess: true,
+	}
+
+	return
+}
+
+func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.ServerStreamingServer[grpc.MangaDownloadResponse]) error {
+	log.Info().Str("name", req.Name).Msg("Download")
+	ctx := context.Background()
+
+	client := database.CreateEntClient()
+	defer client.Close()
+
+	m, err := meta.Read(ctx, client, req.Name)
+	if err != nil {
+
+		return err
+	}
+
+	c, err := container.CreateContainer(m)
+	if err != nil {
+		return err
+	}
+
+	reader, filename, err := c.Download(ctx)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+
+	const MESSAGE_SIZE = 1024 * 1024
+	length := len(bytes)
+
+	for i := 0; i < length; i = MESSAGE_SIZE {
+		end := min(i+MESSAGE_SIZE, length)
+		err = stream.Send(&grpc.MangaDownloadResponse{
+			Filename:    filename,
+			ContentType: "application/zip",
+			Data:        bytes[i:end],
+			Size:        int32(length),
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
