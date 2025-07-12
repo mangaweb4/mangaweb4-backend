@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mangaweb4/mangaweb4-backend/database"
 	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
@@ -29,12 +30,12 @@ func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *g
 	}
 
 	if req.Filter != grpc.Filter_FILTER_UNKNOWN && req.Filter != grpc.Filter_FILTER_FAVORITE_TAGS {
-		err = tag.ErrInvalidTagFilter.Format(req.Filter.String())
+		err = fmt.Errorf("invalid filter type: %s", req.Filter.String())
 		return
 	}
 
 	if req.Sort == grpc.SortField_SORT_FIELD_CREATION_TIME {
-		err = tag.ErrInvalidTagSortField.Format(req.Sort.String())
+		err = fmt.Errorf("invalid sort field: %s", req.Sort.String())
 		return
 	}
 

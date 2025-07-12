@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"entgo.io/ent/dialect"
 	dialect_sql "entgo.io/ent/dialect/sql"
@@ -11,7 +12,6 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/migrate"
-	"github.com/mangaweb4/mangaweb4-backend/errors"
 	"github.com/rs/zerolog/log"
 	_ "modernc.org/sqlite"
 )
@@ -38,7 +38,7 @@ func Open(ctx context.Context, dbType string, connStr string) error {
 		return nil
 	}
 
-	return errors.ErrNotImplemented
+	return errors.New("invalid database type.")
 
 }
 
@@ -51,7 +51,7 @@ func openDB(dbType string) (db *dialect_sql.Driver, err error) {
 		return openSqlite()
 	}
 
-	return nil, errors.ErrNotImplemented
+	return nil, errors.New("invalid databse type.")
 }
 
 func openPostgres() (db *dialect_sql.Driver, err error) {
