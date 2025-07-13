@@ -58,15 +58,27 @@ $ git submodule update
 
 ### Install gRPC toolchain
 
-Install `protoc` on the system. On Windows, you could install it using Chocolatey or any similar tool.
+Install `protoc` on the system. Using the instruction from the [protobuf website](https://protobuf.dev/installation/)
+
+Personally I find problems with include path when install `protoc` on Windows using `winget`, so I recommend using [Chocolatey](https://chocolatey.org/) instead.
 
 ```sh
 $ choco install protoc
 ```
 
-Use the following command to install gRPC toolchain for Go.
+Then, use the following command to install gRPC toolchain for Go.
 
 ```sh
 $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
+
+After this you should be able to generate gRPC codes. From the project directory, run `go generate ./grpc` to generate the code.
+
+## Updating database code
+
+Mangaweb4-backend uses [ent](https://entgo.io/) Entity framework for managing database.
+
+To update Database schema, firstly make changes to the files insides `ent/schema`, then run `go generate ent` from the project directory.
+
+For more information about updating schema and generate codes, please visit [ent's website](https://entgo.io/docs/code-gen).
