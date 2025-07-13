@@ -45,7 +45,7 @@ func CreateQuery(client *ent.Client, u *ent.User, q QueryParams) *ent.TagQuery {
 			Offset(q.Page * q.ItemPerPage)
 	}
 
-	if q.Filter == grpc.Filter_FILTER_FAVORITE_ITEMS {
+	if q.Filter == grpc.Filter_FILTER_FAVORITE_TAGS {
 		query = query.Where(tag.HasFavoriteOfUserWith(user.ID(u.ID)))
 	}
 	if q.Search != "" {
