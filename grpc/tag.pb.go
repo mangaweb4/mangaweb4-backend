@@ -24,7 +24,6 @@ const (
 type TagListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
-	Tag           string                 `protobuf:"bytes,2,opt,name=Tag,proto3" json:"Tag,omitempty"`
 	Filter        Filter                 `protobuf:"varint,3,opt,name=Filter,proto3,enum=mangaweb4.types.Filter" json:"Filter,omitempty"`
 	Page          int32                  `protobuf:"varint,4,opt,name=Page,proto3" json:"Page,omitempty"`
 	ItemPerPage   int32                  `protobuf:"varint,5,opt,name=ItemPerPage,proto3" json:"ItemPerPage,omitempty"`
@@ -68,13 +67,6 @@ func (*TagListRequest) Descriptor() ([]byte, []int) {
 func (x *TagListRequest) GetUser() string {
 	if x != nil {
 		return x.User
-	}
-	return ""
-}
-
-func (x *TagListRequest) GetTag() string {
-	if x != nil {
-		return x.Tag
 	}
 	return ""
 }
@@ -477,16 +469,15 @@ var File_tag_proto protoreflect.FileDescriptor
 
 const file_tag_proto_rawDesc = "" +
 	"\n" +
-	"\ttag.proto\x1a\vtypes.proto\"\x97\x02\n" +
+	"\ttag.proto\x1a\vtypes.proto\"\x8b\x02\n" +
 	"\x0eTagListRequest\x12\x12\n" +
-	"\x04User\x18\x01 \x01(\tR\x04User\x12\x10\n" +
-	"\x03Tag\x18\x02 \x01(\tR\x03Tag\x12/\n" +
+	"\x04User\x18\x01 \x01(\tR\x04User\x12/\n" +
 	"\x06Filter\x18\x03 \x01(\x0e2\x17.mangaweb4.types.FilterR\x06Filter\x12\x12\n" +
 	"\x04Page\x18\x04 \x01(\x05R\x04Page\x12 \n" +
 	"\vItemPerPage\x18\x05 \x01(\x05R\vItemPerPage\x12\x16\n" +
 	"\x06Search\x18\x06 \x01(\tR\x06Search\x12.\n" +
 	"\x04Sort\x18\a \x01(\x0e2\x1a.mangaweb4.types.SortFieldR\x04Sort\x120\n" +
-	"\x05Order\x18\b \x01(\x0e2\x1a.mangaweb4.types.SortOrderR\x05Order\"}\n" +
+	"\x05Order\x18\b \x01(\x0e2\x1a.mangaweb4.types.SortOrderR\x05OrderJ\x04\b\x02\x10\x03\"}\n" +
 	"\x0fTagListResponse\x12 \n" +
 	"\vTagFavorite\x18\x01 \x01(\bR\vTagFavorite\x12\x1c\n" +
 	"\tTotalPage\x18\x02 \x01(\x05R\tTotalPage\x12*\n" +
