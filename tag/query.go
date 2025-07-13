@@ -7,19 +7,10 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
+	"github.com/mangaweb4/mangaweb4-backend/grpc"
 )
 
-type SortField string
-type SortOrder string
 type Filter string
-
-const (
-	SortFieldName      = SortField("name")
-	SortFieldPageCount = SortField("itemCount")
-
-	SortOrderAscending  = SortOrder("ascending")
-	SortOrderDescending = SortOrder("descending")
-)
 
 func IsTagExist(ctx context.Context, client *ent.Client, name string) bool {
 	count, err := client.Tag.Query().Where(tag.Name(name)).Count(ctx)
@@ -39,12 +30,12 @@ func ReadAll(ctx context.Context, client *ent.Client) (tags []*ent.Tag, err erro
 }
 
 type QueryParams struct {
-	FavoriteOnly bool
-	Search       string
-	Page         int
-	ItemPerPage  int
-	Sort         SortField
-	Order        SortOrder
+	Filter      grpc.Filter
+	Search      string
+	Page        int
+	ItemPerPage int
+	Sort        grpc.SortField
+	Order       grpc.SortOrder
 }
 
 func CreateQuery(client *ent.Client, u *ent.User, q QueryParams) *ent.TagQuery {
@@ -54,7 +45,7 @@ func CreateQuery(client *ent.Client, u *ent.User, q QueryParams) *ent.TagQuery {
 			Offset(q.Page * q.ItemPerPage)
 	}
 
-	if q.FavoriteOnly {
+	if q.Filter == grpc.Filter_FILTER_FAVORITE_ITEMS {
 		query = query.Where(tag.HasFavoriteOfUserWith(user.ID(u.ID)))
 	}
 	if q.Search != "" {
@@ -62,14 +53,14 @@ func CreateQuery(client *ent.Client, u *ent.User, q QueryParams) *ent.TagQuery {
 	}
 
 	switch q.Sort {
-	case SortFieldName:
-		if q.Order == SortOrderAscending {
+	case grpc.SortField_SORT_FIELD_NAME:
+		if q.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
 			query = query.Order(tag.ByName(sql.OrderAsc()))
 		} else {
 			query = query.Order(tag.ByName(sql.OrderDesc()))
 		}
-	case SortFieldPageCount:
-		if q.Order == SortOrderAscending {
+	case grpc.SortField_SORT_FIELD_ITEMCOUNT:
+		if q.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
 			query = query.Order(tag.ByMetaCount(sql.OrderAsc()))
 		} else {
 			query = query.Order(tag.ByMetaCount(sql.OrderDesc()))

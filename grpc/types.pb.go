@@ -76,6 +76,7 @@ const (
 	SortField_SORT_FIELD_NAME          SortField = 0
 	SortField_SORT_FIELD_CREATION_TIME SortField = 1
 	SortField_SORT_FIELD_PAGECOUNT     SortField = 2
+	SortField_SORT_FIELD_ITEMCOUNT     SortField = 3
 )
 
 // Enum value maps for SortField.
@@ -84,11 +85,13 @@ var (
 		0: "SORT_FIELD_NAME",
 		1: "SORT_FIELD_CREATION_TIME",
 		2: "SORT_FIELD_PAGECOUNT",
+		3: "SORT_FIELD_ITEMCOUNT",
 	}
 	SortField_value = map[string]int32{
 		"SORT_FIELD_NAME":          0,
 		"SORT_FIELD_CREATION_TIME": 1,
 		"SORT_FIELD_PAGECOUNT":     2,
+		"SORT_FIELD_ITEMCOUNT":     3,
 	}
 )
 
@@ -173,11 +176,12 @@ const file_types_proto_rawDesc = "" +
 	"\x06Filter\x12\x12\n" +
 	"\x0eFILTER_UNKNOWN\x10\x00\x12\x19\n" +
 	"\x15FILTER_FAVORITE_ITEMS\x10\x01\x12\x18\n" +
-	"\x14FILTER_FAVORITE_TAGS\x10\x02*X\n" +
+	"\x14FILTER_FAVORITE_TAGS\x10\x02*r\n" +
 	"\tSortField\x12\x13\n" +
 	"\x0fSORT_FIELD_NAME\x10\x00\x12\x1c\n" +
 	"\x18SORT_FIELD_CREATION_TIME\x10\x01\x12\x18\n" +
-	"\x14SORT_FIELD_PAGECOUNT\x10\x02*@\n" +
+	"\x14SORT_FIELD_PAGECOUNT\x10\x02\x12\x18\n" +
+	"\x14SORT_FIELD_ITEMCOUNT\x10\x03*@\n" +
 	"\tSortOrder\x12\x18\n" +
 	"\x14SORT_ORDER_ASCENDING\x10\x00\x12\x19\n" +
 	"\x15SORT_ORDER_DESCENDING\x10\x01B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"

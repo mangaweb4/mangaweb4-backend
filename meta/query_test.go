@@ -54,7 +54,7 @@ func (s *QueryTestSuite) TestReadPage() {
 	s.Assert().Equal("[some artist]manga 4 here.zip", tags[3].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageFavoriteOnly() {
+func (s *QueryTestSuite) TestReadPageFilterFavoriteItem() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -144,7 +144,7 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeAsc() {
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageFavoriteOnlySortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -174,7 +174,7 @@ func (s *QueryTestSuite) TestReadPageFavoriteOnlySortByCreateTimeDesc() {
 	s.Assert().Equal("[some artist]manga 1 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -205,7 +205,7 @@ func (s *QueryTestSuite) TestReadPageFavoriteOnlySortByCreateTimeAsc() {
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchNameFavoriteOnlySortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -236,7 +236,7 @@ func (s *QueryTestSuite) TestReadPageSearchNameFavoriteOnlySortByCreateTimeDesc(
 	s.Assert().Equal("[some artist]manga 1 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchNameFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -267,7 +267,7 @@ func (s *QueryTestSuite) TestReadPageSearchNameFavoriteOnlySortByCreateTimeAsc()
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchTagFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -301,7 +301,7 @@ func (s *QueryTestSuite) TestReadPageSearchTagFavoriteOnlySortByCreateTimeAsc() 
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchNameTagFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageSearchNameTagFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -362,7 +362,7 @@ func (s *QueryTestSuite) TestCount() {
 	s.Assert().Equal(4, c)
 }
 
-func (s *QueryTestSuite) TestCountFavoriteOnly() {
+func (s *QueryTestSuite) TestCountFilterFavoriteItem() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -440,7 +440,7 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeAsc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountFavoriteOnlySortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -466,7 +466,7 @@ func (s *QueryTestSuite) TestCountFavoriteOnlySortByCreateTimeDesc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -492,7 +492,7 @@ func (s *QueryTestSuite) TestCountFavoriteOnlySortByCreateTimeAsc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchNameFavoriteOnlySortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -519,7 +519,7 @@ func (s *QueryTestSuite) TestCountSearchNameFavoriteOnlySortByCreateTimeDesc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchNameFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -547,7 +547,7 @@ func (s *QueryTestSuite) TestCountSearchNameFavoriteOnlySortByCreateTimeAsc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchTagFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -577,7 +577,7 @@ func (s *QueryTestSuite) TestCountSearchTagFavoriteOnlySortByCreateTimeAsc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchNameTagFavoriteOnlySortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountSearchNameTagFilterFavoriteItemSortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)

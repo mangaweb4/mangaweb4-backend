@@ -34,38 +34,19 @@ func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *g
 		return
 	}
 
-	if req.Sort == grpc.SortField_SORT_FIELD_CREATION_TIME {
+	if req.Sort != grpc.SortField_SORT_FIELD_NAME && req.Sort != grpc.SortField_SORT_FIELD_ITEMCOUNT {
 		err = fmt.Errorf("invalid sort field: %s", req.Sort.String())
 		return
 	}
 
-	var sort tag.SortField
-
-	switch req.Sort {
-	case grpc.SortField_SORT_FIELD_NAME:
-		sort = tag.SortFieldName
-
-	case grpc.SortField_SORT_FIELD_PAGECOUNT:
-		sort = tag.SortFieldPageCount
-	}
-
-	var order tag.SortOrder
-	switch req.Order {
-	case grpc.SortOrder_SORT_ORDER_ASCENDING:
-		order = tag.SortOrderAscending
-
-	case grpc.SortOrder_SORT_ORDER_DESCENDING:
-		order = tag.SortOrderDescending
-	}
-
 	allTags, err := tag.ReadPage(ctx, client, u,
 		tag.QueryParams{
-			FavoriteOnly: req.Filter == grpc.Filter_FILTER_FAVORITE_TAGS,
-			Search:       req.Search,
-			Page:         int(req.Page),
-			ItemPerPage:  int(req.ItemPerPage),
-			Sort:         sort,
-			Order:        order,
+			Filter:      req.Filter,
+			Search:      req.Search,
+			Page:        int(req.Page),
+			ItemPerPage: int(req.ItemPerPage),
+			Sort:        req.Sort,
+			Order:       req.Order,
 		})
 
 	if err != nil {
@@ -74,12 +55,12 @@ func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *g
 
 	total, err := tag.Count(ctx, client, u,
 		tag.QueryParams{
-			FavoriteOnly: req.Filter == grpc.Filter_FILTER_FAVORITE_TAGS,
-			Search:       req.Search,
-			Page:         0,
-			ItemPerPage:  0,
-			Sort:         sort,
-			Order:        order,
+			Filter:      req.Filter,
+			Search:      req.Search,
+			Page:        0,
+			ItemPerPage: 0,
+			Sort:        req.Sort,
+			Order:       req.Order,
 		})
 
 	if err != nil {

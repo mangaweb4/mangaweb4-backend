@@ -8,6 +8,7 @@ import (
 	dialect_sql "entgo.io/ent/dialect/sql"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/enttest"
+	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/stretchr/testify/suite"
 	_ "modernc.org/sqlite"
 )
@@ -36,10 +37,10 @@ func (s *QueryTestSuite) TestReadPage() {
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: false,
-			Search:       "",
-			Page:         0,
-			ItemPerPage:  30,
+			Filter:      grpc.Filter_FILTER_UNKNOWN,
+			Search:      "",
+			Page:        0,
+			ItemPerPage: 30,
 		},
 	)
 
@@ -63,10 +64,10 @@ func (s *QueryTestSuite) TestReadPagePageCount() {
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: false,
-			Search:       "",
-			Page:         0,
-			ItemPerPage:  2,
+			Filter:      grpc.Filter_FILTER_UNKNOWN,
+			Search:      "",
+			Page:        0,
+			ItemPerPage: 2,
 		})
 
 	s.Assert().Nil(err)
@@ -74,10 +75,10 @@ func (s *QueryTestSuite) TestReadPagePageCount() {
 
 	tags, err = ReadPage(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: false,
-			Search:       "",
-			Page:         1,
-			ItemPerPage:  2,
+			Filter:      grpc.Filter_FILTER_UNKNOWN,
+			Search:      "",
+			Page:        1,
+			ItemPerPage: 2,
 		})
 	s.Assert().Nil(err)
 	s.Assert().Equal(1, len(tags))
@@ -99,10 +100,10 @@ func (s *QueryTestSuite) TestReadPagePageWithSearch() {
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: false,
-			Search:       "name",
-			Page:         0,
-			ItemPerPage:  30,
+			Filter:      grpc.Filter_FILTER_UNKNOWN,
+			Search:      "name",
+			Page:        0,
+			ItemPerPage: 30,
 		})
 
 	s.Assert().Nil(err)
@@ -111,7 +112,7 @@ func (s *QueryTestSuite) TestReadPagePageWithSearch() {
 	s.Assert().Equal("Name 2", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageWithSearchFavoriteOnly() {
+func (s *QueryTestSuite) TestReadPageWithSearchFilterFavoriteTags() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -127,10 +128,10 @@ func (s *QueryTestSuite) TestReadPageWithSearchFavoriteOnly() {
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: true,
-			Search:       "name",
-			Page:         0,
-			ItemPerPage:  30,
+			Filter:      grpc.Filter_FILTER_FAVORITE_TAGS,
+			Search:      "name",
+			Page:        0,
+			ItemPerPage: 30,
 		})
 
 	s.Assert().Nil(err)
@@ -155,10 +156,10 @@ func (s *QueryTestSuite) TestCount() {
 	var u *ent.User
 	c, err := Count(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: false,
-			Search:       "",
-			Page:         0,
-			ItemPerPage:  30,
+			Filter:      grpc.Filter_FILTER_UNKNOWN,
+			Search:      "",
+			Page:        0,
+			ItemPerPage: 30,
 		},
 	)
 
@@ -182,17 +183,17 @@ func (s *QueryTestSuite) TestCountPageWithSearch() {
 	var u *ent.User
 	c, err := Count(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: false,
-			Search:       "name",
-			Page:         0,
-			ItemPerPage:  30,
+			Filter:      grpc.Filter_FILTER_UNKNOWN,
+			Search:      "name",
+			Page:        0,
+			ItemPerPage: 30,
 		})
 
 	s.Assert().Nil(err)
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountWithSearchFavoriteOnly() {
+func (s *QueryTestSuite) TestCountWithSearchFilterFavoriteTags() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -208,10 +209,10 @@ func (s *QueryTestSuite) TestCountWithSearchFavoriteOnly() {
 	var u *ent.User
 	c, err := Count(context.Background(), client, u,
 		QueryParams{
-			FavoriteOnly: true,
-			Search:       "name",
-			Page:         0,
-			ItemPerPage:  30,
+			Filter:      grpc.Filter_FILTER_FAVORITE_TAGS,
+			Search:      "name",
+			Page:        0,
+			ItemPerPage: 30,
 		})
 
 	s.Assert().Nil(err)
