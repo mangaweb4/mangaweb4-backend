@@ -189,6 +189,8 @@ type MangaListResponseItem struct {
 	IsRead         bool                   `protobuf:"varint,4,opt,name=IsRead,proto3" json:"IsRead,omitempty"`
 	PageCount      int32                  `protobuf:"varint,5,opt,name=PageCount,proto3" json:"PageCount,omitempty"`
 	HasFavoriteTag bool                   `protobuf:"varint,6,opt,name=HasFavoriteTag,proto3" json:"HasFavoriteTag,omitempty"`
+	CurrentPage    int32                  `protobuf:"varint,7,opt,name=CurrentPage,proto3" json:"CurrentPage,omitempty"`
+	MaxProgress    int32                  `protobuf:"varint,8,opt,name=MaxProgress,proto3" json:"MaxProgress,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -263,6 +265,20 @@ func (x *MangaListResponseItem) GetHasFavoriteTag() bool {
 		return x.HasFavoriteTag
 	}
 	return false
+}
+
+func (x *MangaListResponseItem) GetCurrentPage() int32 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *MangaListResponseItem) GetMaxProgress() int32 {
+	if x != nil {
+		return x.MaxProgress
+	}
+	return 0
 }
 
 type MangaThumbnailRequest struct {
@@ -1150,7 +1166,7 @@ const file_manga_proto_rawDesc = "" +
 	"\x11MangaListResponse\x12 \n" +
 	"\vTagFavorite\x18\x01 \x01(\bR\vTagFavorite\x12\x1c\n" +
 	"\tTotalPage\x18\x02 \x01(\x05R\tTotalPage\x12,\n" +
-	"\x05Items\x18\x03 \x03(\v2\x16.MangaListResponseItemR\x05Items\"\xb9\x01\n" +
+	"\x05Items\x18\x03 \x03(\v2\x16.MangaListResponseItemR\x05Items\"\xfd\x01\n" +
 	"\x15MangaListResponseItem\x12\x0e\n" +
 	"\x02Id\x18\x01 \x01(\x05R\x02Id\x12\x12\n" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x1e\n" +
@@ -1159,7 +1175,9 @@ const file_manga_proto_rawDesc = "" +
 	"IsFavorite\x12\x16\n" +
 	"\x06IsRead\x18\x04 \x01(\bR\x06IsRead\x12\x1c\n" +
 	"\tPageCount\x18\x05 \x01(\x05R\tPageCount\x12&\n" +
-	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\"+\n" +
+	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\x12 \n" +
+	"\vCurrentPage\x18\a \x01(\x05R\vCurrentPage\x12 \n" +
+	"\vMaxProgress\x18\b \x01(\x05R\vMaxProgress\"+\n" +
 	"\x15MangaThumbnailRequest\x12\x12\n" +
 	"\x04Name\x18\x01 \x01(\tR\x04Name\"N\n" +
 	"\x16MangaThumbnailResponse\x12 \n" +

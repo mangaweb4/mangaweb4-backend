@@ -14,6 +14,8 @@ const (
 	FieldID = "id"
 	// FieldPage holds the string denoting the page field in the database.
 	FieldPage = "page"
+	// FieldMax holds the string denoting the max field in the database.
+	FieldMax = "max"
 	// FieldItemID holds the string denoting the item_id field in the database.
 	FieldItemID = "item_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
@@ -44,6 +46,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldPage,
+	FieldMax,
 	FieldItemID,
 	FieldUserID,
 }
@@ -61,6 +64,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultPage holds the default value on creation for the "page" field.
 	DefaultPage int
+	// DefaultMax holds the default value on creation for the "max" field.
+	DefaultMax int
 )
 
 // OrderOption defines the ordering options for the Progress queries.
@@ -74,6 +79,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByPage orders the results by the page field.
 func ByPage(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPage, opts...).ToFunc()
+}
+
+// ByMax orders the results by the max field.
+func ByMax(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMax, opts...).ToFunc()
 }
 
 // ByItemID orders the results by the item_id field.

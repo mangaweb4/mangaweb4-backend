@@ -86,12 +86,23 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 
 	items := make([]*grpc.MangaListResponseItem, len(allMeta))
 	for i, m := range allMeta {
+		progress, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+
+		currentPage := 0
+		maxProgress := 0
+		if progress != nil {
+			currentPage = progress.Page
+			maxProgress = progress.Max
+		}
+
 		items[i] = &grpc.MangaListResponseItem{
-			Id:         int32(m.ID),
-			Name:       m.Name,
-			IsFavorite: u.QueryFavoriteItems().Where(ent_meta.ID(m.ID)).ExistX(ctx),
-			IsRead:     u.QueryHistories().QueryItem().Where(ent_meta.ID(m.ID)).ExistX(ctx),
-			PageCount:  int32(len(m.FileIndices)),
+			Id:          int32(m.ID),
+			Name:        m.Name,
+			IsFavorite:  u.QueryFavoriteItems().Where(ent_meta.ID(m.ID)).ExistX(ctx),
+			IsRead:      progress != nil,
+			PageCount:   int32(len(m.FileIndices)),
+			CurrentPage: int32(currentPage),
+			MaxProgress: int32(maxProgress),
 		}
 
 		tags, e := m.QueryTags().All(ctx)

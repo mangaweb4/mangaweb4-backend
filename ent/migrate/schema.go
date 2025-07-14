@@ -62,6 +62,7 @@ var (
 	ProgressesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "page", Type: field.TypeInt, Default: 0},
+		{Name: "max", Type: field.TypeInt, Default: 0},
 		{Name: "item_id", Type: field.TypeInt, Nullable: true},
 		{Name: "user_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -73,13 +74,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "progresses_meta_progress",
-				Columns:    []*schema.Column{ProgressesColumns[2]},
+				Columns:    []*schema.Column{ProgressesColumns[3]},
 				RefColumns: []*schema.Column{MetaColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "progresses_users_progress",
-				Columns:    []*schema.Column{ProgressesColumns[3]},
+				Columns:    []*schema.Column{ProgressesColumns[4]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

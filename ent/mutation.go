@@ -2098,6 +2098,8 @@ type ProgressMutation struct {
 	id            *int
 	page          *int
 	addpage       *int
+	max           *int
+	addmax        *int
 	clearedFields map[string]struct{}
 	item          *int
 	cleareditem   bool
@@ -2260,6 +2262,62 @@ func (m *ProgressMutation) AddedPage() (r int, exists bool) {
 func (m *ProgressMutation) ResetPage() {
 	m.page = nil
 	m.addpage = nil
+}
+
+// SetMax sets the "max" field.
+func (m *ProgressMutation) SetMax(i int) {
+	m.max = &i
+	m.addmax = nil
+}
+
+// Max returns the value of the "max" field in the mutation.
+func (m *ProgressMutation) Max() (r int, exists bool) {
+	v := m.max
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMax returns the old "max" field's value of the Progress entity.
+// If the Progress object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProgressMutation) OldMax(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMax is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMax requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMax: %w", err)
+	}
+	return oldValue.Max, nil
+}
+
+// AddMax adds i to the "max" field.
+func (m *ProgressMutation) AddMax(i int) {
+	if m.addmax != nil {
+		*m.addmax += i
+	} else {
+		m.addmax = &i
+	}
+}
+
+// AddedMax returns the value that was added to the "max" field in this mutation.
+func (m *ProgressMutation) AddedMax() (r int, exists bool) {
+	v := m.addmax
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMax resets all changes to the "max" field.
+func (m *ProgressMutation) ResetMax() {
+	m.max = nil
+	m.addmax = nil
 }
 
 // SetItemID sets the "item_id" field.
@@ -2448,9 +2506,12 @@ func (m *ProgressMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ProgressMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.page != nil {
 		fields = append(fields, progress.FieldPage)
+	}
+	if m.max != nil {
+		fields = append(fields, progress.FieldMax)
 	}
 	if m.item != nil {
 		fields = append(fields, progress.FieldItemID)
@@ -2468,6 +2529,8 @@ func (m *ProgressMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case progress.FieldPage:
 		return m.Page()
+	case progress.FieldMax:
+		return m.Max()
 	case progress.FieldItemID:
 		return m.ItemID()
 	case progress.FieldUserID:
@@ -2483,6 +2546,8 @@ func (m *ProgressMutation) OldField(ctx context.Context, name string) (ent.Value
 	switch name {
 	case progress.FieldPage:
 		return m.OldPage(ctx)
+	case progress.FieldMax:
+		return m.OldMax(ctx)
 	case progress.FieldItemID:
 		return m.OldItemID(ctx)
 	case progress.FieldUserID:
@@ -2502,6 +2567,13 @@ func (m *ProgressMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPage(v)
+		return nil
+	case progress.FieldMax:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMax(v)
 		return nil
 	case progress.FieldItemID:
 		v, ok := value.(int)
@@ -2528,6 +2600,9 @@ func (m *ProgressMutation) AddedFields() []string {
 	if m.addpage != nil {
 		fields = append(fields, progress.FieldPage)
 	}
+	if m.addmax != nil {
+		fields = append(fields, progress.FieldMax)
+	}
 	return fields
 }
 
@@ -2538,6 +2613,8 @@ func (m *ProgressMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case progress.FieldPage:
 		return m.AddedPage()
+	case progress.FieldMax:
+		return m.AddedMax()
 	}
 	return nil, false
 }
@@ -2553,6 +2630,13 @@ func (m *ProgressMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddPage(v)
+		return nil
+	case progress.FieldMax:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMax(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Progress numeric field %s", name)
@@ -2598,6 +2682,9 @@ func (m *ProgressMutation) ResetField(name string) error {
 	switch name {
 	case progress.FieldPage:
 		m.ResetPage()
+		return nil
+	case progress.FieldMax:
+		m.ResetMax()
 		return nil
 	case progress.FieldItemID:
 		m.ResetItemID()

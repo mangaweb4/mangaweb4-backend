@@ -20,6 +20,8 @@ type Progress struct {
 	ID int `json:"id,omitempty"`
 	// Page holds the value of the "page" field.
 	Page int `json:"page,omitempty"`
+	// Max holds the value of the "max" field.
+	Max int `json:"max,omitempty"`
 	// ItemID holds the value of the "item_id" field.
 	ItemID int `json:"item_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -68,7 +70,7 @@ func (*Progress) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case progress.FieldID, progress.FieldPage, progress.FieldItemID, progress.FieldUserID:
+		case progress.FieldID, progress.FieldPage, progress.FieldMax, progress.FieldItemID, progress.FieldUserID:
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -96,6 +98,12 @@ func (pr *Progress) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field page", values[i])
 			} else if value.Valid {
 				pr.Page = int(value.Int64)
+			}
+		case progress.FieldMax:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field max", values[i])
+			} else if value.Valid {
+				pr.Max = int(value.Int64)
 			}
 		case progress.FieldItemID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -157,6 +165,9 @@ func (pr *Progress) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", pr.ID))
 	builder.WriteString("page=")
 	builder.WriteString(fmt.Sprintf("%v", pr.Page))
+	builder.WriteString(", ")
+	builder.WriteString("max=")
+	builder.WriteString(fmt.Sprintf("%v", pr.Max))
 	builder.WriteString(", ")
 	builder.WriteString("item_id=")
 	builder.WriteString(fmt.Sprintf("%v", pr.ItemID))

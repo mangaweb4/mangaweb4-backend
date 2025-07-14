@@ -15,6 +15,7 @@ type Progress struct {
 func (Progress) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("page").Default(0),
+		field.Int("max").Default(0),
 		field.Int("item_id").Optional(),
 		field.Int("user_id").Optional(),
 	}

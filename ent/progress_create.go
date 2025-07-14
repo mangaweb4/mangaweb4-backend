@@ -37,6 +37,20 @@ func (pc *ProgressCreate) SetNillablePage(i *int) *ProgressCreate {
 	return pc
 }
 
+// SetMax sets the "max" field.
+func (pc *ProgressCreate) SetMax(i int) *ProgressCreate {
+	pc.mutation.SetMax(i)
+	return pc
+}
+
+// SetNillableMax sets the "max" field if the given value is not nil.
+func (pc *ProgressCreate) SetNillableMax(i *int) *ProgressCreate {
+	if i != nil {
+		pc.SetMax(*i)
+	}
+	return pc
+}
+
 // SetItemID sets the "item_id" field.
 func (pc *ProgressCreate) SetItemID(i int) *ProgressCreate {
 	pc.mutation.SetItemID(i)
@@ -114,12 +128,19 @@ func (pc *ProgressCreate) defaults() {
 		v := progress.DefaultPage
 		pc.mutation.SetPage(v)
 	}
+	if _, ok := pc.mutation.Max(); !ok {
+		v := progress.DefaultMax
+		pc.mutation.SetMax(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (pc *ProgressCreate) check() error {
 	if _, ok := pc.mutation.Page(); !ok {
 		return &ValidationError{Name: "page", err: errors.New(`ent: missing required field "Progress.page"`)}
+	}
+	if _, ok := pc.mutation.Max(); !ok {
+		return &ValidationError{Name: "max", err: errors.New(`ent: missing required field "Progress.max"`)}
 	}
 	return nil
 }
@@ -151,6 +172,10 @@ func (pc *ProgressCreate) createSpec() (*Progress, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.Page(); ok {
 		_spec.SetField(progress.FieldPage, field.TypeInt, value)
 		_node.Page = value
+	}
+	if value, ok := pc.mutation.Max(); ok {
+		_spec.SetField(progress.FieldMax, field.TypeInt, value)
+		_node.Max = value
 	}
 	if nodes := pc.mutation.ItemIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -256,6 +281,24 @@ func (u *ProgressUpsert) AddPage(v int) *ProgressUpsert {
 	return u
 }
 
+// SetMax sets the "max" field.
+func (u *ProgressUpsert) SetMax(v int) *ProgressUpsert {
+	u.Set(progress.FieldMax, v)
+	return u
+}
+
+// UpdateMax sets the "max" field to the value that was provided on create.
+func (u *ProgressUpsert) UpdateMax() *ProgressUpsert {
+	u.SetExcluded(progress.FieldMax)
+	return u
+}
+
+// AddMax adds v to the "max" field.
+func (u *ProgressUpsert) AddMax(v int) *ProgressUpsert {
+	u.Add(progress.FieldMax, v)
+	return u
+}
+
 // SetItemID sets the "item_id" field.
 func (u *ProgressUpsert) SetItemID(v int) *ProgressUpsert {
 	u.Set(progress.FieldItemID, v)
@@ -350,6 +393,27 @@ func (u *ProgressUpsertOne) AddPage(v int) *ProgressUpsertOne {
 func (u *ProgressUpsertOne) UpdatePage() *ProgressUpsertOne {
 	return u.Update(func(s *ProgressUpsert) {
 		s.UpdatePage()
+	})
+}
+
+// SetMax sets the "max" field.
+func (u *ProgressUpsertOne) SetMax(v int) *ProgressUpsertOne {
+	return u.Update(func(s *ProgressUpsert) {
+		s.SetMax(v)
+	})
+}
+
+// AddMax adds v to the "max" field.
+func (u *ProgressUpsertOne) AddMax(v int) *ProgressUpsertOne {
+	return u.Update(func(s *ProgressUpsert) {
+		s.AddMax(v)
+	})
+}
+
+// UpdateMax sets the "max" field to the value that was provided on create.
+func (u *ProgressUpsertOne) UpdateMax() *ProgressUpsertOne {
+	return u.Update(func(s *ProgressUpsert) {
+		s.UpdateMax()
 	})
 }
 
@@ -617,6 +681,27 @@ func (u *ProgressUpsertBulk) AddPage(v int) *ProgressUpsertBulk {
 func (u *ProgressUpsertBulk) UpdatePage() *ProgressUpsertBulk {
 	return u.Update(func(s *ProgressUpsert) {
 		s.UpdatePage()
+	})
+}
+
+// SetMax sets the "max" field.
+func (u *ProgressUpsertBulk) SetMax(v int) *ProgressUpsertBulk {
+	return u.Update(func(s *ProgressUpsert) {
+		s.SetMax(v)
+	})
+}
+
+// AddMax adds v to the "max" field.
+func (u *ProgressUpsertBulk) AddMax(v int) *ProgressUpsertBulk {
+	return u.Update(func(s *ProgressUpsert) {
+		s.AddMax(v)
+	})
+}
+
+// UpdateMax sets the "max" field to the value that was provided on create.
+func (u *ProgressUpsertBulk) UpdateMax() *ProgressUpsertBulk {
+	return u.Update(func(s *ProgressUpsert) {
+		s.UpdateMax()
 	})
 }
 

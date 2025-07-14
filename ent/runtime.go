@@ -79,6 +79,10 @@ func init() {
 	progressDescPage := progressFields[0].Descriptor()
 	// progress.DefaultPage holds the default value on creation for the page field.
 	progress.DefaultPage = progressDescPage.Default.(int)
+	// progressDescMax is the schema descriptor for max field.
+	progressDescMax := progressFields[1].Descriptor()
+	// progress.DefaultMax holds the default value on creation for the max field.
+	progress.DefaultMax = progressDescMax.Default.(int)
 	tagFields := schema.Tag{}.Fields()
 	_ = tagFields
 	// tagDescName is the schema descriptor for name field.

@@ -58,6 +58,11 @@ func Page(v int) predicate.Progress {
 	return predicate.Progress(sql.FieldEQ(FieldPage, v))
 }
 
+// Max applies equality check predicate on the "max" field. It's identical to MaxEQ.
+func Max(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldEQ(FieldMax, v))
+}
+
 // ItemID applies equality check predicate on the "item_id" field. It's identical to ItemIDEQ.
 func ItemID(v int) predicate.Progress {
 	return predicate.Progress(sql.FieldEQ(FieldItemID, v))
@@ -106,6 +111,46 @@ func PageLT(v int) predicate.Progress {
 // PageLTE applies the LTE predicate on the "page" field.
 func PageLTE(v int) predicate.Progress {
 	return predicate.Progress(sql.FieldLTE(FieldPage, v))
+}
+
+// MaxEQ applies the EQ predicate on the "max" field.
+func MaxEQ(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldEQ(FieldMax, v))
+}
+
+// MaxNEQ applies the NEQ predicate on the "max" field.
+func MaxNEQ(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldNEQ(FieldMax, v))
+}
+
+// MaxIn applies the In predicate on the "max" field.
+func MaxIn(vs ...int) predicate.Progress {
+	return predicate.Progress(sql.FieldIn(FieldMax, vs...))
+}
+
+// MaxNotIn applies the NotIn predicate on the "max" field.
+func MaxNotIn(vs ...int) predicate.Progress {
+	return predicate.Progress(sql.FieldNotIn(FieldMax, vs...))
+}
+
+// MaxGT applies the GT predicate on the "max" field.
+func MaxGT(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldGT(FieldMax, v))
+}
+
+// MaxGTE applies the GTE predicate on the "max" field.
+func MaxGTE(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldGTE(FieldMax, v))
+}
+
+// MaxLT applies the LT predicate on the "max" field.
+func MaxLT(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldLT(FieldMax, v))
+}
+
+// MaxLTE applies the LTE predicate on the "max" field.
+func MaxLTE(v int) predicate.Progress {
+	return predicate.Progress(sql.FieldLTE(FieldMax, v))
 }
 
 // ItemIDEQ applies the EQ predicate on the "item_id" field.

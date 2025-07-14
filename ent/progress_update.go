@@ -50,6 +50,27 @@ func (pu *ProgressUpdate) AddPage(i int) *ProgressUpdate {
 	return pu
 }
 
+// SetMax sets the "max" field.
+func (pu *ProgressUpdate) SetMax(i int) *ProgressUpdate {
+	pu.mutation.ResetMax()
+	pu.mutation.SetMax(i)
+	return pu
+}
+
+// SetNillableMax sets the "max" field if the given value is not nil.
+func (pu *ProgressUpdate) SetNillableMax(i *int) *ProgressUpdate {
+	if i != nil {
+		pu.SetMax(*i)
+	}
+	return pu
+}
+
+// AddMax adds i to the "max" field.
+func (pu *ProgressUpdate) AddMax(i int) *ProgressUpdate {
+	pu.mutation.AddMax(i)
+	return pu
+}
+
 // SetItemID sets the "item_id" field.
 func (pu *ProgressUpdate) SetItemID(i int) *ProgressUpdate {
 	pu.mutation.SetItemID(i)
@@ -159,6 +180,12 @@ func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.AddedPage(); ok {
 		_spec.AddField(progress.FieldPage, field.TypeInt, value)
 	}
+	if value, ok := pu.mutation.Max(); ok {
+		_spec.SetField(progress.FieldMax, field.TypeInt, value)
+	}
+	if value, ok := pu.mutation.AddedMax(); ok {
+		_spec.AddField(progress.FieldMax, field.TypeInt, value)
+	}
 	if pu.mutation.ItemCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -255,6 +282,27 @@ func (puo *ProgressUpdateOne) SetNillablePage(i *int) *ProgressUpdateOne {
 // AddPage adds i to the "page" field.
 func (puo *ProgressUpdateOne) AddPage(i int) *ProgressUpdateOne {
 	puo.mutation.AddPage(i)
+	return puo
+}
+
+// SetMax sets the "max" field.
+func (puo *ProgressUpdateOne) SetMax(i int) *ProgressUpdateOne {
+	puo.mutation.ResetMax()
+	puo.mutation.SetMax(i)
+	return puo
+}
+
+// SetNillableMax sets the "max" field if the given value is not nil.
+func (puo *ProgressUpdateOne) SetNillableMax(i *int) *ProgressUpdateOne {
+	if i != nil {
+		puo.SetMax(*i)
+	}
+	return puo
+}
+
+// AddMax adds i to the "max" field.
+func (puo *ProgressUpdateOne) AddMax(i int) *ProgressUpdateOne {
+	puo.mutation.AddMax(i)
 	return puo
 }
 
@@ -396,6 +444,12 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 	}
 	if value, ok := puo.mutation.AddedPage(); ok {
 		_spec.AddField(progress.FieldPage, field.TypeInt, value)
+	}
+	if value, ok := puo.mutation.Max(); ok {
+		_spec.SetField(progress.FieldMax, field.TypeInt, value)
+	}
+	if value, ok := puo.mutation.AddedMax(); ok {
+		_spec.AddField(progress.FieldMax, field.TypeInt, value)
 	}
 	if puo.mutation.ItemCleared() {
 		edge := &sqlgraph.EdgeSpec{
