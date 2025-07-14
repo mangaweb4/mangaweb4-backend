@@ -365,12 +365,15 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 		if progressRec == nil {
 			_, err = client.Progress.Create().
 				SetPage(int(req.Index)).
+				SetMax(int(0)).
 				SetItem(m).
 				SetUser(u).
 				Save(ctx)
 		} else {
+			max := max(progressRec.Max, int(req.Index))
 			_, err = progressRec.Update().
 				SetPage(int(req.Index)).
+				SetMax(max).
 				SetItem(m).
 				SetUser(u).
 				Save(ctx)
