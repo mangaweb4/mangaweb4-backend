@@ -23,10 +23,14 @@ type Meta struct {
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// Favorite holds the value of the "favorite" field.
+	//
+	// Deprecated: use 'favorite_of_user' instead.
 	Favorite bool `json:"favorite,omitempty"`
 	// FileIndices holds the value of the "file_indices" field.
 	FileIndices []int `json:"file_indices,omitempty"`
 	// Read holds the value of the "read" field.
+	//
+	// Deprecated: use 'progress' or 'histories' edge instead.
 	Read bool `json:"read,omitempty"`
 	// Active holds the value of the "active" field.
 	Active bool `json:"active,omitempty"`

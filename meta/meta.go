@@ -53,9 +53,7 @@ func NewItem(ctx context.Context, client *ent.Client, name string, ct meta.Conta
 	return client.Meta.Create().
 		SetName(i.Name).
 		SetCreateTime(i.CreateTime).
-		SetFavorite(i.Favorite).
 		SetFileIndices(i.FileIndices).
-		SetRead(false).
 		SetContainerType(ct).
 		Save(ctx)
 }

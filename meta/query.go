@@ -119,9 +119,7 @@ func Write(ctx context.Context, client *ent.Client, m *ent.Meta) error {
 	return client.Meta.Create().
 		SetName(m.Name).
 		SetCreateTime(m.CreateTime).
-		SetFavorite(m.Favorite).
 		SetFileIndices(m.FileIndices).
-		SetRead(m.Read).
 		SetActive(m.Active).
 		SetContainerType(m.ContainerType).
 		SetThumbnailIndex(m.ThumbnailIndex).

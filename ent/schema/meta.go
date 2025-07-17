@@ -18,9 +18,9 @@ func (Meta) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").NotEmpty().Unique(),
 		field.Time("create_time").Default(time.Now),
-		field.Bool("favorite").Default(false),
+		field.Bool("favorite").Default(false).Deprecated("use 'favorite_of_user' instead."),
 		field.Ints("file_indices").Default([]int{}),
-		field.Bool("read").Default(false),
+		field.Bool("read").Default(false).Deprecated("use 'progress' or 'histories' edge instead."),
 		field.Bool("active").Default(true),
 		field.Bool("hidden").Default(false),
 		field.Enum("container_type").Values("zip", "directory").Default("zip"),
