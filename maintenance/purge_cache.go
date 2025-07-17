@@ -11,7 +11,5 @@ func PurgeCache() {
 	c := configuration.Get()
 
 	err := os.RemoveAll(c.CachePath)
-	if err != nil {
-		log.Error().AnErr("error", err).Msg("Purge cache error.")
-	}
+	log.Err(err).Msg("Purge cache")
 }

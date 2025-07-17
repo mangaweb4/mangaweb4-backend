@@ -109,14 +109,14 @@ func main() {
 
 	log.Info().Str("dbType", dbType).Str("dbConnection", connectionStr).Msg("Database open.")
 	if err := database.Open(ctx, dbType, connectionStr); err != nil {
-		log.Error().AnErr("error", err).Msg("Connect to Database fails")
+		log.Error().Err(err).Msg("Connect to Database fails")
 		return
 	} else {
 		defer database.Close()
 	}
 
 	if err := database.CreateSchema(ctx); err != nil {
-		log.Error().AnErr("error", err).Msg("Database creating schema fails.")
+		log.Error().Err(err).Msg("Database creating schema fails.")
 		return
 	}
 
@@ -126,7 +126,7 @@ func main() {
 
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Error().AnErr("error", err).Str("address", address).Msg("failed to listen")
+		log.Error().Err(err).Str("address", address).Msg("failed to listen")
 	}
 	var opts []grpclib.ServerOption
 
@@ -137,7 +137,7 @@ func main() {
 	grpc.RegisterTagServer(grpcServer, &server.TagServer{})
 
 	if err := grpcServer.Serve(listener); err != nil {
-		log.Error().AnErr("error", err).Msg("Starting server fails")
+		log.Error().Err(err).Msg("Starting server fails")
 		return
 	}
 

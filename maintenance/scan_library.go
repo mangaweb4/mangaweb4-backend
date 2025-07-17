@@ -42,27 +42,19 @@ func ScanLibrary(ctx context.Context, client *ent.Client) error {
 		if item, err := meta.Read(ctx, client, file.Name); err == nil {
 			item.Active = true
 			if err := meta.Write(ctx, client, item); err != nil {
-				log.Error().
-					Str("name", item.Name).
-					AnErr("error", err).
-					Msg("Failed to re-activate meta")
+				log.Error().Str("name", item.Name).Err(err).Msg("Failed to re-activate meta")
 			}
 		} else {
 			item, err := meta.NewItem(ctx, client, file.Name, file.Type)
 			if err != nil {
-				log.
-					Error().
-					AnErr("error", err).
-					Msg("Failed to create meta data.")
+				log.Error().Err(err).Msg("Failed to create meta data.")
 
 				continue
 			}
 
 			item, tags, err := meta.PopulateTags(ctx, client, item)
 			if err != nil {
-				log.Error().
-					AnErr("error", err).
-					Msg("Failed to populate tags.")
+				log.Error().Err(err).Msg("Failed to populate tags.")
 				continue
 			}
 
@@ -92,10 +84,7 @@ func ScanLibrary(ctx context.Context, client *ent.Client) error {
 		m.Active = false
 
 		if err := meta.Write(ctx, client, m); err != nil {
-			log.Error().
-				Str("name", m.Name).
-				AnErr("error", err).
-				Msg("Failed to inactivate meta")
+			log.Error().Str("name", m.Name).Err(err).Msg("Failed to inactivate meta")
 		}
 	}
 
