@@ -23,17 +23,16 @@ func TestProviderTestSuite(t *testing.T) {
 }
 
 func (s *QueryTestSuite) TestReadPage() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Tag 1").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	client.Tag.Create().SetName("Tag 1").Save(context.Background())
+	client.Tag.Create().SetName("Tag 2").Save(context.Background())
+	client.Tag.Create().SetName("Tag 3").Save(context.Background())
 
 	u, err := user.GetUser(context.Background(), client, "")
 	s.Assert().Nil(err)
@@ -51,18 +50,28 @@ func (s *QueryTestSuite) TestReadPage() {
 	s.Assert().Equal(3, len(tags))
 }
 
+func createTestDBClient(s *QueryTestSuite) (db *sql.DB, client *ent.Client, err error) {
+	db, err = sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	if err != nil {
+		return
+	}
+
+	client = enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
+
+	return
+}
+
 func (s *QueryTestSuite) TestReadPagePageCount() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Tag 1").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	client.Tag.Create().SetName("Tag 1").Save(context.Background())
+	client.Tag.Create().SetName("Tag 2").Save(context.Background())
+	client.Tag.Create().SetName("Tag 3").Save(context.Background())
 
 	u, err := user.GetUser(context.Background(), client, "")
 	s.Assert().Nil(err)
@@ -90,17 +99,16 @@ func (s *QueryTestSuite) TestReadPagePageCount() {
 }
 
 func (s *QueryTestSuite) TestReadPagePageWithSearch() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Name 1").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Name 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	client.Tag.Create().SetName("Name 1").Save(context.Background())
+	client.Tag.Create().SetName("Name 2").Save(context.Background())
+	client.Tag.Create().SetName("Tag 3").Save(context.Background())
 
 	u, err := user.GetUser(context.Background(), client, "")
 	s.Assert().Nil(err)
@@ -120,12 +128,11 @@ func (s *QueryTestSuite) TestReadPagePageWithSearch() {
 }
 
 func (s *QueryTestSuite) TestReadPageWithSearchFilterFavoriteTags() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	u, err := user.GetUser(context.Background(), client, "")
@@ -152,17 +159,16 @@ func (s *QueryTestSuite) TestReadPageWithSearchFilterFavoriteTags() {
 }
 
 func (s *QueryTestSuite) TestCount() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Tag 1").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	client.Tag.Create().SetName("Tag 1").Save(context.Background())
+	client.Tag.Create().SetName("Tag 2").Save(context.Background())
+	client.Tag.Create().SetName("Tag 3").Save(context.Background())
 
 	u, err := user.GetUser(context.Background(), client, "")
 	s.Assert().Nil(err)
@@ -181,17 +187,16 @@ func (s *QueryTestSuite) TestCount() {
 }
 
 func (s *QueryTestSuite) TestCountPageWithSearch() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Name 1").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Name 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	client.Tag.Create().SetName("Name 1").Save(context.Background())
+	client.Tag.Create().SetName("Name 2").Save(context.Background())
+	client.Tag.Create().SetName("Tag 3").Save(context.Background())
 
 	u, err := user.GetUser(context.Background(), client, "")
 	s.Assert().Nil(err)
@@ -209,12 +214,11 @@ func (s *QueryTestSuite) TestCountPageWithSearch() {
 }
 
 func (s *QueryTestSuite) TestCountWithSearchFilterFavoriteTags() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	u, err := user.GetUser(context.Background(), client, "")
