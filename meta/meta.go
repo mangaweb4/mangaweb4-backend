@@ -157,10 +157,11 @@ func GetThumbnailBytes(m *ent.Meta) (thumbnail []byte, err error) {
 		} else {
 			return
 		}
-	}
-	_, err = io.Copy(&buffer, file)
-	if err != nil {
-		return
+	} else {
+		_, err = io.Copy(&buffer, file)
+		if err != nil {
+			return
+		}
 	}
 
 	thumbnail = bytes.Clone(buffer.Bytes())
