@@ -4,10 +4,14 @@ import (
 	"os"
 
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
+	"github.com/rs/zerolog/log"
 )
 
-func PurgeCache() error {
+func PurgeCache() {
 	c := configuration.Get()
 
-	return os.RemoveAll(c.CachePath)
+	err := os.RemoveAll(c.CachePath)
+	if err != nil {
+		log.Error().AnErr("error", err).Msg("Purge cache error.")
+	}
 }

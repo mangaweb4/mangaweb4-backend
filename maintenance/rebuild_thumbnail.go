@@ -5,6 +5,7 @@ import (
 
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
+	"github.com/rs/zerolog/log"
 )
 
 func RebuildThumbnail(client *ent.Client) error {
@@ -14,7 +15,10 @@ func RebuildThumbnail(client *ent.Client) error {
 	}
 
 	for _, m := range allMeta {
-		meta.DeleteThumbnail(m)
+		err := meta.DeleteThumbnail(m)
+		if err != nil {
+			log.Warn().Err(err).Str("meta", m.Name).Msg("unable to delete thumbnail file")
+		}
 	}
 
 	return nil

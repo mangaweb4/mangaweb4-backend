@@ -15,6 +15,7 @@ import (
 	"github.com/facette/natsort"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/rs/zerolog/log"
 )
 
 func isValidDirectory(name string) bool {
@@ -51,7 +52,7 @@ type DirectoryContainer struct {
 	Meta *ent.Meta
 }
 
-func (c *DirectoryContainer) getChildren(ctx context.Context) (children []fs.FileInfo, err error) {
+func (c *DirectoryContainer) getChildren(_ context.Context) (children []fs.FileInfo, err error) {
 	m := c.Meta
 	fullpath := filepath.Join(configuration.Get().DataPath, m.Name)
 	dir, err := os.Open(fullpath)
@@ -145,9 +146,11 @@ func (c *DirectoryContainer) Download(ctx context.Context) (reader io.ReadCloser
 	buf := new(bytes.Buffer)
 	w := zip.NewWriter(buf)
 
+	defer func() { log.Err(w.Close()).Msg("close zip writer file for download") }()
+
 	length := len(c.Meta.FileIndices)
 
-	for i := 0; i < length; i++ {
+	for i := range length {
 		img, name, e := c.OpenItem(ctx, i)
 		if e != nil {
 			err = e
@@ -166,8 +169,6 @@ func (c *DirectoryContainer) Download(ctx context.Context) (reader io.ReadCloser
 			return
 		}
 	}
-
-	w.Close()
 
 	reader = io.NopCloser(buf)
 

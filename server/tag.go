@@ -22,7 +22,7 @@ func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *g
 	log.Info().Interface("request", req).Msg("Tag list")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on TagServer.List") }()
 
 	u, err := user.GetUser(ctx, client, req.User)
 	if err != nil {
@@ -92,7 +92,7 @@ func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest
 	log.Info().Str("tag", req.Name).Msg("Tag thumbnail image")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on TagServer.Thumbnail") }()
 
 	t, err := tag.Read(ctx, client, req.Name)
 	if err != nil {
@@ -121,7 +121,7 @@ func (s *TagServer) SetFavorite(ctx context.Context, req *grpc.TagSetFavoriteReq
 	log.Info().Str("tag", req.Tag).Str("user", req.User).Bool("favorite", req.Favorite).Msg("Set favorite tag.")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on TagServer.SetFavorite") }()
 
 	m, err := tag.Read(ctx, client, req.Tag)
 	if err != nil {

@@ -68,11 +68,7 @@ func CreateContainer(m *ent.Meta) (c Container, err error) {
 }
 
 func isValidContainerName(name string) bool {
-	if strings.HasPrefix(name, ".") {
-		return false
-	}
-
-	return true
+	return !strings.HasPrefix(name, ".")
 }
 
 func isValidImageFile(name string) bool {

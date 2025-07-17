@@ -7,6 +7,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/database"
 	"github.com/mangaweb4/mangaweb4-backend/ent/history"
 	ent_meta "github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/user"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -20,7 +21,7 @@ type HistoryServer struct {
 
 func (s *HistoryServer) List(ctx context.Context, req *grpc.HistoryListRequest) (resp *grpc.HistoryListResponse, err error) {
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on History.List") }()
 
 	u, err := user.GetUser(ctx, client, req.User)
 	if err != nil {
@@ -62,7 +63,7 @@ func (s *HistoryServer) List(ctx context.Context, req *grpc.HistoryListRequest) 
 		}
 
 		for _, t := range tags {
-			if t.Favorite {
+			if u.QueryFavoriteTags().Where(ent_tag.ID(t.ID)).ExistX(ctx) {
 				items[i].HasFavoriteTag = true
 				break
 			}

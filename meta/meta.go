@@ -19,6 +19,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	tag_util "github.com/mangaweb4/mangaweb4-backend/tag"
+	"github.com/rs/zerolog/log"
 
 	"golang.org/x/exp/slices"
 	_ "golang.org/x/image/webp"
@@ -93,7 +94,7 @@ func CreateThumbnail(m *ent.Meta) (thumbnail image.Image, err error) {
 		return
 	}
 
-	defer stream.Close()
+	defer func() { log.Err(stream.Close()).Msg("close thumbnail stream.") }()
 
 	img, err := imaging.Decode(stream, imaging.AutoOrientation(true))
 	if err != nil {
@@ -134,26 +135,33 @@ func GetThumbnailBytes(m *ent.Meta) (thumbnail []byte, err error) {
 
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			os.MkdirAll(filepath.Dir(thumbfile), fs.ModePerm)
+			err = os.MkdirAll(filepath.Dir(thumbfile), fs.ModePerm)
+			if err != nil {
+				return
+			}
 			img, e := CreateThumbnail(m)
 			if e != nil {
 				err = e
 				return
 			}
 
-			e = imaging.Save(img, thumbfile, imaging.JPEGQuality(75))
-			if e != nil {
-				err = e
+			err = imaging.Save(img, thumbfile, imaging.JPEGQuality(75))
+			if err != nil {
 				return
 			}
 
-			imaging.Encode(&buffer, img, imaging.JPEG, imaging.JPEGQuality(75))
-			err = nil
+			err = imaging.Encode(&buffer, img, imaging.JPEG, imaging.JPEGQuality(75))
+			if err != nil {
+				return
+			}
 		} else {
 			return
 		}
 	}
-	io.Copy(&buffer, file)
+	_, err = io.Copy(&buffer, file)
+	if err != nil {
+		return
+	}
 
 	thumbnail = bytes.Clone(buffer.Bytes())
 
@@ -205,7 +213,6 @@ func PopulateTags(ctx context.Context, client *ent.Client, m *ent.Meta) (out *en
 
 			tag, _ = client.Tag.Create().
 				SetName(tag.Name).
-				SetFavorite(tag.Favorite).
 				SetHidden(tag.Hidden).
 				Save(ctx)
 

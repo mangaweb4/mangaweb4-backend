@@ -102,7 +102,6 @@ func Write(ctx context.Context, client *ent.Client, t *ent.Tag) error {
 	return client.Tag.Create().
 		SetName(t.Name).
 		SetHidden(t.Hidden).
-		SetFavorite(t.Favorite).
 		OnConflict(sql.ConflictColumns(tag.FieldName)).
 		UpdateNewValues().
 		Exec(ctx)

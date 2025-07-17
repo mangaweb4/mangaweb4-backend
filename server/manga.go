@@ -27,7 +27,7 @@ type MangaServer struct {
 
 func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.List") }()
 
 	u, err := user.GetUser(ctx, client, req.User)
 	if err != nil {
@@ -138,16 +138,11 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 	item := req.Name
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Detail") }()
 
 	m, err := meta.Read(ctx, client, item)
 	if err != nil {
 		return
-	}
-
-	if !m.Read {
-		m.Read = true
-		meta.Write(ctx, client, m)
 	}
 
 	log.Info().
@@ -176,7 +171,7 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 		grpcTags[i] = &grpc.MangaDetailResponseTagItem{
 			ID:         int32(tags[i].ID),
 			Name:       tags[i].Name,
-			IsFavorite: tags[i].Favorite,
+			IsFavorite: u.QueryFavoriteTags().Where(ent_tag.ID(tags[i].ID)).ExistX(ctx),
 			IsHidden:   tags[i].Hidden,
 		}
 	}
@@ -189,7 +184,7 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 		CurrentPage: int32(currentPage),
 	}
 
-	client.History.Create().
+	_, err = client.History.Create().
 		SetUser(u).
 		SetItem(m).
 		Save(ctx)
@@ -204,7 +199,7 @@ func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailReq
 		Msg("Thumbnail")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Thumbnail") }()
 
 	m, err := meta.Read(ctx, client, item)
 	if err != nil {
@@ -232,7 +227,7 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 		Msg("Set Favorite Item.")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.SetFavorite") }()
 
 	u, err := user.GetUser(ctx, client, req.User)
 	if err != nil {
@@ -268,7 +263,7 @@ func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCove
 		Msg("Update cover.")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.UpdateCover") }()
 
 	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
@@ -304,7 +299,7 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 		Msg("Get image")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.PageImage") }()
 
 	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
@@ -404,7 +399,7 @@ func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) 
 		Msg("Fix metadata")
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Repair") }()
 
 	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
@@ -440,7 +435,7 @@ func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.Se
 	ctx := context.Background()
 
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Download") }()
 
 	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
@@ -457,7 +452,7 @@ func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.Se
 	if err != nil {
 		return err
 	}
-	defer reader.Close()
+	defer func() { log.Err(reader.Close()).Msg("container download.") }()
 
 	bytes, err := io.ReadAll(reader)
 	if err != nil {

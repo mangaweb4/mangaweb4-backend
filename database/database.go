@@ -38,7 +38,7 @@ func Open(ctx context.Context, dbType string, connStr string) error {
 		return nil
 	}
 
-	return errors.New("invalid database type.")
+	return errors.New("invalid database type")
 
 }
 
@@ -51,7 +51,7 @@ func openDB(dbType string) (db *dialect_sql.Driver, err error) {
 		return openSqlite()
 	}
 
-	return nil, errors.New("invalid databse type.")
+	return nil, errors.New("invalid databse type")
 }
 
 func openPostgres() (db *dialect_sql.Driver, err error) {
@@ -65,7 +65,7 @@ func openSqlite() (db *dialect_sql.Driver, err error) {
 		db = dialect_sql.OpenDB(dialect.SQLite, d)
 		return
 	} else {
-		e = err
+		err = e
 		return
 	}
 }
@@ -124,7 +124,7 @@ func CreateEntClient() *ent.Client {
 
 func CreateSchema(ctx context.Context) error {
 	client := CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("close database connection") }()
 
 	return client.Schema.Create(ctx, migrate.WithDropColumn(true), migrate.WithDropIndex(true))
 }

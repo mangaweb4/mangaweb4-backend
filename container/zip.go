@@ -13,6 +13,7 @@ import (
 	"github.com/facette/natsort"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/rs/zerolog/log"
 )
 
 type ZipContainer struct {
@@ -28,7 +29,8 @@ func (c *ZipContainer) ListItems(ctx context.Context) (names []string, err error
 	if err != nil {
 		return
 	}
-	defer r.Close()
+
+	defer func() { log.Err(r.Close()).Msg("unable to close zip file") }()
 
 	names = make([]string, len(m.FileIndices))
 	for i, f := range m.FileIndices {
@@ -48,7 +50,7 @@ func (c *ZipContainer) OpenItem(ctx context.Context, index int) (reader io.ReadC
 		return
 	}
 
-	defer r.Close()
+	defer func() { log.Err(r.Close()).Msg("close zip file on OpenItem") }()
 
 	if index >= len(c.Meta.FileIndices) {
 		err = fmt.Errorf("invalid item")
@@ -67,7 +69,8 @@ func (c *ZipContainer) OpenItem(ctx context.Context, index int) (reader io.ReadC
 	if err != nil {
 		return
 	}
-	defer reader.Close()
+
+	defer func() { log.Err(reader.Close()).Msg("close zip file item on OpenItem") }()
 
 	content, err := io.ReadAll(reader)
 	if err != nil {
@@ -88,7 +91,7 @@ func (c *ZipContainer) PopulateImageIndices(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer r.Close()
+	defer func() { log.Err(r.Close()).Msg("close zip file on PopulateImageIndices") }()
 
 	type fileIndexPair struct {
 		Index    int

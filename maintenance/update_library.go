@@ -9,8 +9,7 @@ import (
 
 func UpdateLibrary(ctx context.Context) {
 	client := database.CreateEntClient()
-	defer client.Close()
+	defer func() { log.Err(client.Close()).Msg("Update metadata close client.") }()
 
-	log.Info().Msg("Update metadata set.")
-	ScanLibrary(ctx, client)
+	log.Err(ScanLibrary(ctx, client)).Msg("Update metadata set.")
 }
