@@ -19,6 +19,8 @@ type Tag struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Favorite holds the value of the "favorite" field.
+	//
+	// Deprecated: use 'favorite_of_user' edge instead.
 	Favorite bool `json:"favorite,omitempty"`
 	// Hidden holds the value of the "hidden" field.
 	Hidden bool `json:"hidden,omitempty"`

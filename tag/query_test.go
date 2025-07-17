@@ -9,6 +9,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/enttest"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
+	"github.com/mangaweb4/mangaweb4-backend/user"
 	"github.com/stretchr/testify/suite"
 	_ "modernc.org/sqlite"
 )
@@ -18,7 +19,7 @@ type QueryTestSuite struct {
 }
 
 func TestProviderTestSuite(t *testing.T) {
-	// suite.Run(t, new(QueryTestSuite))
+	suite.Run(t, new(QueryTestSuite))
 }
 
 func (s *QueryTestSuite) TestReadPage() {
@@ -34,7 +35,9 @@ func (s *QueryTestSuite) TestReadPage() {
 	client.Tag.Create().SetName("Tag 2").SetFavorite(false).Save(context.Background())
 	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_UNKNOWN,
@@ -61,7 +64,9 @@ func (s *QueryTestSuite) TestReadPagePageCount() {
 	client.Tag.Create().SetName("Tag 2").SetFavorite(false).Save(context.Background())
 	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_UNKNOWN,
@@ -97,7 +102,9 @@ func (s *QueryTestSuite) TestReadPagePageWithSearch() {
 	client.Tag.Create().SetName("Name 2").SetFavorite(false).Save(context.Background())
 	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_UNKNOWN,
@@ -121,11 +128,16 @@ func (s *QueryTestSuite) TestReadPageWithSearchFilterFavoriteTags() {
 	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Name 1").SetFavorite(true).Save(context.Background())
-	client.Tag.Create().SetName("Name 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	_, err = client.Tag.Create().AddFavoriteOfUserIDs(u.ID).SetName("Name 1").Save(context.Background())
+	s.Assert().Nil(err)
+	_, err = client.Tag.Create().SetName("Name 2").Save(context.Background())
+	s.Assert().Nil(err)
+	_, err = client.Tag.Create().SetName("Tag 3").Save(context.Background())
+	s.Assert().Nil(err)
+
 	tags, err := ReadPage(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_FAVORITE_TAGS,
@@ -137,7 +149,6 @@ func (s *QueryTestSuite) TestReadPageWithSearchFilterFavoriteTags() {
 	s.Assert().Nil(err)
 	s.Assert().Equal(1, len(tags))
 	s.Assert().Equal("Name 1", tags[0].Name)
-	s.Assert().Equal(true, tags[0].Favorite)
 }
 
 func (s *QueryTestSuite) TestCount() {
@@ -153,7 +164,9 @@ func (s *QueryTestSuite) TestCount() {
 	client.Tag.Create().SetName("Tag 2").SetFavorite(false).Save(context.Background())
 	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
 	c, err := Count(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_UNKNOWN,
@@ -180,7 +193,9 @@ func (s *QueryTestSuite) TestCountPageWithSearch() {
 	client.Tag.Create().SetName("Name 2").SetFavorite(false).Save(context.Background())
 	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
 	c, err := Count(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_UNKNOWN,
@@ -202,11 +217,15 @@ func (s *QueryTestSuite) TestCountWithSearchFilterFavoriteTags() {
 	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Tag.Create().SetName("Name 1").SetFavorite(true).Save(context.Background())
-	client.Tag.Create().SetName("Name 2").SetFavorite(false).Save(context.Background())
-	client.Tag.Create().SetName("Tag 3").SetFavorite(false).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	_, err = client.Tag.Create().AddFavoriteOfUserIDs(u.ID).SetName("Name 1").Save(context.Background())
+	s.Assert().Nil(err)
+
+	client.Tag.Create().SetName("Name 2").Save(context.Background())
+	client.Tag.Create().SetName("Tag 3").Save(context.Background())
+
 	c, err := Count(context.Background(), client, u,
 		QueryParams{
 			Filter:      grpc.Filter_FILTER_FAVORITE_TAGS,
