@@ -9,6 +9,7 @@ import (
 	dialect_sql "entgo.io/ent/dialect/sql"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/enttest"
+	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/stretchr/testify/suite"
 	_ "modernc.org/sqlite"
 )
@@ -39,8 +40,8 @@ func (s *QueryTestSuite) TestReadPage() {
 	client.Meta.Create().SetName("[some artist]manga 5 here.zip").SetActive(false).Save(context.Background())
 
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		SortBy:      SortFieldName,
-		SortOrder:   SortOrderAscending,
+		SortBy:      grpc.SortField_SORT_FIELD_NAME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -54,7 +55,7 @@ func (s *QueryTestSuite) TestReadPage() {
 	s.Assert().Equal("[some artist]manga 4 here.zip", tags[3].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageFilterFavoriteItem() {
+func (s *QueryTestSuite) TestReadPageFilterFavoriteItems() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -70,9 +71,9 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItem() {
 
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		Filter:      FilterFavoriteItem,
-		SortBy:      SortFieldName,
-		SortOrder:   SortOrderAscending,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
+		SortBy:      grpc.SortField_SORT_FIELD_NAME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -100,9 +101,9 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeDesc() {
 
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		Filter:      FilterNone,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderDescending,
+		Filter:      grpc.Filter_FILTER_UNKNOWN,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_DESCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -130,9 +131,9 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeAsc() {
 
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		Filter:      FilterNone,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
+		Filter:      grpc.Filter_FILTER_UNKNOWN,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -144,7 +145,7 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeAsc() {
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestReadPageFavoriteItemsSSortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -160,9 +161,9 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeDesc() {
 
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		Filter:      FilterFavoriteItem,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderDescending,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_DESCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -174,7 +175,7 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeDesc() {
 	s.Assert().Equal("[some artist]manga 1 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -191,9 +192,9 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeAsc() {
 	var u *ent.User
 
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		Filter:      FilterFavoriteItem,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -205,7 +206,7 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItemSortByCreateTimeAsc() {
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemsortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -222,9 +223,9 @@ func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTim
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderDescending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_DESCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -236,7 +237,7 @@ func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTim
 	s.Assert().Equal("[some artist]manga 1 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -253,9 +254,9 @@ func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTim
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -267,7 +268,7 @@ func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemSortByCreateTim
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -287,9 +288,9 @@ func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemSortByCreateTime
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchTag:   "some artist",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -301,7 +302,7 @@ func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemSortByCreateTime
 	s.Assert().Equal("[some artist]manga 2 here.zip", tags[1].Name)
 }
 
-func (s *QueryTestSuite) TestReadPageSearchNameTagFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestReadPageSearchNameTagFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -322,9 +323,9 @@ func (s *QueryTestSuite) TestReadPageSearchNameTagFilterFavoriteItemSortByCreate
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SearchTag:   "some artist",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -353,8 +354,8 @@ func (s *QueryTestSuite) TestCount() {
 
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
-		SortBy:      SortFieldName,
-		SortOrder:   SortOrderAscending,
+		SortBy:      grpc.SortField_SORT_FIELD_NAME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -362,7 +363,7 @@ func (s *QueryTestSuite) TestCount() {
 	s.Assert().Equal(4, c)
 }
 
-func (s *QueryTestSuite) TestCountFilterFavoriteItem() {
+func (s *QueryTestSuite) TestCountFilterFavoriteItems() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -378,9 +379,9 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItem() {
 
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
-		Filter:      FilterFavoriteItem,
-		SortBy:      SortFieldName,
-		SortOrder:   SortOrderAscending,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
+		SortBy:      grpc.SortField_SORT_FIELD_NAME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -404,9 +405,9 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeDesc() {
 
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
-		Filter:      FilterNone,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderDescending,
+		Filter:      grpc.Filter_FILTER_UNKNOWN,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_DESCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -430,9 +431,9 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeAsc() {
 
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
-		Filter:      FilterNone,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
+		Filter:      grpc.Filter_FILTER_UNKNOWN,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -440,7 +441,7 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeAsc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestCountFilterFavoriteItemsortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -456,9 +457,9 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeDesc() {
 
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
-		Filter:      FilterFavoriteItem,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderDescending,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_DESCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -466,7 +467,7 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeDesc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -482,9 +483,9 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeAsc() {
 
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
-		Filter:      FilterFavoriteItem,
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -492,7 +493,7 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItemSortByCreateTimeAsc() {
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeDesc() {
+func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemsortByCreateTimeDesc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -509,9 +510,9 @@ func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeDe
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderDescending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_DESCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -519,7 +520,7 @@ func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeDe
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -536,9 +537,9 @@ func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeAs
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -547,7 +548,7 @@ func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemSortByCreateTimeAs
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -567,9 +568,9 @@ func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemSortByCreateTimeAsc
 	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchTag:   "some artist",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -577,7 +578,7 @@ func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemSortByCreateTimeAsc
 	s.Assert().Equal(2, c)
 }
 
-func (s *QueryTestSuite) TestCountSearchNameTagFilterFavoriteItemSortByCreateTimeAsc() {
+func (s *QueryTestSuite) TestCountSearchNameTagFilterFavoriteItemsortByCreateTimeAsc() {
 	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
@@ -598,9 +599,9 @@ func (s *QueryTestSuite) TestCountSearchNameTagFilterFavoriteItemSortByCreateTim
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SearchTag:   "some artist",
-		SortBy:      SortFieldCreateTime,
-		SortOrder:   SortOrderAscending,
-		Filter:      FilterFavoriteItem,
+		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
+		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -625,8 +626,8 @@ func (s *QueryTestSuite) TestReadSortByPageCountAsc() {
 
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		SortBy:      SortFieldName,
-		SortOrder:   SortOrderAscending,
+		SortBy:      grpc.SortField_SORT_FIELD_NAME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
@@ -657,8 +658,8 @@ func (s *QueryTestSuite) TestReadSortByPageCountDesc() {
 
 	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
-		SortBy:      SortFieldName,
-		SortOrder:   SortOrderAscending,
+		SortBy:      grpc.SortField_SORT_FIELD_NAME,
+		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
 		Page:        0,
 		ItemPerPage: 30,
 	})
