@@ -20,6 +20,8 @@ type HistoryServer struct {
 }
 
 func (s *HistoryServer) List(ctx context.Context, req *grpc.HistoryListRequest) (resp *grpc.HistoryListResponse, err error) {
+	defer func() { log.Err(err).Interface("request", req).Msg("History.List") }()
+
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on History.List") }()
 

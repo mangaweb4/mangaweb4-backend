@@ -13,7 +13,7 @@ type MaintenanceServer struct {
 }
 
 func (s *MaintenanceServer) PurgeCache(ctx context.Context, req *grpc.MaintenancePurgeCacheRequest) (resp *grpc.MaintenancePurgeCacheResponse, err error) {
-	log.Info().Msg("Purge Cache")
+	defer func() { log.Err(err).Interface("request", req).Msg("MaintenanceServer.PurgeCache") }()
 
 	go maintenance.PurgeCache()
 
@@ -27,7 +27,7 @@ func (s *MaintenanceServer) PurgeCache(ctx context.Context, req *grpc.Maintenanc
 }
 
 func (s *MaintenanceServer) UpdateLibrary(ctx context.Context, req *grpc.MaintenanceUpdateLibraryRequest) (resp *grpc.MaintenanceUpdateLibraryResponse, err error) {
-	log.Info().Msg("Update library")
+	defer func() { log.Err(err).Interface("request", req).Msg("MaintenanceServer.UpdateLibrary") }()
 
 	go maintenance.UpdateLibrary(context.Background())
 
