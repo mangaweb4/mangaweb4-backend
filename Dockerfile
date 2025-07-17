@@ -15,4 +15,6 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder1 /go/src/mangaweb/mangaweb ./
 
+EXPOSE 8972
+
 CMD ["./mangaweb"]
