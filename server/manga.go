@@ -26,6 +26,7 @@ type MangaServer struct {
 }
 
 func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.List") }()
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.List") }()
 
@@ -135,12 +136,12 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 }
 
 func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) (resp *grpc.MangaDetailResponse, err error) {
-	item := req.Name
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Detail") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Detail") }()
 
-	m, err := meta.Read(ctx, client, item)
+	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
 		return
 	}
@@ -177,7 +178,7 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 	}
 
 	resp = &grpc.MangaDetailResponse{
-		Name:        item,
+		Name:        req.Name,
 		Favorite:    u.QueryFavoriteItems().Where(ent_meta.ID(m.ID)).ExistX(ctx),
 		Tags:        grpcTags,
 		PageCount:   int32(len(m.FileIndices)),
@@ -193,15 +194,12 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 }
 
 func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailRequest) (resp *grpc.MangaThumbnailResponse, err error) {
-	item := req.Name
-	log.Info().
-		Str("name", item).
-		Msg("Thumbnail")
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Thumbnail") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Thumbnail") }()
 
-	m, err := meta.Read(ctx, client, item)
+	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
 		return
 	}
@@ -220,11 +218,7 @@ func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailReq
 }
 
 func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavoriteRequest) (resp *grpc.MangaSetFavoriteResponse, err error) {
-	item := req.Name
-
-	log.Info().
-		Interface("request", req).
-		Msg("Set Favorite Item.")
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.SetFavorite") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.SetFavorite") }()
@@ -234,7 +228,7 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 		return
 	}
 
-	m, err := meta.Read(ctx, client, item)
+	m, err := meta.Read(ctx, client, req.Name)
 	if err != nil {
 		return
 	}
@@ -258,9 +252,7 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 }
 
 func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCoverRequest) (resp *grpc.MangaUpdateCoverResponse, err error) {
-	log.Info().
-		Interface("request", req).
-		Msg("Update cover.")
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.UpdateCover") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.UpdateCover") }()
@@ -294,9 +286,7 @@ func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCove
 }
 
 func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageRequest) (resp *grpc.MangaPageImageResponse, err error) {
-	log.Info().
-		Interface("request", req).
-		Msg("Get image")
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.PageImage") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.PageImage") }()
@@ -394,9 +384,7 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 }
 
 func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) (resp *grpc.MangaRepairResponse, err error) {
-	log.Info().
-		Interface("request", req).
-		Msg("Fix metadata")
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Repair") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Repair") }()
@@ -431,7 +419,9 @@ func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) 
 }
 
 func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.ServerStreamingServer[grpc.MangaDownloadResponse]) error {
-	log.Info().Str("name", req.Name).Msg("Download")
+	var err error
+
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Download") }()
 	ctx := context.Background()
 
 	client := database.CreateEntClient()
