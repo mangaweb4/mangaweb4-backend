@@ -1,11 +1,10 @@
-name: Go build and run test.
+name: build-test
 
 on:
   push:
 
 jobs:
-
-  build:
+  build-test:
     runs-on: ubuntu-latest
    
     steps:
