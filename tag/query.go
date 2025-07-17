@@ -81,16 +81,16 @@ func CreateQuery(client *ent.Client, u *ent.User, params QueryParams) (query *en
 	return
 }
 
-func ReadPage(ctx context.Context, client *ent.Client, u *ent.User, q QueryParams) (tags []*ent.Tag, err error) {
-	query, err := CreateQuery(client, u, q)
+func ReadPage(ctx context.Context, client *ent.Client, u *ent.User, params QueryParams) (tags []*ent.Tag, err error) {
+	query, err := CreateQuery(client, u, params)
 	if err != nil {
 		return
 	}
 	return query.All(ctx)
 }
 
-func Count(ctx context.Context, client *ent.Client, u *ent.User, q QueryParams) (count int, err error) {
-	query, err := CreateQuery(client, u, q)
+func Count(ctx context.Context, client *ent.Client, u *ent.User, params QueryParams) (count int, err error) {
+	query, err := CreateQuery(client, u, params)
 	if err != nil {
 		return
 	}
