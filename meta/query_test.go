@@ -10,6 +10,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/enttest"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
+	"github.com/mangaweb4/mangaweb4-backend/user"
 	"github.com/stretchr/testify/suite"
 	_ "modernc.org/sqlite"
 )
@@ -19,19 +20,30 @@ type QueryTestSuite struct {
 }
 
 func TestQueryTestSuite(t *testing.T) {
-	// suite.Run(t, new(QueryTestSuite))
+	suite.Run(t, new(QueryTestSuite))
+}
+
+func createTestDBClient(s *QueryTestSuite) (db *sql.DB, client *ent.Client, err error) {
+	db, err = sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	if err != nil {
+		return
+	}
+
+	client = enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
+
+	return
 }
 
 func (s *QueryTestSuite) TestReadPage() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 2 here.zip").Save(context.Background())
@@ -56,20 +68,21 @@ func (s *QueryTestSuite) TestReadPage() {
 }
 
 func (s *QueryTestSuite) TestReadPageFilterFavoriteItems() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").AddFavoriteOfUser(u).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").Save(context.Background())
 
-	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		SortBy:      grpc.SortField_SORT_FIELD_NAME,
@@ -86,12 +99,11 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItems() {
 }
 
 func (s *QueryTestSuite) TestReadPageSortByCreateTimeDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).Save(context.Background())
@@ -99,7 +111,8 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeDesc() {
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).SetActive(false).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_UNKNOWN,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -116,12 +129,11 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeDesc() {
 }
 
 func (s *QueryTestSuite) TestReadPageSortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).Save(context.Background())
@@ -129,7 +141,8 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeAsc() {
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).SetActive(false).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_UNKNOWN,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -146,20 +159,21 @@ func (s *QueryTestSuite) TestReadPageSortByCreateTimeAsc() {
 }
 
 func (s *QueryTestSuite) TestReadPageFavoriteItemsSSortByCreateTimeDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).Save(context.Background())
 
-	var u *ent.User
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -176,20 +190,20 @@ func (s *QueryTestSuite) TestReadPageFavoriteItemsSSortByCreateTimeDesc() {
 }
 
 func (s *QueryTestSuite) TestReadPageFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).Save(context.Background())
-
-	var u *ent.User
 
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
@@ -207,20 +221,21 @@ func (s *QueryTestSuite) TestReadPageFilterFavoriteItemsortByCreateTimeAsc() {
 }
 
 func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemsortByCreateTimeDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).Save(context.Background())
+
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -238,20 +253,21 @@ func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemsortByCreateTim
 }
 
 func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).Save(context.Background())
+
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -269,23 +285,24 @@ func (s *QueryTestSuite) TestReadPageSearchNameFilterFavoriteItemsortByCreateTim
 }
 
 func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	tag1, _ := client.Tag.Create().SetName("some artist").Save(context.Background())
 	tag2, _ := client.Tag.Create().SetName("artist").Save(context.Background())
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).AddTags(tag2).Save(context.Background())
-	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).AddTags(tag2).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).AddTags(tag2).Save(context.Background())
+	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).AddTags(tag2).Save(context.Background())
+
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchTag:   "some artist",
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -303,22 +320,22 @@ func (s *QueryTestSuite) TestReadPageSearchTagFilterFavoriteItemsortByCreateTime
 }
 
 func (s *QueryTestSuite) TestReadPageSearchNameTagFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	tag1, _ := client.Tag.Create().SetName("some artist").Save(context.Background())
 	tag2, _ := client.Tag.Create().SetName("artist").Save(context.Background())
 
-	var u *ent.User
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).AddTags(tag2).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).AddTags(tag2).Save(context.Background())
 
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
@@ -338,12 +355,11 @@ func (s *QueryTestSuite) TestReadPageSearchNameTagFilterFavoriteItemsortByCreate
 }
 
 func (s *QueryTestSuite) TestCount() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").Save(context.Background())
@@ -352,7 +368,8 @@ func (s *QueryTestSuite) TestCount() {
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 5 here.zip").SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SortBy:      grpc.SortField_SORT_FIELD_NAME,
 		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
@@ -364,20 +381,22 @@ func (s *QueryTestSuite) TestCount() {
 }
 
 func (s *QueryTestSuite) TestCountFilterFavoriteItems() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").AddFavoriteOfUser(u).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").Save(context.Background())
 
-	var u *ent.User
+	s.Assert().Nil(err)
 	c, err := Count(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		SortBy:      grpc.SortField_SORT_FIELD_NAME,
@@ -390,12 +409,11 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItems() {
 }
 
 func (s *QueryTestSuite) TestCountSortByCreateTimeDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).Save(context.Background())
@@ -403,7 +421,8 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeDesc() {
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).SetActive(false).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	c, err := Count(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_UNKNOWN,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -416,12 +435,11 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeDesc() {
 }
 
 func (s *QueryTestSuite) TestCountSortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).Save(context.Background())
@@ -429,7 +447,8 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeAsc() {
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).SetActive(false).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	c, err := Count(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_UNKNOWN,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -442,20 +461,21 @@ func (s *QueryTestSuite) TestCountSortByCreateTimeAsc() {
 }
 
 func (s *QueryTestSuite) TestCountFilterFavoriteItemsortByCreateTimeDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).Save(context.Background())
 
-	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -468,20 +488,21 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItemsortByCreateTimeDesc() {
 }
 
 func (s *QueryTestSuite) TestCountFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
+
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 3 here.zip").SetCreateTime(time.UnixMilli(5000)).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetCreateTime(time.UnixMilli(6000)).Save(context.Background())
 
-	var u *ent.User
 	c, err := Count(context.Background(), client, u, QueryParams{
 		Filter:      grpc.Filter_FILTER_FAVORITE_ITEMS,
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -494,20 +515,21 @@ func (s *QueryTestSuite) TestCountFilterFavoriteItemsortByCreateTimeAsc() {
 }
 
 func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemsortByCreateTimeDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).Save(context.Background())
+
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -521,20 +543,21 @@ func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemsortByCreateTimeDe
 }
 
 func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).Save(context.Background())
+
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -549,23 +572,24 @@ func (s *QueryTestSuite) TestCountSearchNameFilterFavoriteItemsortByCreateTimeAs
 }
 
 func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	tag1, _ := client.Tag.Create().SetName("some artist").Save(context.Background())
 	tag2, _ := client.Tag.Create().SetName("artist").Save(context.Background())
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).AddTags(tag2).Save(context.Background())
-	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).AddTags(tag2).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).AddTags(tag2).Save(context.Background())
+	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).AddTags(tag2).Save(context.Background())
+
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchTag:   "some artist",
 		SortBy:      grpc.SortField_SORT_FIELD_CREATION_TIME,
@@ -579,23 +603,24 @@ func (s *QueryTestSuite) TestCountSearchTagFilterFavoriteItemsortByCreateTimeAsc
 }
 
 func (s *QueryTestSuite) TestCountSearchNameTagFilterFavoriteItemsortByCreateTimeAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	tag1, _ := client.Tag.Create().SetName("some artist").Save(context.Background())
 	tag2, _ := client.Tag.Create().SetName("artist").Save(context.Background())
 
-	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).SetFavorite(true).AddTags(tag1).Save(context.Background())
-	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).SetFavorite(true).AddTags(tag2).Save(context.Background())
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 
-	var u *ent.User
+	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetCreateTime(time.UnixMilli(3000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 2 here.zip").SetCreateTime(time.UnixMilli(4000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[some artist]manga 3.zip").SetCreateTime(time.UnixMilli(5000)).AddFavoriteOfUser(u).AddTags(tag1).Save(context.Background())
+	client.Meta.Create().SetName("[artist]manga 4.zip").SetCreateTime(time.UnixMilli(6000)).AddFavoriteOfUser(u).AddTags(tag2).Save(context.Background())
+
 	c, err := Count(context.Background(), client, u, QueryParams{
 		SearchName:  "here",
 		SearchTag:   "some artist",
@@ -610,12 +635,11 @@ func (s *QueryTestSuite) TestCountSearchNameTagFilterFavoriteItemsortByCreateTim
 }
 
 func (s *QueryTestSuite) TestReadSortByPageCountAsc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetFileIndices([]int{1}).Save(context.Background())
@@ -624,7 +648,8 @@ func (s *QueryTestSuite) TestReadSortByPageCountAsc() {
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetFileIndices([]int{1, 2, 3, 4}).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 5 here.zip").SetFileIndices([]int{1, 2, 3, 4}).SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SortBy:      grpc.SortField_SORT_FIELD_NAME,
 		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,
@@ -642,12 +667,11 @@ func (s *QueryTestSuite) TestReadSortByPageCountAsc() {
 }
 
 func (s *QueryTestSuite) TestReadSortByPageCountDesc() {
-	db, err := sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
 	s.Assert().NotNil(db)
+	s.Assert().NotNil(client)
 	defer db.Close()
-
-	client := enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
 	defer client.Close()
 
 	client.Meta.Create().SetName("[some artist]manga 1 here.zip").SetFileIndices([]int{1, 2, 3, 4}).Save(context.Background())
@@ -656,7 +680,8 @@ func (s *QueryTestSuite) TestReadSortByPageCountDesc() {
 	client.Meta.Create().SetName("[some artist]manga 4 here.zip").SetFileIndices([]int{1}).Save(context.Background())
 	client.Meta.Create().SetName("[some artist]manga 5 here.zip").SetFileIndices([]int{1, 2, 3, 4}).SetActive(false).Save(context.Background())
 
-	var u *ent.User
+	u, err := user.GetUser(context.Background(), client, "")
+	s.Assert().Nil(err)
 	tags, err := ReadPage(context.Background(), client, u, QueryParams{
 		SortBy:      grpc.SortField_SORT_FIELD_NAME,
 		SortOrder:   grpc.SortOrder_SORT_ORDER_ASCENDING,

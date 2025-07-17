@@ -22,6 +22,17 @@ func TestProviderTestSuite(t *testing.T) {
 	suite.Run(t, new(QueryTestSuite))
 }
 
+func createTestDBClient(s *QueryTestSuite) (db *sql.DB, client *ent.Client, err error) {
+	db, err = sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
+	if err != nil {
+		return
+	}
+
+	client = enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
+
+	return
+}
+
 func (s *QueryTestSuite) TestReadPage() {
 	db, client, err := createTestDBClient(s)
 	s.Assert().Nil(err)
@@ -48,17 +59,6 @@ func (s *QueryTestSuite) TestReadPage() {
 
 	s.Assert().Nil(err)
 	s.Assert().Equal(3, len(tags))
-}
-
-func createTestDBClient(s *QueryTestSuite) (db *sql.DB, client *ent.Client, err error) {
-	db, err = sql.Open("sqlite", "file:ent?mode=memory&_fk=1&_pragma=foreign_keys(1)")
-	if err != nil {
-		return
-	}
-
-	client = enttest.NewClient(s.T(), enttest.WithOptions(ent.Driver(dialect_sql.OpenDB("sqlite3", db))))
-
-	return
 }
 
 func (s *QueryTestSuite) TestReadPagePageCount() {
