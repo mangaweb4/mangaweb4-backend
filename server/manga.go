@@ -26,7 +26,6 @@ type MangaServer struct {
 }
 
 func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
-
 	client := database.CreateEntClient()
 	defer client.Close()
 
@@ -35,51 +34,20 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 		return
 	}
 
-	var filter meta.Filter
-	switch req.Filter {
-	case grpc.Filter_FILTER_UNKNOWN:
-		filter = meta.FilterNone
-
-	case grpc.Filter_FILTER_FAVORITE_ITEMS:
-		filter = meta.FilterFavoriteItem
-
-	case grpc.Filter_FILTER_FAVORITE_TAGS:
-		filter = meta.FilterFavoriteTag
-	}
-
-	var sort meta.SortField
-	switch req.Sort {
-	case grpc.SortField_SORT_FIELD_CREATION_TIME:
-		sort = meta.SortFieldCreateTime
-
-	case grpc.SortField_SORT_FIELD_NAME:
-		sort = meta.SortFieldName
-
-	case grpc.SortField_SORT_FIELD_PAGECOUNT:
-		sort = meta.SortFieldPageCount
-	}
-
-	var order meta.SortOrder
-	switch req.Order {
-	case grpc.SortOrder_SORT_ORDER_ASCENDING:
-		order = meta.SortOrderAscending
-
-	case grpc.SortOrder_SORT_ORDER_DESCENDING:
-		order = meta.SortOrderDescending
-	}
-
 	allMeta, err := meta.ReadPage(ctx,
 		client,
 		u,
 		meta.QueryParams{
 			SearchName:  req.Search,
-			Filter:      filter,
+			Filter:      req.Filter,
 			SearchTag:   req.Tag,
-			SortBy:      sort,
-			SortOrder:   order,
+			SortBy:      req.Sort,
+			SortOrder:   req.Order,
 			Page:        int(req.Page),
 			ItemPerPage: int(req.ItemPerPage),
-		})
+		},
+	)
+
 	if err != nil {
 		return
 	}
@@ -124,10 +92,10 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 		u,
 		meta.QueryParams{
 			SearchName:  req.Search,
-			Filter:      filter,
+			Filter:      req.Filter,
 			SearchTag:   req.Tag,
-			SortBy:      sort,
-			SortOrder:   order,
+			SortBy:      req.Sort,
+			SortOrder:   req.Order,
 			Page:        0,
 			ItemPerPage: 0,
 		})

@@ -2,6 +2,7 @@ package meta
 
 import (
 	"context"
+	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
@@ -9,31 +10,15 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
-)
-
-type SortField string
-type SortOrder string
-type Filter string
-
-const (
-	SortFieldName       = SortField("name")
-	SortFieldCreateTime = SortField("createTime")
-	SortFieldPageCount  = SortField("pageCount")
-
-	SortOrderAscending  = SortOrder("ascending")
-	SortOrderDescending = SortOrder("descending")
-
-	FilterNone         = ""
-	FilterFavoriteItem = "favorite"
-	FilterFavoriteTag  = "tag"
+	"github.com/mangaweb4/mangaweb4-backend/grpc"
 )
 
 type QueryParams struct {
 	SearchName  string
 	SearchTag   string
-	SortBy      SortField
-	SortOrder   SortOrder
-	Filter      Filter
+	SortBy      grpc.SortField
+	SortOrder   grpc.SortOrder
+	Filter      grpc.Filter
 	Page        int
 	ItemPerPage int
 }
@@ -57,11 +42,12 @@ func CreateQuery(ctx context.Context, client *ent.Client, u *ent.User, q QueryPa
 		query = query.Where(meta.NameContainsFold(q.SearchName))
 	}
 
-	if q.Filter == FilterFavoriteItem {
+	switch q.Filter {
+	case grpc.Filter_FILTER_FAVORITE_ITEMS:
 		query = query.Where(
 			meta.HasFavoriteOfUserWith(user.ID(u.ID)),
 		)
-	} else if q.Filter == FilterFavoriteTag {
+	case grpc.Filter_FILTER_FAVORITE_TAGS:
 		query = query.Where(
 			meta.HasTagsWith(tag.HasFavoriteOfUserWith(user.ID(u.ID))),
 		)
@@ -69,23 +55,26 @@ func CreateQuery(ctx context.Context, client *ent.Client, u *ent.User, q QueryPa
 
 	field := ""
 	switch q.SortBy {
-	case SortFieldName:
+	case grpc.SortField_SORT_FIELD_NAME:
 		field = meta.FieldName
-	case SortFieldCreateTime:
+	case grpc.SortField_SORT_FIELD_CREATION_TIME:
 		field = meta.FieldCreateTime
-	case SortFieldPageCount:
+	case grpc.SortField_SORT_FIELD_PAGECOUNT:
 		field = meta.FieldFileIndices
+
+	default:
+		err = fmt.Errorf("invalid filter value: %v", q.SortBy)
 	}
 
 	switch q.SortOrder {
-	case SortOrderAscending:
-		if q.SortBy == SortFieldPageCount {
+	case grpc.SortOrder_SORT_ORDER_ASCENDING:
+		if q.SortBy == grpc.SortField_SORT_FIELD_PAGECOUNT {
 			query = query.Order(sqljson.OrderLen(meta.FieldFileIndices)).Unique(false)
 		} else {
 			query = query.Order(ent.Asc(string(field)))
 		}
-	case SortOrderDescending:
-		if q.SortBy == SortFieldPageCount {
+	case grpc.SortOrder_SORT_ORDER_DESCENDING:
+		if q.SortBy == grpc.SortField_SORT_FIELD_PAGECOUNT {
 			query = query.Order(sqljson.OrderLenDesc(meta.FieldFileIndices)).Unique(false)
 		} else {
 			query = query.Order(ent.Desc(string(field)))
