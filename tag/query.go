@@ -2,6 +2,7 @@ package tag
 
 import (
 	"context"
+	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
@@ -38,45 +39,61 @@ type QueryParams struct {
 	Order       grpc.SortOrder
 }
 
-func CreateQuery(client *ent.Client, u *ent.User, q QueryParams) *ent.TagQuery {
-	query := client.Tag.Query()
-	if q.ItemPerPage > 0 {
-		query = query.Limit(q.ItemPerPage).
-			Offset(q.Page * q.ItemPerPage)
+func CreateQuery(client *ent.Client, u *ent.User, params QueryParams) (query *ent.TagQuery, err error) {
+	query = client.Tag.Query()
+	if params.ItemPerPage > 0 {
+		query = query.Limit(params.ItemPerPage).
+			Offset(params.Page * params.ItemPerPage)
 	}
 
-	if q.Filter == grpc.Filter_FILTER_FAVORITE_TAGS {
+	switch params.Filter {
+	case grpc.Filter_FILTER_UNKNOWN:
+		break
+
+	case grpc.Filter_FILTER_FAVORITE_TAGS:
 		query = query.Where(tag.HasFavoriteOfUserWith(user.ID(u.ID)))
-	}
-	if q.Search != "" {
-		query = query.Where(tag.NameContainsFold(q.Search))
+
+	default:
+		query = nil
+		err = fmt.Errorf("invalid filter value: %v", params.Filter)
+		return
 	}
 
-	switch q.Sort {
+	if params.Search != "" {
+		query = query.Where(tag.NameContainsFold(params.Search))
+	}
+
+	switch params.Sort {
 	case grpc.SortField_SORT_FIELD_NAME:
-		if q.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
+		if params.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
 			query = query.Order(tag.ByName(sql.OrderAsc()))
 		} else {
 			query = query.Order(tag.ByName(sql.OrderDesc()))
 		}
 	case grpc.SortField_SORT_FIELD_ITEMCOUNT:
-		if q.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
+		if params.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
 			query = query.Order(tag.ByMetaCount(sql.OrderAsc()))
 		} else {
 			query = query.Order(tag.ByMetaCount(sql.OrderDesc()))
 		}
 	}
 
-	return query
+	return
 }
 
 func ReadPage(ctx context.Context, client *ent.Client, u *ent.User, q QueryParams) (tags []*ent.Tag, err error) {
-	query := CreateQuery(client, u, q)
+	query, err := CreateQuery(client, u, q)
+	if err != nil {
+		return
+	}
 	return query.All(ctx)
 }
 
 func Count(ctx context.Context, client *ent.Client, u *ent.User, q QueryParams) (count int, err error) {
-	query := CreateQuery(client, u, q)
+	query, err := CreateQuery(client, u, q)
+	if err != nil {
+		return
+	}
 
 	return query.Count(ctx)
 }
