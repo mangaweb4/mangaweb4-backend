@@ -7,6 +7,7 @@ import (
 
 	"entgo.io/ent/dialect"
 	dialect_sql "entgo.io/ent/dialect/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
@@ -35,11 +36,14 @@ func Open(ctx context.Context, dbType string, connStr string) error {
 		}
 
 	case dialect.SQLite:
+		fallthrough
+
+	case dialect.MySQL:
 		return nil
+
+	default:
+		return errors.New("invalid database type")
 	}
-
-	return errors.New("invalid database type")
-
 }
 
 func openDB(dbType string) (db *dialect_sql.Driver, err error) {
@@ -49,15 +53,29 @@ func openDB(dbType string) (db *dialect_sql.Driver, err error) {
 
 	case dialect.SQLite:
 		return openSqlite()
+
+	case dialect.MySQL:
+		return openMySQL()
+	default:
+		return nil, errors.New("invalid databse type")
 	}
 
-	return nil, errors.New("invalid databse type")
 }
 
 func openPostgres() (db *dialect_sql.Driver, err error) {
 	db = dialect_sql.OpenDB(dialect.Postgres, stdlib.OpenDBFromPool(pool))
 
 	return
+}
+
+func openMySQL() (db *dialect_sql.Driver, err error) {
+	if d, e := sql.Open("mysql", connectionStr); e == nil {
+		db = dialect_sql.OpenDB(dialect.MySQL, d)
+		return
+	} else {
+		err = e
+		return
+	}
 }
 
 func openSqlite() (db *dialect_sql.Driver, err error) {
@@ -77,7 +95,6 @@ func Close() {
 }
 
 func CreateEntClient() *ent.Client {
-
 	db, err := openDB(databaseType)
 	if err != nil {
 		return nil
