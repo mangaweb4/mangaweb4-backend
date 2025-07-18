@@ -4,10 +4,9 @@ FROM golang:1.24-alpine AS builder1
 WORKDIR /go/src/mangaweb
 COPY . .
 
-ARG VERSION=Development
 RUN apk add git
 RUN go get -d -v ./...
-RUN go build -v -ldflags="-X 'main.versionString=$VERSION' " -o mangaweb .
+RUN VERSION=$(git describe --tags) && go build -v -ldflags="-X 'main.versionString=$VERSION' " -o mangaweb .
 
 # Stage 2 -- build the target image
 FROM alpine:latest
