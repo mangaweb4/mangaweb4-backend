@@ -27,13 +27,13 @@ func main() {
 
 	flag.Usage = func() {
 
-		_, err := os.Stderr.WriteString("Usage: mangaweb4-backend [options]\n\n")
+		_, err := fmt.Fprint(os.Stderr, "Usage: mangaweb4-backend [options]\n\n")
 		if err != nil {
 			return
 		}
 		flag.PrintDefaults()
 
-		_, err = os.Stderr.WriteString(fmt.Sprintf("MangaWeb 4 version %s", system.VersionString))
+		_, err = fmt.Fprintf(os.Stderr, "MangaWeb 4 version %s", system.VersionString)
 		if err != nil {
 			return
 		}
