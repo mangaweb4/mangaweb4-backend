@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"net"
 	"os"
 	"strconv"
@@ -14,23 +15,28 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/maintenance"
 	"github.com/mangaweb4/mangaweb4-backend/server"
+	"github.com/mangaweb4/mangaweb4-backend/system"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	grpclib "google.golang.org/grpc"
 )
 
-var versionString string = "development"
-
 func main() {
 	ctx := context.Background()
 
 	flag.Usage = func() {
+
 		_, err := os.Stderr.WriteString("Usage: mangaweb4-backend [options]\n\n")
 		if err != nil {
 			return
 		}
 		flag.PrintDefaults()
+
+		_, err = os.Stderr.WriteString(fmt.Sprintf("MangaWeb 4 version %s", system.VersionString))
+		if err != nil {
+			return
+		}
 		os.Exit(0)
 	}
 
@@ -95,14 +101,14 @@ func main() {
 
 	log.Info().
 		Bool("debugMode", debugMode).
-		Str("version", versionString).
+		Str("version", system.VersionString).
 		Str("dataPath", dataPath).
 		Str("cachePath", cachePath).
 		Msg("Server initializes.")
 
 	configuration.Init(configuration.Config{
 		DebugMode:     debugMode,
-		VersionString: versionString,
+		VersionString: system.VersionString,
 		DataPath:      dataPath,
 		CachePath:     cachePath,
 	})
@@ -135,6 +141,7 @@ func main() {
 	grpc.RegisterMaintenanceServer(grpcServer, &server.MaintenanceServer{})
 	grpc.RegisterMangaServer(grpcServer, &server.MangaServer{})
 	grpc.RegisterTagServer(grpcServer, &server.TagServer{})
+	grpc.RegisterSystemServer(grpcServer, &server.SystemServer{})
 
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Error().Err(err).Msg("Starting server fails")
