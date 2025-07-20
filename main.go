@@ -141,6 +141,7 @@ func main() {
 	grpc.RegisterMaintenanceServer(grpcServer, &server.MaintenanceServer{})
 	grpc.RegisterMangaServer(grpcServer, &server.MangaServer{})
 	grpc.RegisterTagServer(grpcServer, &server.TagServer{})
+	grpc.RegisterSystemServer(grpcServer, &server.SystemServer{})
 
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Error().Err(err).Msg("Starting server fails")
