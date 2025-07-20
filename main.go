@@ -14,13 +14,12 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/maintenance"
 	"github.com/mangaweb4/mangaweb4-backend/server"
+	"github.com/mangaweb4/mangaweb4-backend/system"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	grpclib "google.golang.org/grpc"
 )
-
-var versionString string = "development"
 
 func main() {
 	ctx := context.Background()
@@ -95,14 +94,14 @@ func main() {
 
 	log.Info().
 		Bool("debugMode", debugMode).
-		Str("version", versionString).
+		Str("version", system.VersionString).
 		Str("dataPath", dataPath).
 		Str("cachePath", cachePath).
 		Msg("Server initializes.")
 
 	configuration.Init(configuration.Config{
 		DebugMode:     debugMode,
-		VersionString: versionString,
+		VersionString: system.VersionString,
 		DataPath:      dataPath,
 		CachePath:     cachePath,
 	})
