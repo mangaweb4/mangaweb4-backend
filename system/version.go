@@ -1,3 +1,3 @@
 package system
 
-const VersionString string = "development"
+var VersionString = "development"
