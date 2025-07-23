@@ -6,6 +6,7 @@ import (
 	"io"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/disintegration/imaging"
 	"github.com/mangaweb4/mangaweb4-backend/container"
@@ -22,6 +23,7 @@ import (
 )
 
 type MangaServer struct {
+	progressMutex sync.Mutex
 	grpc.UnimplementedMangaServer
 }
 
@@ -313,6 +315,9 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 
 	u, err := user.GetUser(ctx, client, req.User)
 	if err == nil {
+		s.progressMutex.Lock()
+		defer s.progressMutex.Unlock()
+
 		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
 
 		if progressRec == nil {

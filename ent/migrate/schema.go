@@ -85,6 +85,13 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "progress_user_id_item_id",
+				Unique:  true,
+				Columns: []*schema.Column{ProgressesColumns[4], ProgressesColumns[3]},
+			},
+		},
 	}
 	// TagsColumns holds the columns for the "tags" table.
 	TagsColumns = []*schema.Column{
