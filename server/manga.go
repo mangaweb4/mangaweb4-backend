@@ -396,8 +396,8 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 
 	var err error
 	var ctx = context.Background()
-	var contentType = ""
-	var filename = ""
+	var contentType string
+	var filename string
 
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.PageImageStream") }()
 
@@ -460,6 +460,8 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 			contentType = "image/png"
 		case ".webp":
 			contentType = "image/webp"
+		default:
+			contentType = ""
 		}
 
 	} else {
