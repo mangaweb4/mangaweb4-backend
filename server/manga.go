@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"path/filepath"
 	"strings"
@@ -21,6 +22,8 @@ import (
 	"github.com/rs/zerolog/log"
 	grpclib "google.golang.org/grpc"
 )
+
+const MESSAGE_SIZE = 1024 * 1024
 
 type MangaServer struct {
 	progressMutex sync.Mutex
@@ -388,6 +391,120 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 	return
 }
 
+func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
+	stream grpclib.ServerStreamingServer[grpc.MangaPageImageStreamResponse]) error {
+
+	var err error
+	var ctx = context.Background()
+	var contentType = ""
+	var filename = ""
+
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.PageImageStream") }()
+
+	client := database.CreateEntClient()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.PageImageStream") }()
+
+	m, err := meta.Read(ctx, client, req.Name)
+	if err != nil {
+		return err
+	}
+
+	c, err := container.CreateContainer(m)
+	if err != nil {
+		return err
+	}
+
+	fstream, filename, err := c.OpenItem(context.Background(), int(req.Index))
+	if err != nil {
+		return err
+	}
+
+	data, err := io.ReadAll(fstream)
+	if err != nil {
+		return err
+	}
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err == nil {
+		s.progressMutex.Lock()
+		defer s.progressMutex.Unlock()
+
+		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+
+		if progressRec == nil {
+			_, err = client.Progress.Create().
+				SetPage(int(req.Index)).
+				SetMax(int(0)).
+				SetItem(m).
+				SetUser(u).
+				Save(ctx)
+		} else {
+			max := max(progressRec.Max, int(req.Index))
+			_, err = progressRec.Update().
+				SetPage(int(req.Index)).
+				SetMax(max).
+				SetItem(m).
+				SetUser(u).
+				Save(ctx)
+		}
+
+		if err != nil {
+			return err
+		}
+	}
+	if req.Width == 0 && req.Height == 0 {
+		switch filepath.Ext(strings.ToLower(filename)) {
+		case ".jpg", ".jpeg":
+			contentType = "image/jpeg"
+		case ".png":
+			contentType = "image/png"
+		case ".webp":
+			contentType = "image/webp"
+		}
+
+	} else {
+		reader := bytes.NewBuffer(data)
+
+		img, err := imaging.Decode(reader, imaging.AutoOrientation(true))
+		if err != nil {
+			return err
+		}
+
+		if img.Bounds().Dx() > int(req.Width) || img.Bounds().Dy() > int(req.Height) {
+			resized := imaging.Fit(img, int(req.Width), int(req.Height), imaging.MitchellNetravali)
+			img = resized
+		}
+
+		var buf bytes.Buffer
+
+		err = imaging.Encode(&buf, img, imaging.JPEG)
+
+		if err != nil {
+			return err
+		}
+
+		filename = fmt.Sprintf("%s.jpeg", filepath.Base(filename))
+	}
+
+	length := len(data)
+
+	for i := 0; i < length; i += MESSAGE_SIZE {
+		end := min(i+MESSAGE_SIZE, length)
+		err = stream.Send(&grpc.MangaPageImageStreamResponse{
+			Filename:    filename,
+			ContentType: contentType,
+			Data:        data[i:end],
+			Size:        int32(end - i),
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) (resp *grpc.MangaRepairResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Repair") }()
 
@@ -454,7 +571,6 @@ func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.Se
 		return err
 	}
 
-	const MESSAGE_SIZE = 1024 * 1024
 	length := len(bytes)
 
 	for i := 0; i < length; i += MESSAGE_SIZE {
