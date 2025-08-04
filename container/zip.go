@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"unicode/utf8"
 
 	"github.com/facette/natsort"
 	"github.com/mangaweb4/mangaweb4-backend/configuration"
@@ -64,7 +65,12 @@ func (c *ZipContainer) OpenItem(ctx context.Context, index int) (reader io.ReadC
 		return
 	}
 
-	name = zf.Name
+	name = filepath.Base(zf.Name)
+	if !utf8.ValidString(name) {
+		name = fmt.Sprintf("%4d.%s", index, filepath.Ext(zf.Name))
+	}
+
+	log.Debug().Str("name", name).Msg("item name")
 	reader, err = zf.Open()
 	if err != nil {
 		return
