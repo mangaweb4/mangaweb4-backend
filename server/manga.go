@@ -256,6 +256,55 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 	return
 }
 
+func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgressRequest) (resp *grpc.MangaSetProgressResponse, err error) {
+	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.SetProgress") }()
+
+	client := database.CreateEntClient()
+	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.SetProgress") }()
+	m, err := meta.Read(ctx, client, req.Name)
+	if err != nil {
+		return
+	}
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err == nil {
+		s.progressMutex.Lock()
+		defer s.progressMutex.Unlock()
+
+		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+
+		if progressRec == nil {
+			_, err = client.Progress.Create().
+				SetPage(int(req.Page)).
+				SetMax(int(0)).
+				SetItem(m).
+				SetUser(u).
+				Save(ctx)
+		} else {
+			max := max(progressRec.Max, int(req.Page))
+			_, err = progressRec.Update().
+				SetPage(int(req.Page)).
+				SetMax(max).
+				SetItem(m).
+				SetUser(u).
+				Save(ctx)
+		}
+
+		if err != nil {
+			return
+		}
+	}
+
+	resp = &grpc.MangaSetProgressResponse{
+		Name:    req.Name,
+		User:    req.User,
+		Page:    req.Page,
+		Succeed: true,
+	}
+
+	return
+}
+
 func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCoverRequest) (resp *grpc.MangaUpdateCoverResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.UpdateCover") }()
 
@@ -316,34 +365,6 @@ func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageReq
 		return
 	}
 
-	u, err := user.GetUser(ctx, client, req.User)
-	if err == nil {
-		s.progressMutex.Lock()
-		defer s.progressMutex.Unlock()
-
-		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
-
-		if progressRec == nil {
-			_, err = client.Progress.Create().
-				SetPage(int(req.Index)).
-				SetMax(int(0)).
-				SetItem(m).
-				SetUser(u).
-				Save(ctx)
-		} else {
-			max := max(progressRec.Max, int(req.Index))
-			_, err = progressRec.Update().
-				SetPage(int(req.Index)).
-				SetMax(max).
-				SetItem(m).
-				SetUser(u).
-				Save(ctx)
-		}
-
-		if err != nil {
-			return
-		}
-	}
 	if req.Width == 0 && req.Height == 0 {
 		var contentType string
 		switch filepath.Ext(strings.ToLower(f)) {
