@@ -15,6 +15,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -31,6 +32,7 @@ const (
 	TypeHistory  = "History"
 	TypeMeta     = "Meta"
 	TypeProgress = "Progress"
+	TypeSerie    = "Serie"
 	TypeTag      = "Tag"
 	TypeUser     = "User"
 )
@@ -516,6 +518,8 @@ type MetaMutation struct {
 	tags                    map[int]struct{}
 	removedtags             map[int]struct{}
 	clearedtags             bool
+	serie                   *int
+	clearedserie            bool
 	histories               map[int]struct{}
 	removedhistories        map[int]struct{}
 	clearedhistories        bool
@@ -1335,6 +1339,45 @@ func (m *MetaMutation) ResetTags() {
 	m.removedtags = nil
 }
 
+// SetSerieID sets the "serie" edge to the Serie entity by id.
+func (m *MetaMutation) SetSerieID(id int) {
+	m.serie = &id
+}
+
+// ClearSerie clears the "serie" edge to the Serie entity.
+func (m *MetaMutation) ClearSerie() {
+	m.clearedserie = true
+}
+
+// SerieCleared reports if the "serie" edge to the Serie entity was cleared.
+func (m *MetaMutation) SerieCleared() bool {
+	return m.clearedserie
+}
+
+// SerieID returns the "serie" edge ID in the mutation.
+func (m *MetaMutation) SerieID() (id int, exists bool) {
+	if m.serie != nil {
+		return *m.serie, true
+	}
+	return
+}
+
+// SerieIDs returns the "serie" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// SerieID instead. It exists only for internal usage by the builders.
+func (m *MetaMutation) SerieIDs() (ids []int) {
+	if id := m.serie; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetSerie resets all changes to the "serie" edge.
+func (m *MetaMutation) ResetSerie() {
+	m.serie = nil
+	m.clearedserie = false
+}
+
 // AddHistoryIDs adds the "histories" edge to the History entity by ids.
 func (m *MetaMutation) AddHistoryIDs(ids ...int) {
 	if m.histories == nil {
@@ -1930,9 +1973,12 @@ func (m *MetaMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *MetaMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.tags != nil {
 		edges = append(edges, meta.EdgeTags)
+	}
+	if m.serie != nil {
+		edges = append(edges, meta.EdgeSerie)
 	}
 	if m.histories != nil {
 		edges = append(edges, meta.EdgeHistories)
@@ -1956,6 +2002,10 @@ func (m *MetaMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case meta.EdgeSerie:
+		if id := m.serie; id != nil {
+			return []ent.Value{*id}
+		}
 	case meta.EdgeHistories:
 		ids := make([]ent.Value, 0, len(m.histories))
 		for id := range m.histories {
@@ -1980,7 +2030,7 @@ func (m *MetaMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *MetaMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedtags != nil {
 		edges = append(edges, meta.EdgeTags)
 	}
@@ -2030,9 +2080,12 @@ func (m *MetaMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *MetaMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedtags {
 		edges = append(edges, meta.EdgeTags)
+	}
+	if m.clearedserie {
+		edges = append(edges, meta.EdgeSerie)
 	}
 	if m.clearedhistories {
 		edges = append(edges, meta.EdgeHistories)
@@ -2052,6 +2105,8 @@ func (m *MetaMutation) EdgeCleared(name string) bool {
 	switch name {
 	case meta.EdgeTags:
 		return m.clearedtags
+	case meta.EdgeSerie:
+		return m.clearedserie
 	case meta.EdgeHistories:
 		return m.clearedhistories
 	case meta.EdgeFavoriteOfUser:
@@ -2066,6 +2121,9 @@ func (m *MetaMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *MetaMutation) ClearEdge(name string) error {
 	switch name {
+	case meta.EdgeSerie:
+		m.ClearSerie()
+		return nil
 	}
 	return fmt.Errorf("unknown Meta unique edge %s", name)
 }
@@ -2076,6 +2134,9 @@ func (m *MetaMutation) ResetEdge(name string) error {
 	switch name {
 	case meta.EdgeTags:
 		m.ResetTags()
+		return nil
+	case meta.EdgeSerie:
+		m.ResetSerie()
 		return nil
 	case meta.EdgeHistories:
 		m.ResetHistories()
@@ -2788,6 +2849,616 @@ func (m *ProgressMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Progress edge %s", name)
 }
 
+// SerieMutation represents an operation that mutates the Serie nodes in the graph.
+type SerieMutation struct {
+	config
+	op                      Op
+	typ                     string
+	id                      *int
+	name                    *string
+	hidden                  *bool
+	last_update             *time.Time
+	clearedFields           map[string]struct{}
+	items                   map[int]struct{}
+	removeditems            map[int]struct{}
+	cleareditems            bool
+	favorite_of_user        map[int]struct{}
+	removedfavorite_of_user map[int]struct{}
+	clearedfavorite_of_user bool
+	done                    bool
+	oldValue                func(context.Context) (*Serie, error)
+	predicates              []predicate.Serie
+}
+
+var _ ent.Mutation = (*SerieMutation)(nil)
+
+// serieOption allows management of the mutation configuration using functional options.
+type serieOption func(*SerieMutation)
+
+// newSerieMutation creates new mutation for the Serie entity.
+func newSerieMutation(c config, op Op, opts ...serieOption) *SerieMutation {
+	m := &SerieMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeSerie,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withSerieID sets the ID field of the mutation.
+func withSerieID(id int) serieOption {
+	return func(m *SerieMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Serie
+		)
+		m.oldValue = func(ctx context.Context) (*Serie, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Serie.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withSerie sets the old Serie of the mutation.
+func withSerie(node *Serie) serieOption {
+	return func(m *SerieMutation) {
+		m.oldValue = func(context.Context) (*Serie, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m SerieMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m SerieMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *SerieMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *SerieMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Serie.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetName sets the "name" field.
+func (m *SerieMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *SerieMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the Serie entity.
+// If the Serie object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SerieMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *SerieMutation) ResetName() {
+	m.name = nil
+}
+
+// SetHidden sets the "hidden" field.
+func (m *SerieMutation) SetHidden(b bool) {
+	m.hidden = &b
+}
+
+// Hidden returns the value of the "hidden" field in the mutation.
+func (m *SerieMutation) Hidden() (r bool, exists bool) {
+	v := m.hidden
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHidden returns the old "hidden" field's value of the Serie entity.
+// If the Serie object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SerieMutation) OldHidden(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHidden is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHidden requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHidden: %w", err)
+	}
+	return oldValue.Hidden, nil
+}
+
+// ResetHidden resets all changes to the "hidden" field.
+func (m *SerieMutation) ResetHidden() {
+	m.hidden = nil
+}
+
+// SetLastUpdate sets the "last_update" field.
+func (m *SerieMutation) SetLastUpdate(t time.Time) {
+	m.last_update = &t
+}
+
+// LastUpdate returns the value of the "last_update" field in the mutation.
+func (m *SerieMutation) LastUpdate() (r time.Time, exists bool) {
+	v := m.last_update
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastUpdate returns the old "last_update" field's value of the Serie entity.
+// If the Serie object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SerieMutation) OldLastUpdate(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastUpdate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastUpdate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastUpdate: %w", err)
+	}
+	return oldValue.LastUpdate, nil
+}
+
+// ResetLastUpdate resets all changes to the "last_update" field.
+func (m *SerieMutation) ResetLastUpdate() {
+	m.last_update = nil
+}
+
+// AddItemIDs adds the "items" edge to the Meta entity by ids.
+func (m *SerieMutation) AddItemIDs(ids ...int) {
+	if m.items == nil {
+		m.items = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.items[ids[i]] = struct{}{}
+	}
+}
+
+// ClearItems clears the "items" edge to the Meta entity.
+func (m *SerieMutation) ClearItems() {
+	m.cleareditems = true
+}
+
+// ItemsCleared reports if the "items" edge to the Meta entity was cleared.
+func (m *SerieMutation) ItemsCleared() bool {
+	return m.cleareditems
+}
+
+// RemoveItemIDs removes the "items" edge to the Meta entity by IDs.
+func (m *SerieMutation) RemoveItemIDs(ids ...int) {
+	if m.removeditems == nil {
+		m.removeditems = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.items, ids[i])
+		m.removeditems[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedItems returns the removed IDs of the "items" edge to the Meta entity.
+func (m *SerieMutation) RemovedItemsIDs() (ids []int) {
+	for id := range m.removeditems {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ItemsIDs returns the "items" edge IDs in the mutation.
+func (m *SerieMutation) ItemsIDs() (ids []int) {
+	for id := range m.items {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetItems resets all changes to the "items" edge.
+func (m *SerieMutation) ResetItems() {
+	m.items = nil
+	m.cleareditems = false
+	m.removeditems = nil
+}
+
+// AddFavoriteOfUserIDs adds the "favorite_of_user" edge to the User entity by ids.
+func (m *SerieMutation) AddFavoriteOfUserIDs(ids ...int) {
+	if m.favorite_of_user == nil {
+		m.favorite_of_user = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.favorite_of_user[ids[i]] = struct{}{}
+	}
+}
+
+// ClearFavoriteOfUser clears the "favorite_of_user" edge to the User entity.
+func (m *SerieMutation) ClearFavoriteOfUser() {
+	m.clearedfavorite_of_user = true
+}
+
+// FavoriteOfUserCleared reports if the "favorite_of_user" edge to the User entity was cleared.
+func (m *SerieMutation) FavoriteOfUserCleared() bool {
+	return m.clearedfavorite_of_user
+}
+
+// RemoveFavoriteOfUserIDs removes the "favorite_of_user" edge to the User entity by IDs.
+func (m *SerieMutation) RemoveFavoriteOfUserIDs(ids ...int) {
+	if m.removedfavorite_of_user == nil {
+		m.removedfavorite_of_user = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.favorite_of_user, ids[i])
+		m.removedfavorite_of_user[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedFavoriteOfUser returns the removed IDs of the "favorite_of_user" edge to the User entity.
+func (m *SerieMutation) RemovedFavoriteOfUserIDs() (ids []int) {
+	for id := range m.removedfavorite_of_user {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// FavoriteOfUserIDs returns the "favorite_of_user" edge IDs in the mutation.
+func (m *SerieMutation) FavoriteOfUserIDs() (ids []int) {
+	for id := range m.favorite_of_user {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetFavoriteOfUser resets all changes to the "favorite_of_user" edge.
+func (m *SerieMutation) ResetFavoriteOfUser() {
+	m.favorite_of_user = nil
+	m.clearedfavorite_of_user = false
+	m.removedfavorite_of_user = nil
+}
+
+// Where appends a list predicates to the SerieMutation builder.
+func (m *SerieMutation) Where(ps ...predicate.Serie) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the SerieMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *SerieMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Serie, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *SerieMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *SerieMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Serie).
+func (m *SerieMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *SerieMutation) Fields() []string {
+	fields := make([]string, 0, 3)
+	if m.name != nil {
+		fields = append(fields, serie.FieldName)
+	}
+	if m.hidden != nil {
+		fields = append(fields, serie.FieldHidden)
+	}
+	if m.last_update != nil {
+		fields = append(fields, serie.FieldLastUpdate)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *SerieMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case serie.FieldName:
+		return m.Name()
+	case serie.FieldHidden:
+		return m.Hidden()
+	case serie.FieldLastUpdate:
+		return m.LastUpdate()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *SerieMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case serie.FieldName:
+		return m.OldName(ctx)
+	case serie.FieldHidden:
+		return m.OldHidden(ctx)
+	case serie.FieldLastUpdate:
+		return m.OldLastUpdate(ctx)
+	}
+	return nil, fmt.Errorf("unknown Serie field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SerieMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case serie.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case serie.FieldHidden:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHidden(v)
+		return nil
+	case serie.FieldLastUpdate:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastUpdate(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Serie field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *SerieMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *SerieMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SerieMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Serie numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *SerieMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *SerieMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *SerieMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Serie nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *SerieMutation) ResetField(name string) error {
+	switch name {
+	case serie.FieldName:
+		m.ResetName()
+		return nil
+	case serie.FieldHidden:
+		m.ResetHidden()
+		return nil
+	case serie.FieldLastUpdate:
+		m.ResetLastUpdate()
+		return nil
+	}
+	return fmt.Errorf("unknown Serie field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *SerieMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.items != nil {
+		edges = append(edges, serie.EdgeItems)
+	}
+	if m.favorite_of_user != nil {
+		edges = append(edges, serie.EdgeFavoriteOfUser)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *SerieMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case serie.EdgeItems:
+		ids := make([]ent.Value, 0, len(m.items))
+		for id := range m.items {
+			ids = append(ids, id)
+		}
+		return ids
+	case serie.EdgeFavoriteOfUser:
+		ids := make([]ent.Value, 0, len(m.favorite_of_user))
+		for id := range m.favorite_of_user {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *SerieMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.removeditems != nil {
+		edges = append(edges, serie.EdgeItems)
+	}
+	if m.removedfavorite_of_user != nil {
+		edges = append(edges, serie.EdgeFavoriteOfUser)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *SerieMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case serie.EdgeItems:
+		ids := make([]ent.Value, 0, len(m.removeditems))
+		for id := range m.removeditems {
+			ids = append(ids, id)
+		}
+		return ids
+	case serie.EdgeFavoriteOfUser:
+		ids := make([]ent.Value, 0, len(m.removedfavorite_of_user))
+		for id := range m.removedfavorite_of_user {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *SerieMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.cleareditems {
+		edges = append(edges, serie.EdgeItems)
+	}
+	if m.clearedfavorite_of_user {
+		edges = append(edges, serie.EdgeFavoriteOfUser)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *SerieMutation) EdgeCleared(name string) bool {
+	switch name {
+	case serie.EdgeItems:
+		return m.cleareditems
+	case serie.EdgeFavoriteOfUser:
+		return m.clearedfavorite_of_user
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *SerieMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Serie unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *SerieMutation) ResetEdge(name string) error {
+	switch name {
+	case serie.EdgeItems:
+		m.ResetItems()
+		return nil
+	case serie.EdgeFavoriteOfUser:
+		m.ResetFavoriteOfUser()
+		return nil
+	}
+	return fmt.Errorf("unknown Serie edge %s", name)
+}
+
 // TagMutation represents an operation that mutates the Tag nodes in the graph.
 type TagMutation struct {
 	config
@@ -3401,27 +4072,30 @@ func (m *TagMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	email                 *string
-	active                *bool
-	clearedFields         map[string]struct{}
-	favorite_items        map[int]struct{}
-	removedfavorite_items map[int]struct{}
-	clearedfavorite_items bool
-	favorite_tags         map[int]struct{}
-	removedfavorite_tags  map[int]struct{}
-	clearedfavorite_tags  bool
-	histories             map[int]struct{}
-	removedhistories      map[int]struct{}
-	clearedhistories      bool
-	progress              map[int]struct{}
-	removedprogress       map[int]struct{}
-	clearedprogress       bool
-	done                  bool
-	oldValue              func(context.Context) (*User, error)
-	predicates            []predicate.User
+	op                     Op
+	typ                    string
+	id                     *int
+	email                  *string
+	active                 *bool
+	clearedFields          map[string]struct{}
+	favorite_items         map[int]struct{}
+	removedfavorite_items  map[int]struct{}
+	clearedfavorite_items  bool
+	favorite_tags          map[int]struct{}
+	removedfavorite_tags   map[int]struct{}
+	clearedfavorite_tags   bool
+	favorite_series        map[int]struct{}
+	removedfavorite_series map[int]struct{}
+	clearedfavorite_series bool
+	histories              map[int]struct{}
+	removedhistories       map[int]struct{}
+	clearedhistories       bool
+	progress               map[int]struct{}
+	removedprogress        map[int]struct{}
+	clearedprogress        bool
+	done                   bool
+	oldValue               func(context.Context) (*User, error)
+	predicates             []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -3702,6 +4376,60 @@ func (m *UserMutation) ResetFavoriteTags() {
 	m.removedfavorite_tags = nil
 }
 
+// AddFavoriteSeriesIDs adds the "favorite_series" edge to the Serie entity by ids.
+func (m *UserMutation) AddFavoriteSeriesIDs(ids ...int) {
+	if m.favorite_series == nil {
+		m.favorite_series = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.favorite_series[ids[i]] = struct{}{}
+	}
+}
+
+// ClearFavoriteSeries clears the "favorite_series" edge to the Serie entity.
+func (m *UserMutation) ClearFavoriteSeries() {
+	m.clearedfavorite_series = true
+}
+
+// FavoriteSeriesCleared reports if the "favorite_series" edge to the Serie entity was cleared.
+func (m *UserMutation) FavoriteSeriesCleared() bool {
+	return m.clearedfavorite_series
+}
+
+// RemoveFavoriteSeriesIDs removes the "favorite_series" edge to the Serie entity by IDs.
+func (m *UserMutation) RemoveFavoriteSeriesIDs(ids ...int) {
+	if m.removedfavorite_series == nil {
+		m.removedfavorite_series = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.favorite_series, ids[i])
+		m.removedfavorite_series[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedFavoriteSeries returns the removed IDs of the "favorite_series" edge to the Serie entity.
+func (m *UserMutation) RemovedFavoriteSeriesIDs() (ids []int) {
+	for id := range m.removedfavorite_series {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// FavoriteSeriesIDs returns the "favorite_series" edge IDs in the mutation.
+func (m *UserMutation) FavoriteSeriesIDs() (ids []int) {
+	for id := range m.favorite_series {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetFavoriteSeries resets all changes to the "favorite_series" edge.
+func (m *UserMutation) ResetFavoriteSeries() {
+	m.favorite_series = nil
+	m.clearedfavorite_series = false
+	m.removedfavorite_series = nil
+}
+
 // AddHistoryIDs adds the "histories" edge to the History entity by ids.
 func (m *UserMutation) AddHistoryIDs(ids ...int) {
 	if m.histories == nil {
@@ -3960,12 +4688,15 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.favorite_items != nil {
 		edges = append(edges, user.EdgeFavoriteItems)
 	}
 	if m.favorite_tags != nil {
 		edges = append(edges, user.EdgeFavoriteTags)
+	}
+	if m.favorite_series != nil {
+		edges = append(edges, user.EdgeFavoriteSeries)
 	}
 	if m.histories != nil {
 		edges = append(edges, user.EdgeHistories)
@@ -3992,6 +4723,12 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeFavoriteSeries:
+		ids := make([]ent.Value, 0, len(m.favorite_series))
+		for id := range m.favorite_series {
+			ids = append(ids, id)
+		}
+		return ids
 	case user.EdgeHistories:
 		ids := make([]ent.Value, 0, len(m.histories))
 		for id := range m.histories {
@@ -4010,12 +4747,15 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedfavorite_items != nil {
 		edges = append(edges, user.EdgeFavoriteItems)
 	}
 	if m.removedfavorite_tags != nil {
 		edges = append(edges, user.EdgeFavoriteTags)
+	}
+	if m.removedfavorite_series != nil {
+		edges = append(edges, user.EdgeFavoriteSeries)
 	}
 	if m.removedhistories != nil {
 		edges = append(edges, user.EdgeHistories)
@@ -4042,6 +4782,12 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeFavoriteSeries:
+		ids := make([]ent.Value, 0, len(m.removedfavorite_series))
+		for id := range m.removedfavorite_series {
+			ids = append(ids, id)
+		}
+		return ids
 	case user.EdgeHistories:
 		ids := make([]ent.Value, 0, len(m.removedhistories))
 		for id := range m.removedhistories {
@@ -4060,12 +4806,15 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedfavorite_items {
 		edges = append(edges, user.EdgeFavoriteItems)
 	}
 	if m.clearedfavorite_tags {
 		edges = append(edges, user.EdgeFavoriteTags)
+	}
+	if m.clearedfavorite_series {
+		edges = append(edges, user.EdgeFavoriteSeries)
 	}
 	if m.clearedhistories {
 		edges = append(edges, user.EdgeHistories)
@@ -4084,6 +4833,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 		return m.clearedfavorite_items
 	case user.EdgeFavoriteTags:
 		return m.clearedfavorite_tags
+	case user.EdgeFavoriteSeries:
+		return m.clearedfavorite_series
 	case user.EdgeHistories:
 		return m.clearedhistories
 	case user.EdgeProgress:
@@ -4109,6 +4860,9 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	case user.EdgeFavoriteTags:
 		m.ResetFavoriteTags()
+		return nil
+	case user.EdgeFavoriteSeries:
+		m.ResetFavoriteSeries()
 		return nil
 	case user.EdgeHistories:
 		m.ResetHistories()

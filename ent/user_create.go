@@ -13,6 +13,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/history"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -73,6 +74,21 @@ func (uc *UserCreate) AddFavoriteTags(t ...*Tag) *UserCreate {
 		ids[i] = t[i].ID
 	}
 	return uc.AddFavoriteTagIDs(ids...)
+}
+
+// AddFavoriteSeriesIDs adds the "favorite_series" edge to the Serie entity by IDs.
+func (uc *UserCreate) AddFavoriteSeriesIDs(ids ...int) *UserCreate {
+	uc.mutation.AddFavoriteSeriesIDs(ids...)
+	return uc
+}
+
+// AddFavoriteSeries adds the "favorite_series" edges to the Serie entity.
+func (uc *UserCreate) AddFavoriteSeries(s ...*Serie) *UserCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uc.AddFavoriteSeriesIDs(ids...)
 }
 
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
@@ -219,6 +235,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.FavoriteSeriesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

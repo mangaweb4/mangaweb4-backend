@@ -51,12 +51,21 @@ var (
 		{Name: "thumbnail_y", Type: field.TypeInt, Nullable: true, Default: 0},
 		{Name: "thumbnail_width", Type: field.TypeInt, Nullable: true, Default: 0},
 		{Name: "thumbnail_height", Type: field.TypeInt, Nullable: true, Default: 0},
+		{Name: "meta_serie", Type: field.TypeInt, Nullable: true},
 	}
 	// MetaTable holds the schema information for the "meta" table.
 	MetaTable = &schema.Table{
 		Name:       "meta",
 		Columns:    MetaColumns,
 		PrimaryKey: []*schema.Column{MetaColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "meta_series_serie",
+				Columns:    []*schema.Column{MetaColumns[14]},
+				RefColumns: []*schema.Column{SeriesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// ProgressesColumns holds the columns for the "progresses" table.
 	ProgressesColumns = []*schema.Column{
@@ -92,6 +101,19 @@ var (
 				Columns: []*schema.Column{ProgressesColumns[4], ProgressesColumns[3]},
 			},
 		},
+	}
+	// SeriesColumns holds the columns for the "series" table.
+	SeriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "hidden", Type: field.TypeBool, Default: false},
+		{Name: "last_update", Type: field.TypeTime},
+	}
+	// SeriesTable holds the schema information for the "series" table.
+	SeriesTable = &schema.Table{
+		Name:       "series",
+		Columns:    SeriesColumns,
+		PrimaryKey: []*schema.Column{SeriesColumns[0]},
 	}
 	// TagsColumns holds the columns for the "tags" table.
 	TagsColumns = []*schema.Column{
@@ -193,22 +215,50 @@ var (
 			},
 		},
 	}
+	// UserFavoriteSeriesColumns holds the columns for the "user_favorite_series" table.
+	UserFavoriteSeriesColumns = []*schema.Column{
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "serie_id", Type: field.TypeInt},
+	}
+	// UserFavoriteSeriesTable holds the schema information for the "user_favorite_series" table.
+	UserFavoriteSeriesTable = &schema.Table{
+		Name:       "user_favorite_series",
+		Columns:    UserFavoriteSeriesColumns,
+		PrimaryKey: []*schema.Column{UserFavoriteSeriesColumns[0], UserFavoriteSeriesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_favorite_series_user_id",
+				Columns:    []*schema.Column{UserFavoriteSeriesColumns[0]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "user_favorite_series_serie_id",
+				Columns:    []*schema.Column{UserFavoriteSeriesColumns[1]},
+				RefColumns: []*schema.Column{SeriesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		HistoriesTable,
 		MetaTable,
 		ProgressesTable,
+		SeriesTable,
 		TagsTable,
 		UsersTable,
 		MetaTagsTable,
 		UserFavoriteItemsTable,
 		UserFavoriteTagsTable,
+		UserFavoriteSeriesTable,
 	}
 )
 
 func init() {
 	HistoriesTable.ForeignKeys[0].RefTable = MetaTable
 	HistoriesTable.ForeignKeys[1].RefTable = UsersTable
+	MetaTable.ForeignKeys[0].RefTable = SeriesTable
 	ProgressesTable.ForeignKeys[0].RefTable = MetaTable
 	ProgressesTable.ForeignKeys[1].RefTable = UsersTable
 	MetaTagsTable.ForeignKeys[0].RefTable = MetaTable
@@ -217,4 +267,6 @@ func init() {
 	UserFavoriteItemsTable.ForeignKeys[1].RefTable = MetaTable
 	UserFavoriteTagsTable.ForeignKeys[0].RefTable = UsersTable
 	UserFavoriteTagsTable.ForeignKeys[1].RefTable = TagsTable
+	UserFavoriteSeriesTable.ForeignKeys[0].RefTable = UsersTable
+	UserFavoriteSeriesTable.ForeignKeys[1].RefTable = SeriesTable
 }

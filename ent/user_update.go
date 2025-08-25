@@ -14,6 +14,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -87,6 +88,21 @@ func (uu *UserUpdate) AddFavoriteTags(t ...*Tag) *UserUpdate {
 		ids[i] = t[i].ID
 	}
 	return uu.AddFavoriteTagIDs(ids...)
+}
+
+// AddFavoriteSeriesIDs adds the "favorite_series" edge to the Serie entity by IDs.
+func (uu *UserUpdate) AddFavoriteSeriesIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddFavoriteSeriesIDs(ids...)
+	return uu
+}
+
+// AddFavoriteSeries adds the "favorite_series" edges to the Serie entity.
+func (uu *UserUpdate) AddFavoriteSeries(s ...*Serie) *UserUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uu.AddFavoriteSeriesIDs(ids...)
 }
 
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
@@ -164,6 +180,27 @@ func (uu *UserUpdate) RemoveFavoriteTags(t ...*Tag) *UserUpdate {
 		ids[i] = t[i].ID
 	}
 	return uu.RemoveFavoriteTagIDs(ids...)
+}
+
+// ClearFavoriteSeries clears all "favorite_series" edges to the Serie entity.
+func (uu *UserUpdate) ClearFavoriteSeries() *UserUpdate {
+	uu.mutation.ClearFavoriteSeries()
+	return uu
+}
+
+// RemoveFavoriteSeriesIDs removes the "favorite_series" edge to Serie entities by IDs.
+func (uu *UserUpdate) RemoveFavoriteSeriesIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveFavoriteSeriesIDs(ids...)
+	return uu
+}
+
+// RemoveFavoriteSeries removes "favorite_series" edges to Serie entities.
+func (uu *UserUpdate) RemoveFavoriteSeries(s ...*Serie) *UserUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uu.RemoveFavoriteSeriesIDs(ids...)
 }
 
 // ClearHistories clears all "histories" edges to the History entity.
@@ -353,6 +390,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uu.mutation.FavoriteSeriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedFavoriteSeriesIDs(); len(nodes) > 0 && !uu.mutation.FavoriteSeriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.FavoriteSeriesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if uu.mutation.HistoriesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -521,6 +603,21 @@ func (uuo *UserUpdateOne) AddFavoriteTags(t ...*Tag) *UserUpdateOne {
 	return uuo.AddFavoriteTagIDs(ids...)
 }
 
+// AddFavoriteSeriesIDs adds the "favorite_series" edge to the Serie entity by IDs.
+func (uuo *UserUpdateOne) AddFavoriteSeriesIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddFavoriteSeriesIDs(ids...)
+	return uuo
+}
+
+// AddFavoriteSeries adds the "favorite_series" edges to the Serie entity.
+func (uuo *UserUpdateOne) AddFavoriteSeries(s ...*Serie) *UserUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uuo.AddFavoriteSeriesIDs(ids...)
+}
+
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
 func (uuo *UserUpdateOne) AddHistoryIDs(ids ...int) *UserUpdateOne {
 	uuo.mutation.AddHistoryIDs(ids...)
@@ -596,6 +693,27 @@ func (uuo *UserUpdateOne) RemoveFavoriteTags(t ...*Tag) *UserUpdateOne {
 		ids[i] = t[i].ID
 	}
 	return uuo.RemoveFavoriteTagIDs(ids...)
+}
+
+// ClearFavoriteSeries clears all "favorite_series" edges to the Serie entity.
+func (uuo *UserUpdateOne) ClearFavoriteSeries() *UserUpdateOne {
+	uuo.mutation.ClearFavoriteSeries()
+	return uuo
+}
+
+// RemoveFavoriteSeriesIDs removes the "favorite_series" edge to Serie entities by IDs.
+func (uuo *UserUpdateOne) RemoveFavoriteSeriesIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveFavoriteSeriesIDs(ids...)
+	return uuo
+}
+
+// RemoveFavoriteSeries removes "favorite_series" edges to Serie entities.
+func (uuo *UserUpdateOne) RemoveFavoriteSeries(s ...*Serie) *UserUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uuo.RemoveFavoriteSeriesIDs(ids...)
 }
 
 // ClearHistories clears all "histories" edges to the History entity.
@@ -808,6 +926,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.FavoriteSeriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedFavoriteSeriesIDs(); len(nodes) > 0 && !uuo.mutation.FavoriteSeriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.FavoriteSeriesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.FavoriteSeriesTable,
+			Columns: user.FavoriteSeriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

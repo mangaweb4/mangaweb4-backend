@@ -20,6 +20,8 @@ const (
 	EdgeFavoriteItems = "favorite_items"
 	// EdgeFavoriteTags holds the string denoting the favorite_tags edge name in mutations.
 	EdgeFavoriteTags = "favorite_tags"
+	// EdgeFavoriteSeries holds the string denoting the favorite_series edge name in mutations.
+	EdgeFavoriteSeries = "favorite_series"
 	// EdgeHistories holds the string denoting the histories edge name in mutations.
 	EdgeHistories = "histories"
 	// EdgeProgress holds the string denoting the progress edge name in mutations.
@@ -36,6 +38,11 @@ const (
 	// FavoriteTagsInverseTable is the table name for the Tag entity.
 	// It exists in this package in order to avoid circular dependency with the "tag" package.
 	FavoriteTagsInverseTable = "tags"
+	// FavoriteSeriesTable is the table that holds the favorite_series relation/edge. The primary key declared below.
+	FavoriteSeriesTable = "user_favorite_series"
+	// FavoriteSeriesInverseTable is the table name for the Serie entity.
+	// It exists in this package in order to avoid circular dependency with the "serie" package.
+	FavoriteSeriesInverseTable = "series"
 	// HistoriesTable is the table that holds the histories relation/edge.
 	HistoriesTable = "histories"
 	// HistoriesInverseTable is the table name for the History entity.
@@ -66,6 +73,9 @@ var (
 	// FavoriteTagsPrimaryKey and FavoriteTagsColumn2 are the table columns denoting the
 	// primary key for the favorite_tags relation (M2M).
 	FavoriteTagsPrimaryKey = []string{"user_id", "tag_id"}
+	// FavoriteSeriesPrimaryKey and FavoriteSeriesColumn2 are the table columns denoting the
+	// primary key for the favorite_series relation (M2M).
+	FavoriteSeriesPrimaryKey = []string{"user_id", "serie_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -131,6 +141,20 @@ func ByFavoriteTags(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByFavoriteSeriesCount orders the results by favorite_series count.
+func ByFavoriteSeriesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newFavoriteSeriesStep(), opts...)
+	}
+}
+
+// ByFavoriteSeries orders the results by favorite_series terms.
+func ByFavoriteSeries(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newFavoriteSeriesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByHistoriesCount orders the results by histories count.
 func ByHistoriesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -170,6 +194,13 @@ func newFavoriteTagsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(FavoriteTagsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2M, false, FavoriteTagsTable, FavoriteTagsPrimaryKey...),
+	)
+}
+func newFavoriteSeriesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(FavoriteSeriesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, FavoriteSeriesTable, FavoriteSeriesPrimaryKey...),
 	)
 }
 func newHistoriesStep() *sqlgraph.Step {

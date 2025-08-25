@@ -32,13 +32,15 @@ type UserEdges struct {
 	FavoriteItems []*Meta `json:"favorite_items,omitempty"`
 	// FavoriteTags holds the value of the favorite_tags edge.
 	FavoriteTags []*Tag `json:"favorite_tags,omitempty"`
+	// FavoriteSeries holds the value of the favorite_series edge.
+	FavoriteSeries []*Serie `json:"favorite_series,omitempty"`
 	// Histories holds the value of the histories edge.
 	Histories []*History `json:"histories,omitempty"`
 	// Progress holds the value of the progress edge.
 	Progress []*Progress `json:"progress,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // FavoriteItemsOrErr returns the FavoriteItems value or an error if the edge
@@ -59,10 +61,19 @@ func (e UserEdges) FavoriteTagsOrErr() ([]*Tag, error) {
 	return nil, &NotLoadedError{edge: "favorite_tags"}
 }
 
+// FavoriteSeriesOrErr returns the FavoriteSeries value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) FavoriteSeriesOrErr() ([]*Serie, error) {
+	if e.loadedTypes[2] {
+		return e.FavoriteSeries, nil
+	}
+	return nil, &NotLoadedError{edge: "favorite_series"}
+}
+
 // HistoriesOrErr returns the Histories value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) HistoriesOrErr() ([]*History, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.Histories, nil
 	}
 	return nil, &NotLoadedError{edge: "histories"}
@@ -71,7 +82,7 @@ func (e UserEdges) HistoriesOrErr() ([]*History, error) {
 // ProgressOrErr returns the Progress value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) ProgressOrErr() ([]*Progress, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.Progress, nil
 	}
 	return nil, &NotLoadedError{edge: "progress"}
@@ -142,6 +153,11 @@ func (u *User) QueryFavoriteItems() *MetaQuery {
 // QueryFavoriteTags queries the "favorite_tags" edge of the User entity.
 func (u *User) QueryFavoriteTags() *TagQuery {
 	return NewUserClient(u.config).QueryFavoriteTags(u)
+}
+
+// QueryFavoriteSeries queries the "favorite_series" edge of the User entity.
+func (u *User) QueryFavoriteSeries() *SerieQuery {
+	return NewUserClient(u.config).QueryFavoriteSeries(u)
 }
 
 // QueryHistories queries the "histories" edge of the User entity.

@@ -45,6 +45,18 @@ func (f ProgressFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProgressMutation", m)
 }
 
+// The SerieFunc type is an adapter to allow the use of ordinary
+// function as Serie mutator.
+type SerieFunc func(context.Context, *ent.SerieMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SerieFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.SerieMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SerieMutation", m)
+}
+
 // The TagFunc type is an adapter to allow the use of ordinary
 // function as Tag mutator.
 type TagFunc func(context.Context, *ent.TagMutation) (ent.Value, error)

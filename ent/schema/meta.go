@@ -36,6 +36,7 @@ func (Meta) Fields() []ent.Field {
 func (Meta) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("tags", Tag.Type),
+		edge.To("serie", Serie.Type).Unique(),
 		edge.To("histories", History.Type),
 		edge.From("favorite_of_user", User.Type).Ref("favorite_items"),
 		edge.To("progress", Progress.Type),

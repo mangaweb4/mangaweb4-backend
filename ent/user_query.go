@@ -16,6 +16,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -23,14 +24,15 @@ import (
 // UserQuery is the builder for querying User entities.
 type UserQuery struct {
 	config
-	ctx               *QueryContext
-	order             []user.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.User
-	withFavoriteItems *MetaQuery
-	withFavoriteTags  *TagQuery
-	withHistories     *HistoryQuery
-	withProgress      *ProgressQuery
+	ctx                *QueryContext
+	order              []user.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.User
+	withFavoriteItems  *MetaQuery
+	withFavoriteTags   *TagQuery
+	withFavoriteSeries *SerieQuery
+	withHistories      *HistoryQuery
+	withProgress       *ProgressQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -104,6 +106,28 @@ func (uq *UserQuery) QueryFavoriteTags() *TagQuery {
 			sqlgraph.From(user.Table, user.FieldID, selector),
 			sqlgraph.To(tag.Table, tag.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FavoriteTagsTable, user.FavoriteTagsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryFavoriteSeries chains the current query on the "favorite_series" edge.
+func (uq *UserQuery) QueryFavoriteSeries() *SerieQuery {
+	query := (&SerieClient{config: uq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := uq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(serie.Table, serie.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.FavoriteSeriesTable, user.FavoriteSeriesPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -342,15 +366,16 @@ func (uq *UserQuery) Clone() *UserQuery {
 		return nil
 	}
 	return &UserQuery{
-		config:            uq.config,
-		ctx:               uq.ctx.Clone(),
-		order:             append([]user.OrderOption{}, uq.order...),
-		inters:            append([]Interceptor{}, uq.inters...),
-		predicates:        append([]predicate.User{}, uq.predicates...),
-		withFavoriteItems: uq.withFavoriteItems.Clone(),
-		withFavoriteTags:  uq.withFavoriteTags.Clone(),
-		withHistories:     uq.withHistories.Clone(),
-		withProgress:      uq.withProgress.Clone(),
+		config:             uq.config,
+		ctx:                uq.ctx.Clone(),
+		order:              append([]user.OrderOption{}, uq.order...),
+		inters:             append([]Interceptor{}, uq.inters...),
+		predicates:         append([]predicate.User{}, uq.predicates...),
+		withFavoriteItems:  uq.withFavoriteItems.Clone(),
+		withFavoriteTags:   uq.withFavoriteTags.Clone(),
+		withFavoriteSeries: uq.withFavoriteSeries.Clone(),
+		withHistories:      uq.withHistories.Clone(),
+		withProgress:       uq.withProgress.Clone(),
 		// clone intermediate query.
 		sql:  uq.sql.Clone(),
 		path: uq.path,
@@ -376,6 +401,17 @@ func (uq *UserQuery) WithFavoriteTags(opts ...func(*TagQuery)) *UserQuery {
 		opt(query)
 	}
 	uq.withFavoriteTags = query
+	return uq
+}
+
+// WithFavoriteSeries tells the query-builder to eager-load the nodes that are connected to
+// the "favorite_series" edge. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithFavoriteSeries(opts ...func(*SerieQuery)) *UserQuery {
+	query := (&SerieClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withFavoriteSeries = query
 	return uq
 }
 
@@ -479,9 +515,10 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	var (
 		nodes       = []*User{}
 		_spec       = uq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			uq.withFavoriteItems != nil,
 			uq.withFavoriteTags != nil,
+			uq.withFavoriteSeries != nil,
 			uq.withHistories != nil,
 			uq.withProgress != nil,
 		}
@@ -515,6 +552,13 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		if err := uq.loadFavoriteTags(ctx, query, nodes,
 			func(n *User) { n.Edges.FavoriteTags = []*Tag{} },
 			func(n *User, e *Tag) { n.Edges.FavoriteTags = append(n.Edges.FavoriteTags, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := uq.withFavoriteSeries; query != nil {
+		if err := uq.loadFavoriteSeries(ctx, query, nodes,
+			func(n *User) { n.Edges.FavoriteSeries = []*Serie{} },
+			func(n *User, e *Serie) { n.Edges.FavoriteSeries = append(n.Edges.FavoriteSeries, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -650,6 +694,67 @@ func (uq *UserQuery) loadFavoriteTags(ctx context.Context, query *TagQuery, node
 		nodes, ok := nids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected "favorite_tags" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (uq *UserQuery) loadFavoriteSeries(ctx context.Context, query *SerieQuery, nodes []*User, init func(*User), assign func(*User, *Serie)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int]*User)
+	nids := make(map[int]map[*User]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(user.FavoriteSeriesTable)
+		s.Join(joinT).On(s.C(serie.FieldID), joinT.C(user.FavoriteSeriesPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(user.FavoriteSeriesPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(user.FavoriteSeriesPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*User]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Serie](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "favorite_series" node returned %v`, n.ID)
 		}
 		for kn := range nodes {
 			assign(kn, n)

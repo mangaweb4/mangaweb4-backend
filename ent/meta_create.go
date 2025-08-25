@@ -14,6 +14,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/history"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -205,6 +206,25 @@ func (mc *MetaCreate) AddTags(t ...*Tag) *MetaCreate {
 		ids[i] = t[i].ID
 	}
 	return mc.AddTagIDs(ids...)
+}
+
+// SetSerieID sets the "serie" edge to the Serie entity by ID.
+func (mc *MetaCreate) SetSerieID(id int) *MetaCreate {
+	mc.mutation.SetSerieID(id)
+	return mc
+}
+
+// SetNillableSerieID sets the "serie" edge to the Serie entity by ID if the given value is not nil.
+func (mc *MetaCreate) SetNillableSerieID(id *int) *MetaCreate {
+	if id != nil {
+		mc = mc.SetSerieID(*id)
+	}
+	return mc
+}
+
+// SetSerie sets the "serie" edge to the Serie entity.
+func (mc *MetaCreate) SetSerie(s *Serie) *MetaCreate {
+	return mc.SetSerieID(s.ID)
 }
 
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
@@ -466,6 +486,23 @@ func (mc *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := mc.mutation.SerieIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   meta.SerieTable,
+			Columns: []string{meta.SerieColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(serie.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.meta_serie = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := mc.mutation.HistoriesIDs(); len(nodes) > 0 {

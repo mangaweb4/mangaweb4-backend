@@ -15,6 +15,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/history"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -80,6 +81,7 @@ func checkColumn(table, column string) error {
 			history.Table:  history.ValidColumn,
 			meta.Table:     meta.ValidColumn,
 			progress.Table: progress.ValidColumn,
+			serie.Table:    serie.ValidColumn,
 			tag.Table:      tag.ValidColumn,
 			user.Table:     user.ValidColumn,
 		})

@@ -548,6 +548,29 @@ func HasTagsWith(preds ...predicate.Tag) predicate.Meta {
 	})
 }
 
+// HasSerie applies the HasEdge predicate on the "serie" edge.
+func HasSerie() predicate.Meta {
+	return predicate.Meta(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, SerieTable, SerieColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSerieWith applies the HasEdge predicate on the "serie" edge with a given conditions (other predicates).
+func HasSerieWith(preds ...predicate.Serie) predicate.Meta {
+	return predicate.Meta(func(s *sql.Selector) {
+		step := newSerieStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasHistories applies the HasEdge predicate on the "histories" edge.
 func HasHistories() predicate.Meta {
 	return predicate.Meta(func(s *sql.Selector) {

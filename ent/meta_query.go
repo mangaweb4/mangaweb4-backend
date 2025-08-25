@@ -16,6 +16,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -28,9 +29,11 @@ type MetaQuery struct {
 	inters             []Interceptor
 	predicates         []predicate.Meta
 	withTags           *TagQuery
+	withSerie          *SerieQuery
 	withHistories      *HistoryQuery
 	withFavoriteOfUser *UserQuery
 	withProgress       *ProgressQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -82,6 +85,28 @@ func (mq *MetaQuery) QueryTags() *TagQuery {
 			sqlgraph.From(meta.Table, meta.FieldID, selector),
 			sqlgraph.To(tag.Table, tag.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, meta.TagsTable, meta.TagsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySerie chains the current query on the "serie" edge.
+func (mq *MetaQuery) QuerySerie() *SerieQuery {
+	query := (&SerieClient{config: mq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := mq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := mq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(meta.Table, meta.FieldID, selector),
+			sqlgraph.To(serie.Table, serie.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, meta.SerieTable, meta.SerieColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
 		return fromU, nil
@@ -348,6 +373,7 @@ func (mq *MetaQuery) Clone() *MetaQuery {
 		inters:             append([]Interceptor{}, mq.inters...),
 		predicates:         append([]predicate.Meta{}, mq.predicates...),
 		withTags:           mq.withTags.Clone(),
+		withSerie:          mq.withSerie.Clone(),
 		withHistories:      mq.withHistories.Clone(),
 		withFavoriteOfUser: mq.withFavoriteOfUser.Clone(),
 		withProgress:       mq.withProgress.Clone(),
@@ -365,6 +391,17 @@ func (mq *MetaQuery) WithTags(opts ...func(*TagQuery)) *MetaQuery {
 		opt(query)
 	}
 	mq.withTags = query
+	return mq
+}
+
+// WithSerie tells the query-builder to eager-load the nodes that are connected to
+// the "serie" edge. The optional arguments are used to configure the query builder of the edge.
+func (mq *MetaQuery) WithSerie(opts ...func(*SerieQuery)) *MetaQuery {
+	query := (&SerieClient{config: mq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	mq.withSerie = query
 	return mq
 }
 
@@ -478,14 +515,22 @@ func (mq *MetaQuery) prepareQuery(ctx context.Context) error {
 func (mq *MetaQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Meta, error) {
 	var (
 		nodes       = []*Meta{}
+		withFKs     = mq.withFKs
 		_spec       = mq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			mq.withTags != nil,
+			mq.withSerie != nil,
 			mq.withHistories != nil,
 			mq.withFavoriteOfUser != nil,
 			mq.withProgress != nil,
 		}
 	)
+	if mq.withSerie != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, meta.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Meta).scanValues(nil, columns)
 	}
@@ -508,6 +553,12 @@ func (mq *MetaQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Meta, e
 		if err := mq.loadTags(ctx, query, nodes,
 			func(n *Meta) { n.Edges.Tags = []*Tag{} },
 			func(n *Meta, e *Tag) { n.Edges.Tags = append(n.Edges.Tags, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := mq.withSerie; query != nil {
+		if err := mq.loadSerie(ctx, query, nodes, nil,
+			func(n *Meta, e *Serie) { n.Edges.Serie = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -592,6 +643,38 @@ func (mq *MetaQuery) loadTags(ctx context.Context, query *TagQuery, nodes []*Met
 		}
 		for kn := range nodes {
 			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (mq *MetaQuery) loadSerie(ctx context.Context, query *SerieQuery, nodes []*Meta, init func(*Meta), assign func(*Meta, *Serie)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Meta)
+	for i := range nodes {
+		if nodes[i].meta_serie == nil {
+			continue
+		}
+		fk := *nodes[i].meta_serie
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(serie.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "meta_serie" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
 		}
 	}
 	return nil

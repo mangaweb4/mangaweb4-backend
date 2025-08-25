@@ -18,6 +18,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/history"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -33,6 +34,8 @@ type Client struct {
 	Meta *MetaClient
 	// Progress is the client for interacting with the Progress builders.
 	Progress *ProgressClient
+	// Serie is the client for interacting with the Serie builders.
+	Serie *SerieClient
 	// Tag is the client for interacting with the Tag builders.
 	Tag *TagClient
 	// User is the client for interacting with the User builders.
@@ -51,6 +54,7 @@ func (c *Client) init() {
 	c.History = NewHistoryClient(c.config)
 	c.Meta = NewMetaClient(c.config)
 	c.Progress = NewProgressClient(c.config)
+	c.Serie = NewSerieClient(c.config)
 	c.Tag = NewTagClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -148,6 +152,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		History:  NewHistoryClient(cfg),
 		Meta:     NewMetaClient(cfg),
 		Progress: NewProgressClient(cfg),
+		Serie:    NewSerieClient(cfg),
 		Tag:      NewTagClient(cfg),
 		User:     NewUserClient(cfg),
 	}, nil
@@ -172,6 +177,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		History:  NewHistoryClient(cfg),
 		Meta:     NewMetaClient(cfg),
 		Progress: NewProgressClient(cfg),
+		Serie:    NewSerieClient(cfg),
 		Tag:      NewTagClient(cfg),
 		User:     NewUserClient(cfg),
 	}, nil
@@ -202,21 +208,21 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.History.Use(hooks...)
-	c.Meta.Use(hooks...)
-	c.Progress.Use(hooks...)
-	c.Tag.Use(hooks...)
-	c.User.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.History, c.Meta, c.Progress, c.Serie, c.Tag, c.User,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.History.Intercept(interceptors...)
-	c.Meta.Intercept(interceptors...)
-	c.Progress.Intercept(interceptors...)
-	c.Tag.Intercept(interceptors...)
-	c.User.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.History, c.Meta, c.Progress, c.Serie, c.Tag, c.User,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -228,6 +234,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Meta.mutate(ctx, m)
 	case *ProgressMutation:
 		return c.Progress.mutate(ctx, m)
+	case *SerieMutation:
+		return c.Serie.mutate(ctx, m)
 	case *TagMutation:
 		return c.Tag.mutate(ctx, m)
 	case *UserMutation:
@@ -526,6 +534,22 @@ func (c *MetaClient) QueryTags(m *Meta) *TagQuery {
 	return query
 }
 
+// QuerySerie queries the serie edge of a Meta.
+func (c *MetaClient) QuerySerie(m *Meta) *SerieQuery {
+	query := (&SerieClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(meta.Table, meta.FieldID, id),
+			sqlgraph.To(serie.Table, serie.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, meta.SerieTable, meta.SerieColumn),
+		)
+		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryHistories queries the histories edge of a Meta.
 func (c *MetaClient) QueryHistories(m *Meta) *HistoryQuery {
 	query := (&HistoryClient{config: c.config}).Query()
@@ -761,6 +785,171 @@ func (c *ProgressClient) mutate(ctx context.Context, m *ProgressMutation) (Value
 		return (&ProgressDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Progress mutation op: %q", m.Op())
+	}
+}
+
+// SerieClient is a client for the Serie schema.
+type SerieClient struct {
+	config
+}
+
+// NewSerieClient returns a client for the Serie from the given config.
+func NewSerieClient(c config) *SerieClient {
+	return &SerieClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `serie.Hooks(f(g(h())))`.
+func (c *SerieClient) Use(hooks ...Hook) {
+	c.hooks.Serie = append(c.hooks.Serie, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `serie.Intercept(f(g(h())))`.
+func (c *SerieClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Serie = append(c.inters.Serie, interceptors...)
+}
+
+// Create returns a builder for creating a Serie entity.
+func (c *SerieClient) Create() *SerieCreate {
+	mutation := newSerieMutation(c.config, OpCreate)
+	return &SerieCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Serie entities.
+func (c *SerieClient) CreateBulk(builders ...*SerieCreate) *SerieCreateBulk {
+	return &SerieCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SerieClient) MapCreateBulk(slice any, setFunc func(*SerieCreate, int)) *SerieCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SerieCreateBulk{err: fmt.Errorf("calling to SerieClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SerieCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SerieCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Serie.
+func (c *SerieClient) Update() *SerieUpdate {
+	mutation := newSerieMutation(c.config, OpUpdate)
+	return &SerieUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SerieClient) UpdateOne(s *Serie) *SerieUpdateOne {
+	mutation := newSerieMutation(c.config, OpUpdateOne, withSerie(s))
+	return &SerieUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SerieClient) UpdateOneID(id int) *SerieUpdateOne {
+	mutation := newSerieMutation(c.config, OpUpdateOne, withSerieID(id))
+	return &SerieUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Serie.
+func (c *SerieClient) Delete() *SerieDelete {
+	mutation := newSerieMutation(c.config, OpDelete)
+	return &SerieDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SerieClient) DeleteOne(s *Serie) *SerieDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SerieClient) DeleteOneID(id int) *SerieDeleteOne {
+	builder := c.Delete().Where(serie.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SerieDeleteOne{builder}
+}
+
+// Query returns a query builder for Serie.
+func (c *SerieClient) Query() *SerieQuery {
+	return &SerieQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSerie},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Serie entity by its id.
+func (c *SerieClient) Get(ctx context.Context, id int) (*Serie, error) {
+	return c.Query().Where(serie.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SerieClient) GetX(ctx context.Context, id int) *Serie {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryItems queries the items edge of a Serie.
+func (c *SerieClient) QueryItems(s *Serie) *MetaQuery {
+	query := (&MetaClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(serie.Table, serie.FieldID, id),
+			sqlgraph.To(meta.Table, meta.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, serie.ItemsTable, serie.ItemsColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryFavoriteOfUser queries the favorite_of_user edge of a Serie.
+func (c *SerieClient) QueryFavoriteOfUser(s *Serie) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(serie.Table, serie.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, serie.FavoriteOfUserTable, serie.FavoriteOfUserPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *SerieClient) Hooks() []Hook {
+	return c.hooks.Serie
+}
+
+// Interceptors returns the client interceptors.
+func (c *SerieClient) Interceptors() []Interceptor {
+	return c.inters.Serie
+}
+
+func (c *SerieClient) mutate(ctx context.Context, m *SerieMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SerieCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SerieUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SerieUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SerieDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Serie mutation op: %q", m.Op())
 	}
 }
 
@@ -1069,6 +1258,22 @@ func (c *UserClient) QueryFavoriteTags(u *User) *TagQuery {
 	return query
 }
 
+// QueryFavoriteSeries queries the favorite_series edge of a User.
+func (c *UserClient) QueryFavoriteSeries(u *User) *SerieQuery {
+	query := (&SerieClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(serie.Table, serie.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.FavoriteSeriesTable, user.FavoriteSeriesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryHistories queries the histories edge of a User.
 func (c *UserClient) QueryHistories(u *User) *HistoryQuery {
 	query := (&HistoryClient{config: c.config}).Query()
@@ -1129,9 +1334,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		History, Meta, Progress, Tag, User []ent.Hook
+		History, Meta, Progress, Serie, Tag, User []ent.Hook
 	}
 	inters struct {
-		History, Meta, Progress, Tag, User []ent.Interceptor
+		History, Meta, Progress, Serie, Tag, User []ent.Interceptor
 	}
 )

@@ -9,6 +9,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/schema"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
@@ -83,6 +84,20 @@ func init() {
 	progressDescMax := progressFields[1].Descriptor()
 	// progress.DefaultMax holds the default value on creation for the max field.
 	progress.DefaultMax = progressDescMax.Default.(int)
+	serieFields := schema.Serie{}.Fields()
+	_ = serieFields
+	// serieDescName is the schema descriptor for name field.
+	serieDescName := serieFields[0].Descriptor()
+	// serie.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	serie.NameValidator = serieDescName.Validators[0].(func(string) error)
+	// serieDescHidden is the schema descriptor for hidden field.
+	serieDescHidden := serieFields[1].Descriptor()
+	// serie.DefaultHidden holds the default value on creation for the hidden field.
+	serie.DefaultHidden = serieDescHidden.Default.(bool)
+	// serieDescLastUpdate is the schema descriptor for last_update field.
+	serieDescLastUpdate := serieFields[2].Descriptor()
+	// serie.DefaultLastUpdate holds the default value on creation for the last_update field.
+	serie.DefaultLastUpdate = serieDescLastUpdate.Default.(func() time.Time)
 	tagFields := schema.Tag{}.Fields()
 	_ = tagFields
 	// tagDescName is the schema descriptor for name field.

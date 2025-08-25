@@ -43,6 +43,8 @@ const (
 	FieldThumbnailHeight = "thumbnail_height"
 	// EdgeTags holds the string denoting the tags edge name in mutations.
 	EdgeTags = "tags"
+	// EdgeSerie holds the string denoting the serie edge name in mutations.
+	EdgeSerie = "serie"
 	// EdgeHistories holds the string denoting the histories edge name in mutations.
 	EdgeHistories = "histories"
 	// EdgeFavoriteOfUser holds the string denoting the favorite_of_user edge name in mutations.
@@ -56,6 +58,13 @@ const (
 	// TagsInverseTable is the table name for the Tag entity.
 	// It exists in this package in order to avoid circular dependency with the "tag" package.
 	TagsInverseTable = "tags"
+	// SerieTable is the table that holds the serie relation/edge.
+	SerieTable = "meta"
+	// SerieInverseTable is the table name for the Serie entity.
+	// It exists in this package in order to avoid circular dependency with the "serie" package.
+	SerieInverseTable = "series"
+	// SerieColumn is the table column denoting the serie relation/edge.
+	SerieColumn = "meta_serie"
 	// HistoriesTable is the table that holds the histories relation/edge.
 	HistoriesTable = "histories"
 	// HistoriesInverseTable is the table name for the History entity.
@@ -93,6 +102,12 @@ var Columns = []string{
 	FieldThumbnailHeight,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the "meta"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"meta_serie",
+}
+
 var (
 	// TagsPrimaryKey and TagsColumn2 are the table columns denoting the
 	// primary key for the tags relation (M2M).
@@ -106,6 +121,11 @@ var (
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -252,6 +272,13 @@ func ByTags(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// BySerieField orders the results by serie field.
+func BySerieField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSerieStep(), sql.OrderByField(field, opts...))
+	}
+}
+
 // ByHistoriesCount orders the results by histories count.
 func ByHistoriesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -298,6 +325,13 @@ func newTagsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(TagsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2M, false, TagsTable, TagsPrimaryKey...),
+	)
+}
+func newSerieStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SerieInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, false, SerieTable, SerieColumn),
 	)
 }
 func newHistoriesStep() *sqlgraph.Step {

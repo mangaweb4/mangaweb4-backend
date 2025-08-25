@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 )
 
 // Meta is the model entity for the Meta schema.
@@ -51,6 +52,7 @@ type Meta struct {
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MetaQuery when eager-loading is set.
 	Edges        MetaEdges `json:"edges"`
+	meta_serie   *int
 	selectValues sql.SelectValues
 }
 
@@ -58,6 +60,8 @@ type Meta struct {
 type MetaEdges struct {
 	// Tags holds the value of the tags edge.
 	Tags []*Tag `json:"tags,omitempty"`
+	// Serie holds the value of the serie edge.
+	Serie *Serie `json:"serie,omitempty"`
 	// Histories holds the value of the histories edge.
 	Histories []*History `json:"histories,omitempty"`
 	// FavoriteOfUser holds the value of the favorite_of_user edge.
@@ -66,7 +70,7 @@ type MetaEdges struct {
 	Progress []*Progress `json:"progress,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // TagsOrErr returns the Tags value or an error if the edge
@@ -78,10 +82,21 @@ func (e MetaEdges) TagsOrErr() ([]*Tag, error) {
 	return nil, &NotLoadedError{edge: "tags"}
 }
 
+// SerieOrErr returns the Serie value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e MetaEdges) SerieOrErr() (*Serie, error) {
+	if e.Serie != nil {
+		return e.Serie, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: serie.Label}
+	}
+	return nil, &NotLoadedError{edge: "serie"}
+}
+
 // HistoriesOrErr returns the Histories value or an error if the edge
 // was not loaded in eager-loading.
 func (e MetaEdges) HistoriesOrErr() ([]*History, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.Histories, nil
 	}
 	return nil, &NotLoadedError{edge: "histories"}
@@ -90,7 +105,7 @@ func (e MetaEdges) HistoriesOrErr() ([]*History, error) {
 // FavoriteOfUserOrErr returns the FavoriteOfUser value or an error if the edge
 // was not loaded in eager-loading.
 func (e MetaEdges) FavoriteOfUserOrErr() ([]*User, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.FavoriteOfUser, nil
 	}
 	return nil, &NotLoadedError{edge: "favorite_of_user"}
@@ -99,7 +114,7 @@ func (e MetaEdges) FavoriteOfUserOrErr() ([]*User, error) {
 // ProgressOrErr returns the Progress value or an error if the edge
 // was not loaded in eager-loading.
 func (e MetaEdges) ProgressOrErr() ([]*Progress, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.Progress, nil
 	}
 	return nil, &NotLoadedError{edge: "progress"}
@@ -120,6 +135,8 @@ func (*Meta) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullString)
 		case meta.FieldCreateTime:
 			values[i] = new(sql.NullTime)
+		case meta.ForeignKeys[0]: // meta_serie
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -221,6 +238,13 @@ func (m *Meta) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.ThumbnailHeight = int(value.Int64)
 			}
+		case meta.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field meta_serie", value)
+			} else if value.Valid {
+				m.meta_serie = new(int)
+				*m.meta_serie = int(value.Int64)
+			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
 		}
@@ -237,6 +261,11 @@ func (m *Meta) Value(name string) (ent.Value, error) {
 // QueryTags queries the "tags" edge of the Meta entity.
 func (m *Meta) QueryTags() *TagQuery {
 	return NewMetaClient(m.config).QueryTags(m)
+}
+
+// QuerySerie queries the "serie" edge of the Meta entity.
+func (m *Meta) QuerySerie() *SerieQuery {
+	return NewMetaClient(m.config).QuerySerie(m)
 }
 
 // QueryHistories queries the "histories" edge of the Meta entity.
