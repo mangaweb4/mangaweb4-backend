@@ -3,12 +3,16 @@ package maintenance
 import (
 	"context"
 
-	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/database"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
 	"github.com/rs/zerolog/log"
 )
 
-func UpdateTags(client *ent.Client) error {
+func PopulateTags(ctx context.Context) error {
+
+	client := database.CreateEntClient()
+	defer func() { log.Err(client.Close()).Msg("Populate tags close client.") }()
+
 	allMeta, err := meta.ReadAll(context.Background(), client)
 	if err != nil {
 		return err

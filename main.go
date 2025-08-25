@@ -99,18 +99,25 @@ func main() {
 		dbType = value
 	}
 
+	firstLevelDirAsTag := false
+	if value, valid := os.LookupEnv("MANGAWEB_FIRST_LEVEL_DIR_AS_TAG"); valid {
+		firstLevelDirAsTag, _ = strconv.ParseBool(value)
+	}
+
 	log.Info().
 		Bool("debugMode", debugMode).
 		Str("version", system.VersionString).
 		Str("dataPath", dataPath).
 		Str("cachePath", cachePath).
+		Bool("firstLevelDirAsTag", firstLevelDirAsTag).
 		Msg("Server initializes.")
 
 	configuration.Init(configuration.Config{
-		DebugMode:     debugMode,
-		VersionString: system.VersionString,
-		DataPath:      dataPath,
-		CachePath:     cachePath,
+		DebugMode:          debugMode,
+		VersionString:      system.VersionString,
+		DataPath:           dataPath,
+		CachePath:          cachePath,
+		FirstLevelDirAsTag: firstLevelDirAsTag,
 	})
 
 	log.Info().Str("dbType", dbType).Str("dbConnection", connectionStr).Msg("Database open.")

@@ -38,3 +38,16 @@ func (s *MaintenanceServer) UpdateLibrary(ctx context.Context, req *grpc.Mainten
 	err = nil
 	return
 }
+
+func (s *MaintenanceServer) PopulateTags(ctx context.Context, req *grpc.MaintenancePopulateTagsRequest) (resp *grpc.MaintenancePopulateTagsResponse, err error) {
+	defer func() { log.Err(err).Interface("request", req).Msg("MaintenanceServer.UpdateLibrary") }()
+
+	go maintenance.PopulateTags(context.Background())
+
+	resp = &grpc.MaintenancePopulateTagsResponse{
+		IsSuccess: true,
+	}
+
+	err = nil
+	return
+}

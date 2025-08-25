@@ -181,6 +181,86 @@ func (x *MaintenanceUpdateLibraryResponse) GetIsSuccess() bool {
 	return false
 }
 
+type MaintenancePopulateTagsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MaintenancePopulateTagsRequest) Reset() {
+	*x = MaintenancePopulateTagsRequest{}
+	mi := &file_maintenance_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MaintenancePopulateTagsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MaintenancePopulateTagsRequest) ProtoMessage() {}
+
+func (x *MaintenancePopulateTagsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_maintenance_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MaintenancePopulateTagsRequest.ProtoReflect.Descriptor instead.
+func (*MaintenancePopulateTagsRequest) Descriptor() ([]byte, []int) {
+	return file_maintenance_proto_rawDescGZIP(), []int{4}
+}
+
+type MaintenancePopulateTagsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IsSuccess     bool                   `protobuf:"varint,1,opt,name=IsSuccess,proto3" json:"IsSuccess,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MaintenancePopulateTagsResponse) Reset() {
+	*x = MaintenancePopulateTagsResponse{}
+	mi := &file_maintenance_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MaintenancePopulateTagsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MaintenancePopulateTagsResponse) ProtoMessage() {}
+
+func (x *MaintenancePopulateTagsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_maintenance_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MaintenancePopulateTagsResponse.ProtoReflect.Descriptor instead.
+func (*MaintenancePopulateTagsResponse) Descriptor() ([]byte, []int) {
+	return file_maintenance_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *MaintenancePopulateTagsResponse) GetIsSuccess() bool {
+	if x != nil {
+		return x.IsSuccess
+	}
+	return false
+}
+
 var File_maintenance_proto protoreflect.FileDescriptor
 
 const file_maintenance_proto_rawDesc = "" +
@@ -191,11 +271,15 @@ const file_maintenance_proto_rawDesc = "" +
 	"\tIsSuccess\x18\x01 \x01(\bR\tIsSuccess\"!\n" +
 	"\x1fMaintenanceUpdateLibraryRequest\"@\n" +
 	" MaintenanceUpdateLibraryResponse\x12\x1c\n" +
-	"\tIsSuccess\x18\x01 \x01(\bR\tIsSuccess2\xb4\x01\n" +
+	"\tIsSuccess\x18\x01 \x01(\bR\tIsSuccess\" \n" +
+	"\x1eMaintenancePopulateTagsRequest\"?\n" +
+	"\x1fMaintenancePopulateTagsResponse\x12\x1c\n" +
+	"\tIsSuccess\x18\x01 \x01(\bR\tIsSuccess2\x89\x02\n" +
 	"\vMaintenance\x12M\n" +
 	"\n" +
 	"PurgeCache\x12\x1d.MaintenancePurgeCacheRequest\x1a\x1e.MaintenancePurgeCacheResponse\"\x00\x12V\n" +
-	"\rUpdateLibrary\x12 .MaintenanceUpdateLibraryRequest\x1a!.MaintenanceUpdateLibraryResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
+	"\rUpdateLibrary\x12 .MaintenanceUpdateLibraryRequest\x1a!.MaintenanceUpdateLibraryResponse\"\x00\x12S\n" +
+	"\fPopulateTags\x12\x1f.MaintenancePopulateTagsRequest\x1a .MaintenancePopulateTagsResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
 
 var (
 	file_maintenance_proto_rawDescOnce sync.Once
@@ -209,20 +293,24 @@ func file_maintenance_proto_rawDescGZIP() []byte {
 	return file_maintenance_proto_rawDescData
 }
 
-var file_maintenance_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_maintenance_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_maintenance_proto_goTypes = []any{
 	(*MaintenancePurgeCacheRequest)(nil),     // 0: MaintenancePurgeCacheRequest
 	(*MaintenancePurgeCacheResponse)(nil),    // 1: MaintenancePurgeCacheResponse
 	(*MaintenanceUpdateLibraryRequest)(nil),  // 2: MaintenanceUpdateLibraryRequest
 	(*MaintenanceUpdateLibraryResponse)(nil), // 3: MaintenanceUpdateLibraryResponse
+	(*MaintenancePopulateTagsRequest)(nil),   // 4: MaintenancePopulateTagsRequest
+	(*MaintenancePopulateTagsResponse)(nil),  // 5: MaintenancePopulateTagsResponse
 }
 var file_maintenance_proto_depIdxs = []int32{
 	0, // 0: Maintenance.PurgeCache:input_type -> MaintenancePurgeCacheRequest
 	2, // 1: Maintenance.UpdateLibrary:input_type -> MaintenanceUpdateLibraryRequest
-	1, // 2: Maintenance.PurgeCache:output_type -> MaintenancePurgeCacheResponse
-	3, // 3: Maintenance.UpdateLibrary:output_type -> MaintenanceUpdateLibraryResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: Maintenance.PopulateTags:input_type -> MaintenancePopulateTagsRequest
+	1, // 3: Maintenance.PurgeCache:output_type -> MaintenancePurgeCacheResponse
+	3, // 4: Maintenance.UpdateLibrary:output_type -> MaintenanceUpdateLibraryResponse
+	5, // 5: Maintenance.PopulateTags:output_type -> MaintenancePopulateTagsResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -239,7 +327,7 @@ func file_maintenance_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_maintenance_proto_rawDesc), len(file_maintenance_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
