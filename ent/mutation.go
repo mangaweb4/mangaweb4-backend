@@ -2797,6 +2797,7 @@ type TagMutation struct {
 	name                    *string
 	favorite                *bool
 	hidden                  *bool
+	last_update             *time.Time
 	clearedFields           map[string]struct{}
 	meta                    map[int]struct{}
 	removedmeta             map[int]struct{}
@@ -3015,6 +3016,42 @@ func (m *TagMutation) ResetHidden() {
 	m.hidden = nil
 }
 
+// SetLastUpdate sets the "last_update" field.
+func (m *TagMutation) SetLastUpdate(t time.Time) {
+	m.last_update = &t
+}
+
+// LastUpdate returns the value of the "last_update" field in the mutation.
+func (m *TagMutation) LastUpdate() (r time.Time, exists bool) {
+	v := m.last_update
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastUpdate returns the old "last_update" field's value of the Tag entity.
+// If the Tag object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TagMutation) OldLastUpdate(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastUpdate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastUpdate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastUpdate: %w", err)
+	}
+	return oldValue.LastUpdate, nil
+}
+
+// ResetLastUpdate resets all changes to the "last_update" field.
+func (m *TagMutation) ResetLastUpdate() {
+	m.last_update = nil
+}
+
 // AddMetumIDs adds the "meta" edge to the Meta entity by ids.
 func (m *TagMutation) AddMetumIDs(ids ...int) {
 	if m.meta == nil {
@@ -3157,7 +3194,7 @@ func (m *TagMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TagMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, tag.FieldName)
 	}
@@ -3166,6 +3203,9 @@ func (m *TagMutation) Fields() []string {
 	}
 	if m.hidden != nil {
 		fields = append(fields, tag.FieldHidden)
+	}
+	if m.last_update != nil {
+		fields = append(fields, tag.FieldLastUpdate)
 	}
 	return fields
 }
@@ -3181,6 +3221,8 @@ func (m *TagMutation) Field(name string) (ent.Value, bool) {
 		return m.Favorite()
 	case tag.FieldHidden:
 		return m.Hidden()
+	case tag.FieldLastUpdate:
+		return m.LastUpdate()
 	}
 	return nil, false
 }
@@ -3196,6 +3238,8 @@ func (m *TagMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldFavorite(ctx)
 	case tag.FieldHidden:
 		return m.OldHidden(ctx)
+	case tag.FieldLastUpdate:
+		return m.OldLastUpdate(ctx)
 	}
 	return nil, fmt.Errorf("unknown Tag field %s", name)
 }
@@ -3225,6 +3269,13 @@ func (m *TagMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetHidden(v)
+		return nil
+	case tag.FieldLastUpdate:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastUpdate(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Tag field %s", name)
@@ -3283,6 +3334,9 @@ func (m *TagMutation) ResetField(name string) error {
 		return nil
 	case tag.FieldHidden:
 		m.ResetHidden()
+		return nil
+	case tag.FieldLastUpdate:
+		m.ResetLastUpdate()
 		return nil
 	}
 	return fmt.Errorf("unknown Tag field %s", name)

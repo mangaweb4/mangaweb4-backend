@@ -3,6 +3,8 @@
 package tag
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
@@ -66,6 +68,11 @@ func Favorite(v bool) predicate.Tag {
 // Hidden applies equality check predicate on the "hidden" field. It's identical to HiddenEQ.
 func Hidden(v bool) predicate.Tag {
 	return predicate.Tag(sql.FieldEQ(FieldHidden, v))
+}
+
+// LastUpdate applies equality check predicate on the "last_update" field. It's identical to LastUpdateEQ.
+func LastUpdate(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldEQ(FieldLastUpdate, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -151,6 +158,46 @@ func HiddenEQ(v bool) predicate.Tag {
 // HiddenNEQ applies the NEQ predicate on the "hidden" field.
 func HiddenNEQ(v bool) predicate.Tag {
 	return predicate.Tag(sql.FieldNEQ(FieldHidden, v))
+}
+
+// LastUpdateEQ applies the EQ predicate on the "last_update" field.
+func LastUpdateEQ(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldEQ(FieldLastUpdate, v))
+}
+
+// LastUpdateNEQ applies the NEQ predicate on the "last_update" field.
+func LastUpdateNEQ(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldNEQ(FieldLastUpdate, v))
+}
+
+// LastUpdateIn applies the In predicate on the "last_update" field.
+func LastUpdateIn(vs ...time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldIn(FieldLastUpdate, vs...))
+}
+
+// LastUpdateNotIn applies the NotIn predicate on the "last_update" field.
+func LastUpdateNotIn(vs ...time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldNotIn(FieldLastUpdate, vs...))
+}
+
+// LastUpdateGT applies the GT predicate on the "last_update" field.
+func LastUpdateGT(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldGT(FieldLastUpdate, v))
+}
+
+// LastUpdateGTE applies the GTE predicate on the "last_update" field.
+func LastUpdateGTE(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldGTE(FieldLastUpdate, v))
+}
+
+// LastUpdateLT applies the LT predicate on the "last_update" field.
+func LastUpdateLT(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldLT(FieldLastUpdate, v))
+}
+
+// LastUpdateLTE applies the LTE predicate on the "last_update" field.
+func LastUpdateLTE(v time.Time) predicate.Tag {
+	return predicate.Tag(sql.FieldLTE(FieldLastUpdate, v))
 }
 
 // HasMeta applies the HasEdge predicate on the "meta" edge.

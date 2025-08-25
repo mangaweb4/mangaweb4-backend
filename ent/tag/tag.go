@@ -3,6 +3,8 @@
 package tag
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -18,6 +20,8 @@ const (
 	FieldFavorite = "favorite"
 	// FieldHidden holds the string denoting the hidden field in the database.
 	FieldHidden = "hidden"
+	// FieldLastUpdate holds the string denoting the last_update field in the database.
+	FieldLastUpdate = "last_update"
 	// EdgeMeta holds the string denoting the meta edge name in mutations.
 	EdgeMeta = "meta"
 	// EdgeFavoriteOfUser holds the string denoting the favorite_of_user edge name in mutations.
@@ -41,6 +45,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldHidden,
+	FieldLastUpdate,
 }
 
 var (
@@ -74,6 +79,8 @@ var (
 	DefaultFavorite bool
 	// DefaultHidden holds the default value on creation for the "hidden" field.
 	DefaultHidden bool
+	// DefaultLastUpdate holds the default value on creation for the "last_update" field.
+	DefaultLastUpdate func() time.Time
 )
 
 // OrderOption defines the ordering options for the Tag queries.
@@ -97,6 +104,11 @@ func ByFavorite(opts ...sql.OrderTermOption) OrderOption {
 // ByHidden orders the results by the hidden field.
 func ByHidden(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHidden, opts...).ToFunc()
+}
+
+// ByLastUpdate orders the results by the last_update field.
+func ByLastUpdate(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLastUpdate, opts...).ToFunc()
 }
 
 // ByMetaCount orders the results by meta count.

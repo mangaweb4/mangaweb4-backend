@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -53,6 +54,20 @@ func (tc *TagCreate) SetHidden(b bool) *TagCreate {
 func (tc *TagCreate) SetNillableHidden(b *bool) *TagCreate {
 	if b != nil {
 		tc.SetHidden(*b)
+	}
+	return tc
+}
+
+// SetLastUpdate sets the "last_update" field.
+func (tc *TagCreate) SetLastUpdate(t time.Time) *TagCreate {
+	tc.mutation.SetLastUpdate(t)
+	return tc
+}
+
+// SetNillableLastUpdate sets the "last_update" field if the given value is not nil.
+func (tc *TagCreate) SetNillableLastUpdate(t *time.Time) *TagCreate {
+	if t != nil {
+		tc.SetLastUpdate(*t)
 	}
 	return tc
 }
@@ -130,6 +145,10 @@ func (tc *TagCreate) defaults() {
 		v := tag.DefaultHidden
 		tc.mutation.SetHidden(v)
 	}
+	if _, ok := tc.mutation.LastUpdate(); !ok {
+		v := tag.DefaultLastUpdate()
+		tc.mutation.SetLastUpdate(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -147,6 +166,9 @@ func (tc *TagCreate) check() error {
 	}
 	if _, ok := tc.mutation.Hidden(); !ok {
 		return &ValidationError{Name: "hidden", err: errors.New(`ent: missing required field "Tag.hidden"`)}
+	}
+	if _, ok := tc.mutation.LastUpdate(); !ok {
+		return &ValidationError{Name: "last_update", err: errors.New(`ent: missing required field "Tag.last_update"`)}
 	}
 	return nil
 }
@@ -186,6 +208,10 @@ func (tc *TagCreate) createSpec() (*Tag, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.Hidden(); ok {
 		_spec.SetField(tag.FieldHidden, field.TypeBool, value)
 		_node.Hidden = value
+	}
+	if value, ok := tc.mutation.LastUpdate(); ok {
+		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
+		_node.LastUpdate = value
 	}
 	if nodes := tc.mutation.MetaIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -307,6 +333,18 @@ func (u *TagUpsert) UpdateHidden() *TagUpsert {
 	return u
 }
 
+// SetLastUpdate sets the "last_update" field.
+func (u *TagUpsert) SetLastUpdate(v time.Time) *TagUpsert {
+	u.Set(tag.FieldLastUpdate, v)
+	return u
+}
+
+// UpdateLastUpdate sets the "last_update" field to the value that was provided on create.
+func (u *TagUpsert) UpdateLastUpdate() *TagUpsert {
+	u.SetExcluded(tag.FieldLastUpdate)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -386,6 +424,20 @@ func (u *TagUpsertOne) SetHidden(v bool) *TagUpsertOne {
 func (u *TagUpsertOne) UpdateHidden() *TagUpsertOne {
 	return u.Update(func(s *TagUpsert) {
 		s.UpdateHidden()
+	})
+}
+
+// SetLastUpdate sets the "last_update" field.
+func (u *TagUpsertOne) SetLastUpdate(v time.Time) *TagUpsertOne {
+	return u.Update(func(s *TagUpsert) {
+		s.SetLastUpdate(v)
+	})
+}
+
+// UpdateLastUpdate sets the "last_update" field to the value that was provided on create.
+func (u *TagUpsertOne) UpdateLastUpdate() *TagUpsertOne {
+	return u.Update(func(s *TagUpsert) {
+		s.UpdateLastUpdate()
 	})
 }
 
@@ -632,6 +684,20 @@ func (u *TagUpsertBulk) SetHidden(v bool) *TagUpsertBulk {
 func (u *TagUpsertBulk) UpdateHidden() *TagUpsertBulk {
 	return u.Update(func(s *TagUpsert) {
 		s.UpdateHidden()
+	})
+}
+
+// SetLastUpdate sets the "last_update" field.
+func (u *TagUpsertBulk) SetLastUpdate(v time.Time) *TagUpsertBulk {
+	return u.Update(func(s *TagUpsert) {
+		s.SetLastUpdate(v)
+	})
+}
+
+// UpdateLastUpdate sets the "last_update" field to the value that was provided on create.
+func (u *TagUpsertBulk) UpdateLastUpdate() *TagUpsertBulk {
+	return u.Update(func(s *TagUpsert) {
+		s.UpdateLastUpdate()
 	})
 }
 
