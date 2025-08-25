@@ -64,7 +64,18 @@ func ScanLibrary(ctx context.Context, client *ent.Client) error {
 				tagsArray[i] = tag.Name
 			}
 
-			log.Info().Str("name", item.Name).Strs("tags", tagsArray).Msg("Created metadata.")
+			item, serie, err := meta.PopulateSerie(ctx, client, item)
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to populate tags.")
+				continue
+			}
+
+			serieName := "<none>"
+			if serie != nil {
+				serieName = serie.Name
+			}
+
+			log.Info().Str("name", item.Name).Strs("tags", tagsArray).Str("serie", serieName).Msg("Created metadata.")
 		}
 	}
 

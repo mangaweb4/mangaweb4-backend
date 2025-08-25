@@ -16,9 +16,14 @@ func UpdateTags(client *ent.Client) error {
 
 	for _, m := range allMeta {
 		log.Info().Str("item", m.Name).Msg("Populate tags.")
-		_, _, err := meta.PopulateTags(context.Background(), client, m)
+		m, _, err := meta.PopulateTags(context.Background(), client, m)
 		if err != nil {
 			log.Err(err).Msg("fails to populate tags.")
+		}
+
+		_, _, err = meta.PopulateSerie(context.Background(), client, m)
+		if err != nil {
+			log.Err(err).Msg("fails to populate serie.")
 		}
 	}
 	return nil

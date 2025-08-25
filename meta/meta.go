@@ -10,6 +10,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/container"
 	"github.com/mangaweb4/mangaweb4-backend/ent"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
+	"github.com/mangaweb4/mangaweb4-backend/ent/serie"
 	tag_util "github.com/mangaweb4/mangaweb4-backend/tag"
 	"github.com/rs/zerolog/log"
 
@@ -230,5 +232,44 @@ func PopulateTags(ctx context.Context, client *ent.Client, m *ent.Meta) (out *en
 	out = m
 	tags = append(currentTags, newTags...)
 
+	return
+}
+
+func PopulateSerie(ctx context.Context, client *ent.Client, m *ent.Meta) (out *ent.Meta, s *ent.Serie, err error) {
+	position := strings.Index(m.Name, string(os.PathSeparator))
+	if position == -1 {
+
+		return
+	}
+	serieStr := m.Name[0:position]
+
+	if exists, e := client.Serie.Query().Where(serie.Name(serieStr)).Exist(ctx); e != nil {
+		err = e
+		return
+	} else if exists {
+		s, err = client.Serie.Query().Where(serie.Name(serieStr)).Only(ctx)
+		if err != nil {
+			return
+		}
+
+		s, err = s.Update().SetLastUpdate(m.CreateTime).Save(ctx)
+		if err != nil {
+			return
+		}
+	} else {
+		s, e = client.Serie.Create().SetName(serieStr).SetLastUpdate(m.CreateTime).Save(ctx)
+		if e != nil {
+			err = e
+			return
+		}
+
+	}
+
+	m, err = m.Update().SetSerie(s).Save(ctx)
+	if err != nil {
+		return
+	}
+
+	out = m
 	return
 }
