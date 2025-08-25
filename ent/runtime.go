@@ -97,6 +97,10 @@ func init() {
 	tagDescHidden := tagFields[2].Descriptor()
 	// tag.DefaultHidden holds the default value on creation for the hidden field.
 	tag.DefaultHidden = tagDescHidden.Default.(bool)
+	// tagDescLastUpdate is the schema descriptor for last_update field.
+	tagDescLastUpdate := tagFields[3].Descriptor()
+	// tag.DefaultLastUpdate holds the default value on creation for the last_update field.
+	tag.DefaultLastUpdate = tagDescLastUpdate.Default.(time.Time)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescEmail is the schema descriptor for email field.

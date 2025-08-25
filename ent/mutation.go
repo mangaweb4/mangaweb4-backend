@@ -2797,6 +2797,7 @@ type TagMutation struct {
 	name                    *string
 	favorite                *bool
 	hidden                  *bool
+	last_update             *time.Time
 	clearedFields           map[string]struct{}
 	meta                    map[int]struct{}
 	removedmeta             map[int]struct{}
@@ -3015,6 +3016,55 @@ func (m *TagMutation) ResetHidden() {
 	m.hidden = nil
 }
 
+// SetLastUpdate sets the "last_update" field.
+func (m *TagMutation) SetLastUpdate(t time.Time) {
+	m.last_update = &t
+}
+
+// LastUpdate returns the value of the "last_update" field in the mutation.
+func (m *TagMutation) LastUpdate() (r time.Time, exists bool) {
+	v := m.last_update
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastUpdate returns the old "last_update" field's value of the Tag entity.
+// If the Tag object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TagMutation) OldLastUpdate(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastUpdate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastUpdate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastUpdate: %w", err)
+	}
+	return oldValue.LastUpdate, nil
+}
+
+// ClearLastUpdate clears the value of the "last_update" field.
+func (m *TagMutation) ClearLastUpdate() {
+	m.last_update = nil
+	m.clearedFields[tag.FieldLastUpdate] = struct{}{}
+}
+
+// LastUpdateCleared returns if the "last_update" field was cleared in this mutation.
+func (m *TagMutation) LastUpdateCleared() bool {
+	_, ok := m.clearedFields[tag.FieldLastUpdate]
+	return ok
+}
+
+// ResetLastUpdate resets all changes to the "last_update" field.
+func (m *TagMutation) ResetLastUpdate() {
+	m.last_update = nil
+	delete(m.clearedFields, tag.FieldLastUpdate)
+}
+
 // AddMetumIDs adds the "meta" edge to the Meta entity by ids.
 func (m *TagMutation) AddMetumIDs(ids ...int) {
 	if m.meta == nil {
@@ -3157,7 +3207,7 @@ func (m *TagMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TagMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, tag.FieldName)
 	}
@@ -3166,6 +3216,9 @@ func (m *TagMutation) Fields() []string {
 	}
 	if m.hidden != nil {
 		fields = append(fields, tag.FieldHidden)
+	}
+	if m.last_update != nil {
+		fields = append(fields, tag.FieldLastUpdate)
 	}
 	return fields
 }
@@ -3181,6 +3234,8 @@ func (m *TagMutation) Field(name string) (ent.Value, bool) {
 		return m.Favorite()
 	case tag.FieldHidden:
 		return m.Hidden()
+	case tag.FieldLastUpdate:
+		return m.LastUpdate()
 	}
 	return nil, false
 }
@@ -3196,6 +3251,8 @@ func (m *TagMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldFavorite(ctx)
 	case tag.FieldHidden:
 		return m.OldHidden(ctx)
+	case tag.FieldLastUpdate:
+		return m.OldLastUpdate(ctx)
 	}
 	return nil, fmt.Errorf("unknown Tag field %s", name)
 }
@@ -3226,6 +3283,13 @@ func (m *TagMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetHidden(v)
 		return nil
+	case tag.FieldLastUpdate:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastUpdate(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Tag field %s", name)
 }
@@ -3255,7 +3319,11 @@ func (m *TagMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *TagMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(tag.FieldLastUpdate) {
+		fields = append(fields, tag.FieldLastUpdate)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3268,6 +3336,11 @@ func (m *TagMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *TagMutation) ClearField(name string) error {
+	switch name {
+	case tag.FieldLastUpdate:
+		m.ClearLastUpdate()
+		return nil
+	}
 	return fmt.Errorf("unknown Tag nullable field %s", name)
 }
 
@@ -3283,6 +3356,9 @@ func (m *TagMutation) ResetField(name string) error {
 		return nil
 	case tag.FieldHidden:
 		m.ResetHidden()
+		return nil
+	case tag.FieldLastUpdate:
+		m.ResetLastUpdate()
 		return nil
 	}
 	return fmt.Errorf("unknown Tag field %s", name)

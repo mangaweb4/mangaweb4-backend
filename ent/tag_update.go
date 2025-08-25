@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -68,6 +69,26 @@ func (tu *TagUpdate) SetNillableHidden(b *bool) *TagUpdate {
 	if b != nil {
 		tu.SetHidden(*b)
 	}
+	return tu
+}
+
+// SetLastUpdate sets the "last_update" field.
+func (tu *TagUpdate) SetLastUpdate(t time.Time) *TagUpdate {
+	tu.mutation.SetLastUpdate(t)
+	return tu
+}
+
+// SetNillableLastUpdate sets the "last_update" field if the given value is not nil.
+func (tu *TagUpdate) SetNillableLastUpdate(t *time.Time) *TagUpdate {
+	if t != nil {
+		tu.SetLastUpdate(*t)
+	}
+	return tu
+}
+
+// ClearLastUpdate clears the value of the "last_update" field.
+func (tu *TagUpdate) ClearLastUpdate() *TagUpdate {
+	tu.mutation.ClearLastUpdate()
 	return tu
 }
 
@@ -205,6 +226,12 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.Hidden(); ok {
 		_spec.SetField(tag.FieldHidden, field.TypeBool, value)
+	}
+	if value, ok := tu.mutation.LastUpdate(); ok {
+		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
+	}
+	if tu.mutation.LastUpdateCleared() {
+		_spec.ClearField(tag.FieldLastUpdate, field.TypeTime)
 	}
 	if tu.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -355,6 +382,26 @@ func (tuo *TagUpdateOne) SetNillableHidden(b *bool) *TagUpdateOne {
 	if b != nil {
 		tuo.SetHidden(*b)
 	}
+	return tuo
+}
+
+// SetLastUpdate sets the "last_update" field.
+func (tuo *TagUpdateOne) SetLastUpdate(t time.Time) *TagUpdateOne {
+	tuo.mutation.SetLastUpdate(t)
+	return tuo
+}
+
+// SetNillableLastUpdate sets the "last_update" field if the given value is not nil.
+func (tuo *TagUpdateOne) SetNillableLastUpdate(t *time.Time) *TagUpdateOne {
+	if t != nil {
+		tuo.SetLastUpdate(*t)
+	}
+	return tuo
+}
+
+// ClearLastUpdate clears the value of the "last_update" field.
+func (tuo *TagUpdateOne) ClearLastUpdate() *TagUpdateOne {
+	tuo.mutation.ClearLastUpdate()
 	return tuo
 }
 
@@ -522,6 +569,12 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 	}
 	if value, ok := tuo.mutation.Hidden(); ok {
 		_spec.SetField(tag.FieldHidden, field.TypeBool, value)
+	}
+	if value, ok := tuo.mutation.LastUpdate(); ok {
+		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
+	}
+	if tuo.mutation.LastUpdateCleared() {
+		_spec.ClearField(tag.FieldLastUpdate, field.TypeTime)
 	}
 	if tuo.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -204,7 +204,6 @@ func PopulateTags(ctx context.Context, client *ent.Client, m *ent.Meta) (out *en
 
 	newTags := make([]*ent.Tag, 0)
 	for _, t := range tagStrs {
-
 		if slices.ContainsFunc(currentTags, func(tag *ent.Tag) bool {
 			return tag.Name == t
 		}) {
@@ -231,6 +230,15 @@ func PopulateTags(ctx context.Context, client *ent.Client, m *ent.Meta) (out *en
 	m, _ = m.Update().
 		AddTags(newTags...).
 		Save(ctx)
+
+	for _, t := range newTags {
+		if m.CreateTime.After(t.LastUpdate) {
+			_, err = t.Update().SetLastUpdate(m.CreateTime).Save(ctx)
+			if err != nil {
+				return
+			}
+		}
+	}
 
 	out = m
 	tags = append(currentTags, newTags...)
