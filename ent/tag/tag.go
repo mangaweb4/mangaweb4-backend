@@ -80,7 +80,7 @@ var (
 	// DefaultHidden holds the default value on creation for the "hidden" field.
 	DefaultHidden bool
 	// DefaultLastUpdate holds the default value on creation for the "last_update" field.
-	DefaultLastUpdate func() time.Time
+	DefaultLastUpdate time.Time
 )
 
 // OrderOption defines the ordering options for the Tag queries.

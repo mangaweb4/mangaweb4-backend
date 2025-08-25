@@ -146,7 +146,7 @@ func (tc *TagCreate) defaults() {
 		tc.mutation.SetHidden(v)
 	}
 	if _, ok := tc.mutation.LastUpdate(); !ok {
-		v := tag.DefaultLastUpdate()
+		v := tag.DefaultLastUpdate
 		tc.mutation.SetLastUpdate(v)
 	}
 }
@@ -166,9 +166,6 @@ func (tc *TagCreate) check() error {
 	}
 	if _, ok := tc.mutation.Hidden(); !ok {
 		return &ValidationError{Name: "hidden", err: errors.New(`ent: missing required field "Tag.hidden"`)}
-	}
-	if _, ok := tc.mutation.LastUpdate(); !ok {
-		return &ValidationError{Name: "last_update", err: errors.New(`ent: missing required field "Tag.last_update"`)}
 	}
 	return nil
 }
@@ -345,6 +342,12 @@ func (u *TagUpsert) UpdateLastUpdate() *TagUpsert {
 	return u
 }
 
+// ClearLastUpdate clears the value of the "last_update" field.
+func (u *TagUpsert) ClearLastUpdate() *TagUpsert {
+	u.SetNull(tag.FieldLastUpdate)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -438,6 +441,13 @@ func (u *TagUpsertOne) SetLastUpdate(v time.Time) *TagUpsertOne {
 func (u *TagUpsertOne) UpdateLastUpdate() *TagUpsertOne {
 	return u.Update(func(s *TagUpsert) {
 		s.UpdateLastUpdate()
+	})
+}
+
+// ClearLastUpdate clears the value of the "last_update" field.
+func (u *TagUpsertOne) ClearLastUpdate() *TagUpsertOne {
+	return u.Update(func(s *TagUpsert) {
+		s.ClearLastUpdate()
 	})
 }
 
@@ -698,6 +708,13 @@ func (u *TagUpsertBulk) SetLastUpdate(v time.Time) *TagUpsertBulk {
 func (u *TagUpsertBulk) UpdateLastUpdate() *TagUpsertBulk {
 	return u.Update(func(s *TagUpsert) {
 		s.UpdateLastUpdate()
+	})
+}
+
+// ClearLastUpdate clears the value of the "last_update" field.
+func (u *TagUpsertBulk) ClearLastUpdate() *TagUpsertBulk {
+	return u.Update(func(s *TagUpsert) {
+		s.ClearLastUpdate()
 	})
 }
 

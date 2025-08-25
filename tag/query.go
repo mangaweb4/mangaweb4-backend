@@ -76,6 +76,17 @@ func CreateQuery(client *ent.Client, u *ent.User, params QueryParams) (query *en
 		} else {
 			query = query.Order(tag.ByMetaCount(sql.OrderDesc()))
 		}
+	case grpc.SortField_SORT_FIELD_LAST_UPDATE:
+		if params.Order == grpc.SortOrder_SORT_ORDER_ASCENDING {
+			query = query.Order(tag.ByLastUpdate(sql.OrderAsc()))
+		} else {
+			query = query.Order(tag.ByLastUpdate(sql.OrderDesc()))
+		}
+
+	default:
+		query = nil
+		err = fmt.Errorf("invalid sort value: %v", params.Sort)
+		return
 	}
 
 	return

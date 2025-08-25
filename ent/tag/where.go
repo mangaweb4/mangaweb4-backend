@@ -200,6 +200,16 @@ func LastUpdateLTE(v time.Time) predicate.Tag {
 	return predicate.Tag(sql.FieldLTE(FieldLastUpdate, v))
 }
 
+// LastUpdateIsNil applies the IsNil predicate on the "last_update" field.
+func LastUpdateIsNil() predicate.Tag {
+	return predicate.Tag(sql.FieldIsNull(FieldLastUpdate))
+}
+
+// LastUpdateNotNil applies the NotNil predicate on the "last_update" field.
+func LastUpdateNotNil() predicate.Tag {
+	return predicate.Tag(sql.FieldNotNull(FieldLastUpdate))
+}
+
 // HasMeta applies the HasEdge predicate on the "meta" edge.
 func HasMeta() predicate.Tag {
 	return predicate.Tag(func(s *sql.Selector) {

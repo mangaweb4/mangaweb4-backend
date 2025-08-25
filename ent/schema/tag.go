@@ -19,7 +19,7 @@ func (Tag) Fields() []ent.Field {
 		field.String("name").Unique().NotEmpty(),
 		field.Bool("favorite").Default(false).Deprecated("use 'favorite_of_user' edge instead."),
 		field.Bool("hidden").Default(false),
-		field.Time("last_update").Default(time.Now),
+		field.Time("last_update").Default(time.Time{}).Optional(),
 	}
 }
 

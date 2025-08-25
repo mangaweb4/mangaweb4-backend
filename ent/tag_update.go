@@ -86,6 +86,12 @@ func (tu *TagUpdate) SetNillableLastUpdate(t *time.Time) *TagUpdate {
 	return tu
 }
 
+// ClearLastUpdate clears the value of the "last_update" field.
+func (tu *TagUpdate) ClearLastUpdate() *TagUpdate {
+	tu.mutation.ClearLastUpdate()
+	return tu
+}
+
 // AddMetumIDs adds the "meta" edge to the Meta entity by IDs.
 func (tu *TagUpdate) AddMetumIDs(ids ...int) *TagUpdate {
 	tu.mutation.AddMetumIDs(ids...)
@@ -223,6 +229,9 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.LastUpdate(); ok {
 		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
+	}
+	if tu.mutation.LastUpdateCleared() {
+		_spec.ClearField(tag.FieldLastUpdate, field.TypeTime)
 	}
 	if tu.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -387,6 +396,12 @@ func (tuo *TagUpdateOne) SetNillableLastUpdate(t *time.Time) *TagUpdateOne {
 	if t != nil {
 		tuo.SetLastUpdate(*t)
 	}
+	return tuo
+}
+
+// ClearLastUpdate clears the value of the "last_update" field.
+func (tuo *TagUpdateOne) ClearLastUpdate() *TagUpdateOne {
+	tuo.mutation.ClearLastUpdate()
 	return tuo
 }
 
@@ -557,6 +572,9 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 	}
 	if value, ok := tuo.mutation.LastUpdate(); ok {
 		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
+	}
+	if tuo.mutation.LastUpdateCleared() {
+		_spec.ClearField(tag.FieldLastUpdate, field.TypeTime)
 	}
 	if tuo.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{

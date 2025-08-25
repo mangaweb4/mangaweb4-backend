@@ -99,7 +99,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "favorite", Type: field.TypeBool, Default: false},
 		{Name: "hidden", Type: field.TypeBool, Default: false},
-		{Name: "last_update", Type: field.TypeTime},
+		{Name: "last_update", Type: field.TypeTime, Nullable: true},
 	}
 	// TagsTable holds the schema information for the "tags" table.
 	TagsTable = &schema.Table{

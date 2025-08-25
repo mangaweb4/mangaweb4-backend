@@ -3047,9 +3047,22 @@ func (m *TagMutation) OldLastUpdate(ctx context.Context) (v time.Time, err error
 	return oldValue.LastUpdate, nil
 }
 
+// ClearLastUpdate clears the value of the "last_update" field.
+func (m *TagMutation) ClearLastUpdate() {
+	m.last_update = nil
+	m.clearedFields[tag.FieldLastUpdate] = struct{}{}
+}
+
+// LastUpdateCleared returns if the "last_update" field was cleared in this mutation.
+func (m *TagMutation) LastUpdateCleared() bool {
+	_, ok := m.clearedFields[tag.FieldLastUpdate]
+	return ok
+}
+
 // ResetLastUpdate resets all changes to the "last_update" field.
 func (m *TagMutation) ResetLastUpdate() {
 	m.last_update = nil
+	delete(m.clearedFields, tag.FieldLastUpdate)
 }
 
 // AddMetumIDs adds the "meta" edge to the Meta entity by ids.
@@ -3306,7 +3319,11 @@ func (m *TagMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *TagMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(tag.FieldLastUpdate) {
+		fields = append(fields, tag.FieldLastUpdate)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3319,6 +3336,11 @@ func (m *TagMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *TagMutation) ClearField(name string) error {
+	switch name {
+	case tag.FieldLastUpdate:
+		m.ClearLastUpdate()
+		return nil
+	}
 	return fmt.Errorf("unknown Tag nullable field %s", name)
 }
 
