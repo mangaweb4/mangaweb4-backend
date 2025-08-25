@@ -15,6 +15,8 @@ func PopulateTags(ctx context.Context) {
 	allMeta, err := meta.ReadAll(context.Background(), client)
 	if err != nil {
 		log.Err(err).Msg("Populate items.")
+
+		return
 	}
 	for _, m := range allMeta {
 		log.Info().Str("item", m.Name).Msg("Populate tags.")
