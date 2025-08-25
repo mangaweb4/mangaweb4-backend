@@ -8,16 +8,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func PopulateTags(ctx context.Context) error {
-
+func PopulateTags(ctx context.Context) {
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("Populate tags close client.") }()
 
 	allMeta, err := meta.ReadAll(context.Background(), client)
 	if err != nil {
-		return err
+		log.Err(err).Msg("Populate items.")
 	}
-
 	for _, m := range allMeta {
 		log.Info().Str("item", m.Name).Msg("Populate tags.")
 		_, _, err := meta.PopulateTags(context.Background(), client, m)
@@ -25,5 +23,4 @@ func PopulateTags(ctx context.Context) error {
 			log.Err(err).Msg("fails to populate tags.")
 		}
 	}
-	return nil
 }

@@ -233,7 +233,10 @@ func PopulateTags(ctx context.Context, client *ent.Client, m *ent.Meta) (out *en
 
 	for _, t := range newTags {
 		if m.CreateTime.After(t.LastUpdate) {
-			t.Update().SetLastUpdate(m.CreateTime).Save(ctx)
+			_, err = t.Update().SetLastUpdate(m.CreateTime).Save(ctx)
+			if err != nil {
+				return
+			}
 		}
 	}
 
