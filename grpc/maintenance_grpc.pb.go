@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Maintenance_PurgeCache_FullMethodName    = "/Maintenance/PurgeCache"
 	Maintenance_UpdateLibrary_FullMethodName = "/Maintenance/UpdateLibrary"
+	Maintenance_PopulateTags_FullMethodName  = "/Maintenance/PopulateTags"
 )
 
 // MaintenanceClient is the client API for Maintenance service.
@@ -29,6 +30,7 @@ const (
 type MaintenanceClient interface {
 	PurgeCache(ctx context.Context, in *MaintenancePurgeCacheRequest, opts ...grpc.CallOption) (*MaintenancePurgeCacheResponse, error)
 	UpdateLibrary(ctx context.Context, in *MaintenanceUpdateLibraryRequest, opts ...grpc.CallOption) (*MaintenanceUpdateLibraryResponse, error)
+	PopulateTags(ctx context.Context, in *MaintenancePopulateTagsRequest, opts ...grpc.CallOption) (*MaintenancePopulateTagsResponse, error)
 }
 
 type maintenanceClient struct {
@@ -59,12 +61,23 @@ func (c *maintenanceClient) UpdateLibrary(ctx context.Context, in *MaintenanceUp
 	return out, nil
 }
 
+func (c *maintenanceClient) PopulateTags(ctx context.Context, in *MaintenancePopulateTagsRequest, opts ...grpc.CallOption) (*MaintenancePopulateTagsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MaintenancePopulateTagsResponse)
+	err := c.cc.Invoke(ctx, Maintenance_PopulateTags_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MaintenanceServer is the server API for Maintenance service.
 // All implementations must embed UnimplementedMaintenanceServer
 // for forward compatibility.
 type MaintenanceServer interface {
 	PurgeCache(context.Context, *MaintenancePurgeCacheRequest) (*MaintenancePurgeCacheResponse, error)
 	UpdateLibrary(context.Context, *MaintenanceUpdateLibraryRequest) (*MaintenanceUpdateLibraryResponse, error)
+	PopulateTags(context.Context, *MaintenancePopulateTagsRequest) (*MaintenancePopulateTagsResponse, error)
 	mustEmbedUnimplementedMaintenanceServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedMaintenanceServer) PurgeCache(context.Context, *MaintenancePu
 }
 func (UnimplementedMaintenanceServer) UpdateLibrary(context.Context, *MaintenanceUpdateLibraryRequest) (*MaintenanceUpdateLibraryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateLibrary not implemented")
+}
+func (UnimplementedMaintenanceServer) PopulateTags(context.Context, *MaintenancePopulateTagsRequest) (*MaintenancePopulateTagsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PopulateTags not implemented")
 }
 func (UnimplementedMaintenanceServer) mustEmbedUnimplementedMaintenanceServer() {}
 func (UnimplementedMaintenanceServer) testEmbeddedByValue()                     {}
@@ -138,6 +154,24 @@ func _Maintenance_UpdateLibrary_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Maintenance_PopulateTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MaintenancePopulateTagsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MaintenanceServer).PopulateTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Maintenance_PopulateTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MaintenanceServer).PopulateTags(ctx, req.(*MaintenancePopulateTagsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Maintenance_ServiceDesc is the grpc.ServiceDesc for Maintenance service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var Maintenance_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateLibrary",
 			Handler:    _Maintenance_UpdateLibrary_Handler,
+		},
+		{
+			MethodName: "PopulateTags",
+			Handler:    _Maintenance_PopulateTags_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
