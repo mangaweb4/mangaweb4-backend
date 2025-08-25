@@ -1,10 +1,11 @@
 package configuration
 
 type Config struct {
-	VersionString string
-	DebugMode     bool
-	DataPath      string
-	CachePath     string
+	VersionString      string
+	DebugMode          bool
+	DataPath           string
+	CachePath          string
+	FirstLevelDirAsTag bool
 }
 
 var config Config
