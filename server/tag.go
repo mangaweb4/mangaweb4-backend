@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/mangaweb4/mangaweb4-backend/database"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
 	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
 	"github.com/mangaweb4/mangaweb4-backend/tag"
@@ -17,7 +19,9 @@ type TagServer struct {
 	grpc.UnimplementedTagServer
 }
 
-func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *grpc.TagListResponse, err error) {
+func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (
+	resp *grpc.TagListResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.List") }()
 
 	client := database.CreateEntClient()
@@ -77,7 +81,9 @@ func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *g
 	return
 }
 
-func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest) (resp *grpc.TagThumbnailResponse, err error) {
+func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest) (
+	resp *grpc.TagThumbnailResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.Thumbnail") }()
 
 	client := database.CreateEntClient()
@@ -106,7 +112,9 @@ func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest
 	return
 }
 
-func (s *TagServer) SetFavorite(ctx context.Context, req *grpc.TagSetFavoriteRequest) (resp *grpc.TagSetFavoriteResponse, err error) {
+func (s *TagServer) SetFavorite(ctx context.Context, req *grpc.TagSetFavoriteRequest) (
+	resp *grpc.TagSetFavoriteResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.SetFavorite") }()
 
 	client := database.CreateEntClient()
@@ -122,11 +130,15 @@ func (s *TagServer) SetFavorite(ctx context.Context, req *grpc.TagSetFavoriteReq
 		return
 	}
 
-	if req.Favorite {
-		_, err = u.Update().AddFavoriteTags(m).Save(ctx)
-	} else {
-		_, err = u.Update().RemoveFavoriteTags(m).Save(ctx)
+	userTag, err := client.TagUser.Query().Where(taguser.TagID(m.ID), taguser.UserID(u.ID)).First(ctx)
+	if ent.IsNotFound(err) {
+		userTag, err = client.TagUser.Create().SetTag(m).SetUser(u).Save(ctx)
 	}
+
+	userTag.IsFavorite = req.Favorite
+
+	_, err = userTag.Update().Save(ctx)
+
 	if err != nil {
 		return
 	}

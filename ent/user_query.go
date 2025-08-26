@@ -17,20 +17,22 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
 // UserQuery is the builder for querying User entities.
 type UserQuery struct {
 	config
-	ctx               *QueryContext
-	order             []user.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.User
-	withFavoriteItems *MetaQuery
-	withFavoriteTags  *TagQuery
-	withHistories     *HistoryQuery
-	withProgress      *ProgressQuery
+	ctx                *QueryContext
+	order              []user.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.User
+	withFavoriteItems  *MetaQuery
+	withFavoriteTags   *TagQuery
+	withHistories      *HistoryQuery
+	withProgress       *ProgressQuery
+	withTagUserDetails *TagUserQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -148,6 +150,28 @@ func (uq *UserQuery) QueryProgress() *ProgressQuery {
 			sqlgraph.From(user.Table, user.FieldID, selector),
 			sqlgraph.To(progress.Table, progress.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ProgressTable, user.ProgressColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTagUserDetails chains the current query on the "tag_user_details" edge.
+func (uq *UserQuery) QueryTagUserDetails() *TagUserQuery {
+	query := (&TagUserClient{config: uq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := uq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(taguser.Table, taguser.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.TagUserDetailsTable, user.TagUserDetailsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -342,15 +366,16 @@ func (uq *UserQuery) Clone() *UserQuery {
 		return nil
 	}
 	return &UserQuery{
-		config:            uq.config,
-		ctx:               uq.ctx.Clone(),
-		order:             append([]user.OrderOption{}, uq.order...),
-		inters:            append([]Interceptor{}, uq.inters...),
-		predicates:        append([]predicate.User{}, uq.predicates...),
-		withFavoriteItems: uq.withFavoriteItems.Clone(),
-		withFavoriteTags:  uq.withFavoriteTags.Clone(),
-		withHistories:     uq.withHistories.Clone(),
-		withProgress:      uq.withProgress.Clone(),
+		config:             uq.config,
+		ctx:                uq.ctx.Clone(),
+		order:              append([]user.OrderOption{}, uq.order...),
+		inters:             append([]Interceptor{}, uq.inters...),
+		predicates:         append([]predicate.User{}, uq.predicates...),
+		withFavoriteItems:  uq.withFavoriteItems.Clone(),
+		withFavoriteTags:   uq.withFavoriteTags.Clone(),
+		withHistories:      uq.withHistories.Clone(),
+		withProgress:       uq.withProgress.Clone(),
+		withTagUserDetails: uq.withTagUserDetails.Clone(),
 		// clone intermediate query.
 		sql:  uq.sql.Clone(),
 		path: uq.path,
@@ -398,6 +423,17 @@ func (uq *UserQuery) WithProgress(opts ...func(*ProgressQuery)) *UserQuery {
 		opt(query)
 	}
 	uq.withProgress = query
+	return uq
+}
+
+// WithTagUserDetails tells the query-builder to eager-load the nodes that are connected to
+// the "tag_user_details" edge. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithTagUserDetails(opts ...func(*TagUserQuery)) *UserQuery {
+	query := (&TagUserClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withTagUserDetails = query
 	return uq
 }
 
@@ -479,11 +515,12 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	var (
 		nodes       = []*User{}
 		_spec       = uq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			uq.withFavoriteItems != nil,
 			uq.withFavoriteTags != nil,
 			uq.withHistories != nil,
 			uq.withProgress != nil,
+			uq.withTagUserDetails != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -529,6 +566,13 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		if err := uq.loadProgress(ctx, query, nodes,
 			func(n *User) { n.Edges.Progress = []*Progress{} },
 			func(n *User, e *Progress) { n.Edges.Progress = append(n.Edges.Progress, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := uq.withTagUserDetails; query != nil {
+		if err := uq.loadTagUserDetails(ctx, query, nodes,
+			func(n *User) { n.Edges.TagUserDetails = []*TagUser{} },
+			func(n *User, e *TagUser) { n.Edges.TagUserDetails = append(n.Edges.TagUserDetails, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -703,6 +747,36 @@ func (uq *UserQuery) loadProgress(ctx context.Context, query *ProgressQuery, nod
 	}
 	query.Where(predicate.Progress(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(user.ProgressColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.UserID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (uq *UserQuery) loadTagUserDetails(ctx context.Context, query *TagUserQuery, nodes []*User, init func(*User), assign func(*User, *TagUser)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(taguser.FieldUserID)
+	}
+	query.Where(predicate.TagUser(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.TagUserDetailsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

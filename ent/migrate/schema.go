@@ -107,6 +107,41 @@ var (
 		Columns:    TagsColumns,
 		PrimaryKey: []*schema.Column{TagsColumns[0]},
 	}
+	// TagUsersColumns holds the columns for the "tag_users" table.
+	TagUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "is_read", Type: field.TypeBool},
+		{Name: "is_favorite", Type: field.TypeBool},
+		{Name: "tag_id", Type: field.TypeInt, Nullable: true},
+		{Name: "user_id", Type: field.TypeInt, Nullable: true},
+	}
+	// TagUsersTable holds the schema information for the "tag_users" table.
+	TagUsersTable = &schema.Table{
+		Name:       "tag_users",
+		Columns:    TagUsersColumns,
+		PrimaryKey: []*schema.Column{TagUsersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "tag_users_tags_tag_user_details",
+				Columns:    []*schema.Column{TagUsersColumns[3]},
+				RefColumns: []*schema.Column{TagsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "tag_users_users_tag_user_details",
+				Columns:    []*schema.Column{TagUsersColumns[4]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "taguser_user_id_tag_id",
+				Unique:  true,
+				Columns: []*schema.Column{TagUsersColumns[4], TagUsersColumns[3]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -200,6 +235,7 @@ var (
 		MetaTable,
 		ProgressesTable,
 		TagsTable,
+		TagUsersTable,
 		UsersTable,
 		MetaTagsTable,
 		UserFavoriteItemsTable,
@@ -212,6 +248,8 @@ func init() {
 	HistoriesTable.ForeignKeys[1].RefTable = UsersTable
 	ProgressesTable.ForeignKeys[0].RefTable = MetaTable
 	ProgressesTable.ForeignKeys[1].RefTable = UsersTable
+	TagUsersTable.ForeignKeys[0].RefTable = TagsTable
+	TagUsersTable.ForeignKeys[1].RefTable = UsersTable
 	MetaTagsTable.ForeignKeys[0].RefTable = MetaTable
 	MetaTagsTable.ForeignKeys[1].RefTable = TagsTable
 	UserFavoriteItemsTable.ForeignKeys[0].RefTable = UsersTable

@@ -19,6 +19,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -35,6 +36,8 @@ type Client struct {
 	Progress *ProgressClient
 	// Tag is the client for interacting with the Tag builders.
 	Tag *TagClient
+	// TagUser is the client for interacting with the TagUser builders.
+	TagUser *TagUserClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -52,6 +55,7 @@ func (c *Client) init() {
 	c.Meta = NewMetaClient(c.config)
 	c.Progress = NewProgressClient(c.config)
 	c.Tag = NewTagClient(c.config)
+	c.TagUser = NewTagUserClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -149,6 +153,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Meta:     NewMetaClient(cfg),
 		Progress: NewProgressClient(cfg),
 		Tag:      NewTagClient(cfg),
+		TagUser:  NewTagUserClient(cfg),
 		User:     NewUserClient(cfg),
 	}, nil
 }
@@ -173,6 +178,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Meta:     NewMetaClient(cfg),
 		Progress: NewProgressClient(cfg),
 		Tag:      NewTagClient(cfg),
+		TagUser:  NewTagUserClient(cfg),
 		User:     NewUserClient(cfg),
 	}, nil
 }
@@ -202,21 +208,21 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.History.Use(hooks...)
-	c.Meta.Use(hooks...)
-	c.Progress.Use(hooks...)
-	c.Tag.Use(hooks...)
-	c.User.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.History, c.Meta, c.Progress, c.Tag, c.TagUser, c.User,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.History.Intercept(interceptors...)
-	c.Meta.Intercept(interceptors...)
-	c.Progress.Intercept(interceptors...)
-	c.Tag.Intercept(interceptors...)
-	c.User.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.History, c.Meta, c.Progress, c.Tag, c.TagUser, c.User,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -230,6 +236,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Progress.mutate(ctx, m)
 	case *TagMutation:
 		return c.Tag.mutate(ctx, m)
+	case *TagUserMutation:
+		return c.TagUser.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	default:
@@ -904,6 +912,22 @@ func (c *TagClient) QueryFavoriteOfUser(t *Tag) *UserQuery {
 	return query
 }
 
+// QueryTagUserDetails queries the tag_user_details edge of a Tag.
+func (c *TagClient) QueryTagUserDetails(t *Tag) *TagUserQuery {
+	query := (&TagUserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tag.Table, tag.FieldID, id),
+			sqlgraph.To(taguser.Table, taguser.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, tag.TagUserDetailsTable, tag.TagUserDetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *TagClient) Hooks() []Hook {
 	return c.hooks.Tag
@@ -926,6 +950,171 @@ func (c *TagClient) mutate(ctx context.Context, m *TagMutation) (Value, error) {
 		return (&TagDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Tag mutation op: %q", m.Op())
+	}
+}
+
+// TagUserClient is a client for the TagUser schema.
+type TagUserClient struct {
+	config
+}
+
+// NewTagUserClient returns a client for the TagUser from the given config.
+func NewTagUserClient(c config) *TagUserClient {
+	return &TagUserClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `taguser.Hooks(f(g(h())))`.
+func (c *TagUserClient) Use(hooks ...Hook) {
+	c.hooks.TagUser = append(c.hooks.TagUser, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `taguser.Intercept(f(g(h())))`.
+func (c *TagUserClient) Intercept(interceptors ...Interceptor) {
+	c.inters.TagUser = append(c.inters.TagUser, interceptors...)
+}
+
+// Create returns a builder for creating a TagUser entity.
+func (c *TagUserClient) Create() *TagUserCreate {
+	mutation := newTagUserMutation(c.config, OpCreate)
+	return &TagUserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TagUser entities.
+func (c *TagUserClient) CreateBulk(builders ...*TagUserCreate) *TagUserCreateBulk {
+	return &TagUserCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TagUserClient) MapCreateBulk(slice any, setFunc func(*TagUserCreate, int)) *TagUserCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TagUserCreateBulk{err: fmt.Errorf("calling to TagUserClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TagUserCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TagUserCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TagUser.
+func (c *TagUserClient) Update() *TagUserUpdate {
+	mutation := newTagUserMutation(c.config, OpUpdate)
+	return &TagUserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TagUserClient) UpdateOne(tu *TagUser) *TagUserUpdateOne {
+	mutation := newTagUserMutation(c.config, OpUpdateOne, withTagUser(tu))
+	return &TagUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TagUserClient) UpdateOneID(id int) *TagUserUpdateOne {
+	mutation := newTagUserMutation(c.config, OpUpdateOne, withTagUserID(id))
+	return &TagUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TagUser.
+func (c *TagUserClient) Delete() *TagUserDelete {
+	mutation := newTagUserMutation(c.config, OpDelete)
+	return &TagUserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TagUserClient) DeleteOne(tu *TagUser) *TagUserDeleteOne {
+	return c.DeleteOneID(tu.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TagUserClient) DeleteOneID(id int) *TagUserDeleteOne {
+	builder := c.Delete().Where(taguser.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TagUserDeleteOne{builder}
+}
+
+// Query returns a query builder for TagUser.
+func (c *TagUserClient) Query() *TagUserQuery {
+	return &TagUserQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTagUser},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a TagUser entity by its id.
+func (c *TagUserClient) Get(ctx context.Context, id int) (*TagUser, error) {
+	return c.Query().Where(taguser.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TagUserClient) GetX(ctx context.Context, id int) *TagUser {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryTag queries the tag edge of a TagUser.
+func (c *TagUserClient) QueryTag(tu *TagUser) *TagQuery {
+	query := (&TagClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := tu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(taguser.Table, taguser.FieldID, id),
+			sqlgraph.To(tag.Table, tag.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, taguser.TagTable, taguser.TagColumn),
+		)
+		fromV = sqlgraph.Neighbors(tu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryUser queries the user edge of a TagUser.
+func (c *TagUserClient) QueryUser(tu *TagUser) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := tu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(taguser.Table, taguser.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, taguser.UserTable, taguser.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(tu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TagUserClient) Hooks() []Hook {
+	return c.hooks.TagUser
+}
+
+// Interceptors returns the client interceptors.
+func (c *TagUserClient) Interceptors() []Interceptor {
+	return c.inters.TagUser
+}
+
+func (c *TagUserClient) mutate(ctx context.Context, m *TagUserMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TagUserCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TagUserUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TagUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TagUserDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown TagUser mutation op: %q", m.Op())
 	}
 }
 
@@ -1101,6 +1290,22 @@ func (c *UserClient) QueryProgress(u *User) *ProgressQuery {
 	return query
 }
 
+// QueryTagUserDetails queries the tag_user_details edge of a User.
+func (c *UserClient) QueryTagUserDetails(u *User) *TagUserQuery {
+	query := (&TagUserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(taguser.Table, taguser.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.TagUserDetailsTable, user.TagUserDetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
 	return c.hooks.User
@@ -1129,9 +1334,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		History, Meta, Progress, Tag, User []ent.Hook
+		History, Meta, Progress, Tag, TagUser, User []ent.Hook
 	}
 	inters struct {
-		History, Meta, Progress, Tag, User []ent.Interceptor
+		History, Meta, Progress, Tag, TagUser, User []ent.Interceptor
 	}
 )

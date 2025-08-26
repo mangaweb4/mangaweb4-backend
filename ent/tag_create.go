@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -100,6 +101,21 @@ func (tc *TagCreate) AddFavoriteOfUser(u ...*User) *TagCreate {
 		ids[i] = u[i].ID
 	}
 	return tc.AddFavoriteOfUserIDs(ids...)
+}
+
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by IDs.
+func (tc *TagCreate) AddTagUserDetailIDs(ids ...int) *TagCreate {
+	tc.mutation.AddTagUserDetailIDs(ids...)
+	return tc
+}
+
+// AddTagUserDetails adds the "tag_user_details" edges to the TagUser entity.
+func (tc *TagCreate) AddTagUserDetails(t ...*TagUser) *TagCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tc.AddTagUserDetailIDs(ids...)
 }
 
 // Mutation returns the TagMutation object of the builder.
@@ -235,6 +251,22 @@ func (tc *TagCreate) createSpec() (*Tag, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.TagUserDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

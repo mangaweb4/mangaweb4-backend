@@ -16,6 +16,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -81,6 +82,7 @@ func checkColumn(table, column string) error {
 			meta.Table:     meta.ValidColumn,
 			progress.Table: progress.ValidColumn,
 			tag.Table:      tag.ValidColumn,
+			taguser.Table:  taguser.ValidColumn,
 			user.Table:     user.ValidColumn,
 		})
 	})

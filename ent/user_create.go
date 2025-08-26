@@ -14,6 +14,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -103,6 +104,21 @@ func (uc *UserCreate) AddProgress(p ...*Progress) *UserCreate {
 		ids[i] = p[i].ID
 	}
 	return uc.AddProgresIDs(ids...)
+}
+
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by IDs.
+func (uc *UserCreate) AddTagUserDetailIDs(ids ...int) *UserCreate {
+	uc.mutation.AddTagUserDetailIDs(ids...)
+	return uc
+}
+
+// AddTagUserDetails adds the "tag_user_details" edges to the TagUser entity.
+func (uc *UserCreate) AddTagUserDetails(t ...*TagUser) *UserCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uc.AddTagUserDetailIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -251,6 +267,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(progress.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.TagUserDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

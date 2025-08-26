@@ -12,9 +12,11 @@ import (
 	"github.com/disintegration/imaging"
 	"github.com/mangaweb4/mangaweb4-backend/container"
 	"github.com/mangaweb4/mangaweb4-backend/database"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
 	ent_meta "github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
 	"github.com/mangaweb4/mangaweb4-backend/tag"
@@ -30,7 +32,9 @@ type MangaServer struct {
 	grpc.UnimplementedMangaServer
 }
 
-func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
+func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (
+	resp *grpc.MangaListResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.List") }()
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.List") }()
@@ -134,13 +138,34 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 			return
 		}
 
-		resp.TagFavorite = u.QueryFavoriteTags().Where(ent_tag.ID(tagObj.ID)).ExistX(ctx)
+		tagUser, e := client.TagUser.Query().
+			Where(taguser.TagID(tagObj.ID), taguser.UserID(u.ID)).
+			Only(ctx)
+
+		if ent.IsNotFound(e) {
+			tagUser, err = client.TagUser.Create().
+				SetUser(u).
+				SetTag(tagObj).
+				SetIsFavorite(false).
+				SetIsRead(true).
+				Save(ctx)
+		} else {
+			tagUser, err = tagUser.Update().SetIsRead(true).Save(ctx)
+		}
+
+		if err != nil {
+			return
+		}
+
+		resp.TagFavorite = tagUser.IsFavorite
 	}
 
 	return
 }
 
-func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) (resp *grpc.MangaDetailResponse, err error) {
+func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) (
+	resp *grpc.MangaDetailResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Detail") }()
 
 	client := database.CreateEntClient()
@@ -198,7 +223,9 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 	return
 }
 
-func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailRequest) (resp *grpc.MangaThumbnailResponse, err error) {
+func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailRequest) (
+	resp *grpc.MangaThumbnailResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Thumbnail") }()
 
 	client := database.CreateEntClient()
@@ -222,7 +249,9 @@ func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailReq
 	return
 }
 
-func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavoriteRequest) (resp *grpc.MangaSetFavoriteResponse, err error) {
+func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavoriteRequest) (
+	resp *grpc.MangaSetFavoriteResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.SetFavorite") }()
 
 	client := database.CreateEntClient()
@@ -256,7 +285,9 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 	return
 }
 
-func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgressRequest) (resp *grpc.MangaSetProgressResponse, err error) {
+func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgressRequest) (
+	resp *grpc.MangaSetProgressResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.SetProgress") }()
 
 	client := database.CreateEntClient()
@@ -271,7 +302,9 @@ func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgres
 		s.progressMutex.Lock()
 		defer s.progressMutex.Unlock()
 
-		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+		progressRec, _ := client.Progress.Query().
+			Where(progress.UserID(u.ID), progress.ItemID(m.ID)).
+			Only(ctx)
 
 		if progressRec == nil {
 			_, err = client.Progress.Create().
@@ -305,7 +338,9 @@ func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgres
 	return
 }
 
-func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCoverRequest) (resp *grpc.MangaUpdateCoverResponse, err error) {
+func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCoverRequest) (
+	resp *grpc.MangaUpdateCoverResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.UpdateCover") }()
 
 	client := database.CreateEntClient()
@@ -339,7 +374,9 @@ func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCove
 	return
 }
 
-func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageRequest) (resp *grpc.MangaPageImageResponse, err error) {
+func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageRequest) (
+	resp *grpc.MangaPageImageResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.PageImage") }()
 
 	client := database.CreateEntClient()
@@ -528,7 +565,9 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 	return nil
 }
 
-func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) (resp *grpc.MangaRepairResponse, err error) {
+func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) (
+	resp *grpc.MangaRepairResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Repair") }()
 
 	client := database.CreateEntClient()
@@ -563,7 +602,9 @@ func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) 
 	return
 }
 
-func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.ServerStreamingServer[grpc.MangaDownloadResponse]) error {
+func (s *MangaServer) Download(
+	req *grpc.MangaDownloadRequest, stream grpclib.ServerStreamingServer[grpc.MangaDownloadResponse],
+) error {
 	var err error
 
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Download") }()

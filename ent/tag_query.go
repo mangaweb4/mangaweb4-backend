@@ -15,6 +15,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -27,6 +28,7 @@ type TagQuery struct {
 	predicates         []predicate.Tag
 	withMeta           *MetaQuery
 	withFavoriteOfUser *UserQuery
+	withTagUserDetails *TagUserQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -100,6 +102,28 @@ func (tq *TagQuery) QueryFavoriteOfUser() *UserQuery {
 			sqlgraph.From(tag.Table, tag.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, tag.FavoriteOfUserTable, tag.FavoriteOfUserPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTagUserDetails chains the current query on the "tag_user_details" edge.
+func (tq *TagQuery) QueryTagUserDetails() *TagUserQuery {
+	query := (&TagUserClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tag.Table, tag.FieldID, selector),
+			sqlgraph.To(taguser.Table, taguser.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, tag.TagUserDetailsTable, tag.TagUserDetailsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -301,6 +325,7 @@ func (tq *TagQuery) Clone() *TagQuery {
 		predicates:         append([]predicate.Tag{}, tq.predicates...),
 		withMeta:           tq.withMeta.Clone(),
 		withFavoriteOfUser: tq.withFavoriteOfUser.Clone(),
+		withTagUserDetails: tq.withTagUserDetails.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
@@ -326,6 +351,17 @@ func (tq *TagQuery) WithFavoriteOfUser(opts ...func(*UserQuery)) *TagQuery {
 		opt(query)
 	}
 	tq.withFavoriteOfUser = query
+	return tq
+}
+
+// WithTagUserDetails tells the query-builder to eager-load the nodes that are connected to
+// the "tag_user_details" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TagQuery) WithTagUserDetails(opts ...func(*TagUserQuery)) *TagQuery {
+	query := (&TagUserClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withTagUserDetails = query
 	return tq
 }
 
@@ -407,9 +443,10 @@ func (tq *TagQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tag, err
 	var (
 		nodes       = []*Tag{}
 		_spec       = tq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			tq.withMeta != nil,
 			tq.withFavoriteOfUser != nil,
+			tq.withTagUserDetails != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -441,6 +478,13 @@ func (tq *TagQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tag, err
 		if err := tq.loadFavoriteOfUser(ctx, query, nodes,
 			func(n *Tag) { n.Edges.FavoriteOfUser = []*User{} },
 			func(n *Tag, e *User) { n.Edges.FavoriteOfUser = append(n.Edges.FavoriteOfUser, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := tq.withTagUserDetails; query != nil {
+		if err := tq.loadTagUserDetails(ctx, query, nodes,
+			func(n *Tag) { n.Edges.TagUserDetails = []*TagUser{} },
+			func(n *Tag, e *TagUser) { n.Edges.TagUserDetails = append(n.Edges.TagUserDetails, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -566,6 +610,36 @@ func (tq *TagQuery) loadFavoriteOfUser(ctx context.Context, query *UserQuery, no
 		for kn := range nodes {
 			assign(kn, n)
 		}
+	}
+	return nil
+}
+func (tq *TagQuery) loadTagUserDetails(ctx context.Context, query *TagUserQuery, nodes []*Tag, init func(*Tag), assign func(*Tag, *TagUser)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Tag)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(taguser.FieldTagID)
+	}
+	query.Where(predicate.TagUser(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(tag.TagUserDetailsColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.TagID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "tag_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
 	}
 	return nil
 }

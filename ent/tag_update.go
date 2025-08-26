@@ -14,6 +14,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -122,6 +123,21 @@ func (tu *TagUpdate) AddFavoriteOfUser(u ...*User) *TagUpdate {
 	return tu.AddFavoriteOfUserIDs(ids...)
 }
 
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by IDs.
+func (tu *TagUpdate) AddTagUserDetailIDs(ids ...int) *TagUpdate {
+	tu.mutation.AddTagUserDetailIDs(ids...)
+	return tu
+}
+
+// AddTagUserDetails adds the "tag_user_details" edges to the TagUser entity.
+func (tu *TagUpdate) AddTagUserDetails(t ...*TagUser) *TagUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tu.AddTagUserDetailIDs(ids...)
+}
+
 // Mutation returns the TagMutation object of the builder.
 func (tu *TagUpdate) Mutation() *TagMutation {
 	return tu.mutation
@@ -167,6 +183,27 @@ func (tu *TagUpdate) RemoveFavoriteOfUser(u ...*User) *TagUpdate {
 		ids[i] = u[i].ID
 	}
 	return tu.RemoveFavoriteOfUserIDs(ids...)
+}
+
+// ClearTagUserDetails clears all "tag_user_details" edges to the TagUser entity.
+func (tu *TagUpdate) ClearTagUserDetails() *TagUpdate {
+	tu.mutation.ClearTagUserDetails()
+	return tu
+}
+
+// RemoveTagUserDetailIDs removes the "tag_user_details" edge to TagUser entities by IDs.
+func (tu *TagUpdate) RemoveTagUserDetailIDs(ids ...int) *TagUpdate {
+	tu.mutation.RemoveTagUserDetailIDs(ids...)
+	return tu
+}
+
+// RemoveTagUserDetails removes "tag_user_details" edges to TagUser entities.
+func (tu *TagUpdate) RemoveTagUserDetails(t ...*TagUser) *TagUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tu.RemoveTagUserDetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -323,6 +360,51 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if tu.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.RemovedTagUserDetailsIDs(); len(nodes) > 0 && !tu.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.TagUserDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{tag.Label}
@@ -435,6 +517,21 @@ func (tuo *TagUpdateOne) AddFavoriteOfUser(u ...*User) *TagUpdateOne {
 	return tuo.AddFavoriteOfUserIDs(ids...)
 }
 
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by IDs.
+func (tuo *TagUpdateOne) AddTagUserDetailIDs(ids ...int) *TagUpdateOne {
+	tuo.mutation.AddTagUserDetailIDs(ids...)
+	return tuo
+}
+
+// AddTagUserDetails adds the "tag_user_details" edges to the TagUser entity.
+func (tuo *TagUpdateOne) AddTagUserDetails(t ...*TagUser) *TagUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tuo.AddTagUserDetailIDs(ids...)
+}
+
 // Mutation returns the TagMutation object of the builder.
 func (tuo *TagUpdateOne) Mutation() *TagMutation {
 	return tuo.mutation
@@ -480,6 +577,27 @@ func (tuo *TagUpdateOne) RemoveFavoriteOfUser(u ...*User) *TagUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return tuo.RemoveFavoriteOfUserIDs(ids...)
+}
+
+// ClearTagUserDetails clears all "tag_user_details" edges to the TagUser entity.
+func (tuo *TagUpdateOne) ClearTagUserDetails() *TagUpdateOne {
+	tuo.mutation.ClearTagUserDetails()
+	return tuo
+}
+
+// RemoveTagUserDetailIDs removes the "tag_user_details" edge to TagUser entities by IDs.
+func (tuo *TagUpdateOne) RemoveTagUserDetailIDs(ids ...int) *TagUpdateOne {
+	tuo.mutation.RemoveTagUserDetailIDs(ids...)
+	return tuo
+}
+
+// RemoveTagUserDetails removes "tag_user_details" edges to TagUser entities.
+func (tuo *TagUpdateOne) RemoveTagUserDetails(t ...*TagUser) *TagUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tuo.RemoveTagUserDetailIDs(ids...)
 }
 
 // Where appends a list predicates to the TagUpdate builder.
@@ -659,6 +777,51 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if tuo.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.RemovedTagUserDetailsIDs(); len(nodes) > 0 && !tuo.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.TagUserDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   tag.TagUserDetailsTable,
+			Columns: []string{tag.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

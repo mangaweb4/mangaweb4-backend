@@ -15,6 +15,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -119,6 +120,21 @@ func (uu *UserUpdate) AddProgress(p ...*Progress) *UserUpdate {
 	return uu.AddProgresIDs(ids...)
 }
 
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by IDs.
+func (uu *UserUpdate) AddTagUserDetailIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddTagUserDetailIDs(ids...)
+	return uu
+}
+
+// AddTagUserDetails adds the "tag_user_details" edges to the TagUser entity.
+func (uu *UserUpdate) AddTagUserDetails(t ...*TagUser) *UserUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uu.AddTagUserDetailIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -206,6 +222,27 @@ func (uu *UserUpdate) RemoveProgress(p ...*Progress) *UserUpdate {
 		ids[i] = p[i].ID
 	}
 	return uu.RemoveProgresIDs(ids...)
+}
+
+// ClearTagUserDetails clears all "tag_user_details" edges to the TagUser entity.
+func (uu *UserUpdate) ClearTagUserDetails() *UserUpdate {
+	uu.mutation.ClearTagUserDetails()
+	return uu
+}
+
+// RemoveTagUserDetailIDs removes the "tag_user_details" edge to TagUser entities by IDs.
+func (uu *UserUpdate) RemoveTagUserDetailIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveTagUserDetailIDs(ids...)
+	return uu
+}
+
+// RemoveTagUserDetails removes "tag_user_details" edges to TagUser entities.
+func (uu *UserUpdate) RemoveTagUserDetails(t ...*TagUser) *UserUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uu.RemoveTagUserDetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -443,6 +480,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uu.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedTagUserDetailsIDs(); len(nodes) > 0 && !uu.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.TagUserDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -551,6 +633,21 @@ func (uuo *UserUpdateOne) AddProgress(p ...*Progress) *UserUpdateOne {
 	return uuo.AddProgresIDs(ids...)
 }
 
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by IDs.
+func (uuo *UserUpdateOne) AddTagUserDetailIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddTagUserDetailIDs(ids...)
+	return uuo
+}
+
+// AddTagUserDetails adds the "tag_user_details" edges to the TagUser entity.
+func (uuo *UserUpdateOne) AddTagUserDetails(t ...*TagUser) *UserUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uuo.AddTagUserDetailIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -638,6 +735,27 @@ func (uuo *UserUpdateOne) RemoveProgress(p ...*Progress) *UserUpdateOne {
 		ids[i] = p[i].ID
 	}
 	return uuo.RemoveProgresIDs(ids...)
+}
+
+// ClearTagUserDetails clears all "tag_user_details" edges to the TagUser entity.
+func (uuo *UserUpdateOne) ClearTagUserDetails() *UserUpdateOne {
+	uuo.mutation.ClearTagUserDetails()
+	return uuo
+}
+
+// RemoveTagUserDetailIDs removes the "tag_user_details" edge to TagUser entities by IDs.
+func (uuo *UserUpdateOne) RemoveTagUserDetailIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveTagUserDetailIDs(ids...)
+	return uuo
+}
+
+// RemoveTagUserDetails removes "tag_user_details" edges to TagUser entities.
+func (uuo *UserUpdateOne) RemoveTagUserDetails(t ...*TagUser) *UserUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uuo.RemoveTagUserDetailIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -898,6 +1016,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(progress.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedTagUserDetailsIDs(); len(nodes) > 0 && !uuo.mutation.TagUserDetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.TagUserDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TagUserDetailsTable,
+			Columns: []string{user.TagUserDetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(taguser.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

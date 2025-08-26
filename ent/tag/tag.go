@@ -26,6 +26,8 @@ const (
 	EdgeMeta = "meta"
 	// EdgeFavoriteOfUser holds the string denoting the favorite_of_user edge name in mutations.
 	EdgeFavoriteOfUser = "favorite_of_user"
+	// EdgeTagUserDetails holds the string denoting the tag_user_details edge name in mutations.
+	EdgeTagUserDetails = "tag_user_details"
 	// Table holds the table name of the tag in the database.
 	Table = "tags"
 	// MetaTable is the table that holds the meta relation/edge. The primary key declared below.
@@ -38,6 +40,13 @@ const (
 	// FavoriteOfUserInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	FavoriteOfUserInverseTable = "users"
+	// TagUserDetailsTable is the table that holds the tag_user_details relation/edge.
+	TagUserDetailsTable = "tag_users"
+	// TagUserDetailsInverseTable is the table name for the TagUser entity.
+	// It exists in this package in order to avoid circular dependency with the "taguser" package.
+	TagUserDetailsInverseTable = "tag_users"
+	// TagUserDetailsColumn is the table column denoting the tag_user_details relation/edge.
+	TagUserDetailsColumn = "tag_id"
 )
 
 // Columns holds all SQL columns for tag fields.
@@ -138,6 +147,20 @@ func ByFavoriteOfUser(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newFavoriteOfUserStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByTagUserDetailsCount orders the results by tag_user_details count.
+func ByTagUserDetailsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTagUserDetailsStep(), opts...)
+	}
+}
+
+// ByTagUserDetails orders the results by tag_user_details terms.
+func ByTagUserDetails(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTagUserDetailsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newMetaStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -150,5 +173,12 @@ func newFavoriteOfUserStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(FavoriteOfUserInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2M, true, FavoriteOfUserTable, FavoriteOfUserPrimaryKey...),
+	)
+}
+func newTagUserDetailsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TagUserDetailsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, TagUserDetailsTable, TagUserDetailsColumn),
 	)
 }

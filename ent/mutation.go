@@ -16,6 +16,7 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/ent/predicate"
 	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	"github.com/mangaweb4/mangaweb4-backend/ent/taguser"
 	"github.com/mangaweb4/mangaweb4-backend/ent/user"
 )
 
@@ -32,6 +33,7 @@ const (
 	TypeMeta     = "Meta"
 	TypeProgress = "Progress"
 	TypeTag      = "Tag"
+	TypeTagUser  = "TagUser"
 	TypeUser     = "User"
 )
 
@@ -2805,6 +2807,9 @@ type TagMutation struct {
 	favorite_of_user        map[int]struct{}
 	removedfavorite_of_user map[int]struct{}
 	clearedfavorite_of_user bool
+	tag_user_details        map[int]struct{}
+	removedtag_user_details map[int]struct{}
+	clearedtag_user_details bool
 	done                    bool
 	oldValue                func(context.Context) (*Tag, error)
 	predicates              []predicate.Tag
@@ -3173,6 +3178,60 @@ func (m *TagMutation) ResetFavoriteOfUser() {
 	m.removedfavorite_of_user = nil
 }
 
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by ids.
+func (m *TagMutation) AddTagUserDetailIDs(ids ...int) {
+	if m.tag_user_details == nil {
+		m.tag_user_details = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.tag_user_details[ids[i]] = struct{}{}
+	}
+}
+
+// ClearTagUserDetails clears the "tag_user_details" edge to the TagUser entity.
+func (m *TagMutation) ClearTagUserDetails() {
+	m.clearedtag_user_details = true
+}
+
+// TagUserDetailsCleared reports if the "tag_user_details" edge to the TagUser entity was cleared.
+func (m *TagMutation) TagUserDetailsCleared() bool {
+	return m.clearedtag_user_details
+}
+
+// RemoveTagUserDetailIDs removes the "tag_user_details" edge to the TagUser entity by IDs.
+func (m *TagMutation) RemoveTagUserDetailIDs(ids ...int) {
+	if m.removedtag_user_details == nil {
+		m.removedtag_user_details = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.tag_user_details, ids[i])
+		m.removedtag_user_details[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedTagUserDetails returns the removed IDs of the "tag_user_details" edge to the TagUser entity.
+func (m *TagMutation) RemovedTagUserDetailsIDs() (ids []int) {
+	for id := range m.removedtag_user_details {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// TagUserDetailsIDs returns the "tag_user_details" edge IDs in the mutation.
+func (m *TagMutation) TagUserDetailsIDs() (ids []int) {
+	for id := range m.tag_user_details {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetTagUserDetails resets all changes to the "tag_user_details" edge.
+func (m *TagMutation) ResetTagUserDetails() {
+	m.tag_user_details = nil
+	m.clearedtag_user_details = false
+	m.removedtag_user_details = nil
+}
+
 // Where appends a list predicates to the TagMutation builder.
 func (m *TagMutation) Where(ps ...predicate.Tag) {
 	m.predicates = append(m.predicates, ps...)
@@ -3366,12 +3425,15 @@ func (m *TagMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TagMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.meta != nil {
 		edges = append(edges, tag.EdgeMeta)
 	}
 	if m.favorite_of_user != nil {
 		edges = append(edges, tag.EdgeFavoriteOfUser)
+	}
+	if m.tag_user_details != nil {
+		edges = append(edges, tag.EdgeTagUserDetails)
 	}
 	return edges
 }
@@ -3392,18 +3454,27 @@ func (m *TagMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case tag.EdgeTagUserDetails:
+		ids := make([]ent.Value, 0, len(m.tag_user_details))
+		for id := range m.tag_user_details {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TagMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.removedmeta != nil {
 		edges = append(edges, tag.EdgeMeta)
 	}
 	if m.removedfavorite_of_user != nil {
 		edges = append(edges, tag.EdgeFavoriteOfUser)
+	}
+	if m.removedtag_user_details != nil {
+		edges = append(edges, tag.EdgeTagUserDetails)
 	}
 	return edges
 }
@@ -3424,18 +3495,27 @@ func (m *TagMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case tag.EdgeTagUserDetails:
+		ids := make([]ent.Value, 0, len(m.removedtag_user_details))
+		for id := range m.removedtag_user_details {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TagMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.clearedmeta {
 		edges = append(edges, tag.EdgeMeta)
 	}
 	if m.clearedfavorite_of_user {
 		edges = append(edges, tag.EdgeFavoriteOfUser)
+	}
+	if m.clearedtag_user_details {
+		edges = append(edges, tag.EdgeTagUserDetails)
 	}
 	return edges
 }
@@ -3448,6 +3528,8 @@ func (m *TagMutation) EdgeCleared(name string) bool {
 		return m.clearedmeta
 	case tag.EdgeFavoriteOfUser:
 		return m.clearedfavorite_of_user
+	case tag.EdgeTagUserDetails:
+		return m.clearedtag_user_details
 	}
 	return false
 }
@@ -3470,34 +3552,672 @@ func (m *TagMutation) ResetEdge(name string) error {
 	case tag.EdgeFavoriteOfUser:
 		m.ResetFavoriteOfUser()
 		return nil
+	case tag.EdgeTagUserDetails:
+		m.ResetTagUserDetails()
+		return nil
 	}
 	return fmt.Errorf("unknown Tag edge %s", name)
+}
+
+// TagUserMutation represents an operation that mutates the TagUser nodes in the graph.
+type TagUserMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	is_read       *bool
+	is_favorite   *bool
+	clearedFields map[string]struct{}
+	tag           *int
+	clearedtag    bool
+	user          *int
+	cleareduser   bool
+	done          bool
+	oldValue      func(context.Context) (*TagUser, error)
+	predicates    []predicate.TagUser
+}
+
+var _ ent.Mutation = (*TagUserMutation)(nil)
+
+// taguserOption allows management of the mutation configuration using functional options.
+type taguserOption func(*TagUserMutation)
+
+// newTagUserMutation creates new mutation for the TagUser entity.
+func newTagUserMutation(c config, op Op, opts ...taguserOption) *TagUserMutation {
+	m := &TagUserMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTagUser,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTagUserID sets the ID field of the mutation.
+func withTagUserID(id int) taguserOption {
+	return func(m *TagUserMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *TagUser
+		)
+		m.oldValue = func(ctx context.Context) (*TagUser, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().TagUser.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTagUser sets the old TagUser of the mutation.
+func withTagUser(node *TagUser) taguserOption {
+	return func(m *TagUserMutation) {
+		m.oldValue = func(context.Context) (*TagUser, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TagUserMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TagUserMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TagUserMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TagUserMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().TagUser.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetTagID sets the "tag_id" field.
+func (m *TagUserMutation) SetTagID(i int) {
+	m.tag = &i
+}
+
+// TagID returns the value of the "tag_id" field in the mutation.
+func (m *TagUserMutation) TagID() (r int, exists bool) {
+	v := m.tag
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTagID returns the old "tag_id" field's value of the TagUser entity.
+// If the TagUser object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TagUserMutation) OldTagID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTagID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTagID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTagID: %w", err)
+	}
+	return oldValue.TagID, nil
+}
+
+// ClearTagID clears the value of the "tag_id" field.
+func (m *TagUserMutation) ClearTagID() {
+	m.tag = nil
+	m.clearedFields[taguser.FieldTagID] = struct{}{}
+}
+
+// TagIDCleared returns if the "tag_id" field was cleared in this mutation.
+func (m *TagUserMutation) TagIDCleared() bool {
+	_, ok := m.clearedFields[taguser.FieldTagID]
+	return ok
+}
+
+// ResetTagID resets all changes to the "tag_id" field.
+func (m *TagUserMutation) ResetTagID() {
+	m.tag = nil
+	delete(m.clearedFields, taguser.FieldTagID)
+}
+
+// SetUserID sets the "user_id" field.
+func (m *TagUserMutation) SetUserID(i int) {
+	m.user = &i
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *TagUserMutation) UserID() (r int, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the TagUser entity.
+// If the TagUser object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TagUserMutation) OldUserID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *TagUserMutation) ClearUserID() {
+	m.user = nil
+	m.clearedFields[taguser.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *TagUserMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[taguser.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *TagUserMutation) ResetUserID() {
+	m.user = nil
+	delete(m.clearedFields, taguser.FieldUserID)
+}
+
+// SetIsRead sets the "is_read" field.
+func (m *TagUserMutation) SetIsRead(b bool) {
+	m.is_read = &b
+}
+
+// IsRead returns the value of the "is_read" field in the mutation.
+func (m *TagUserMutation) IsRead() (r bool, exists bool) {
+	v := m.is_read
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsRead returns the old "is_read" field's value of the TagUser entity.
+// If the TagUser object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TagUserMutation) OldIsRead(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsRead is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsRead requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsRead: %w", err)
+	}
+	return oldValue.IsRead, nil
+}
+
+// ResetIsRead resets all changes to the "is_read" field.
+func (m *TagUserMutation) ResetIsRead() {
+	m.is_read = nil
+}
+
+// SetIsFavorite sets the "is_favorite" field.
+func (m *TagUserMutation) SetIsFavorite(b bool) {
+	m.is_favorite = &b
+}
+
+// IsFavorite returns the value of the "is_favorite" field in the mutation.
+func (m *TagUserMutation) IsFavorite() (r bool, exists bool) {
+	v := m.is_favorite
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsFavorite returns the old "is_favorite" field's value of the TagUser entity.
+// If the TagUser object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TagUserMutation) OldIsFavorite(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsFavorite is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsFavorite requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsFavorite: %w", err)
+	}
+	return oldValue.IsFavorite, nil
+}
+
+// ResetIsFavorite resets all changes to the "is_favorite" field.
+func (m *TagUserMutation) ResetIsFavorite() {
+	m.is_favorite = nil
+}
+
+// ClearTag clears the "tag" edge to the Tag entity.
+func (m *TagUserMutation) ClearTag() {
+	m.clearedtag = true
+	m.clearedFields[taguser.FieldTagID] = struct{}{}
+}
+
+// TagCleared reports if the "tag" edge to the Tag entity was cleared.
+func (m *TagUserMutation) TagCleared() bool {
+	return m.TagIDCleared() || m.clearedtag
+}
+
+// TagIDs returns the "tag" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// TagID instead. It exists only for internal usage by the builders.
+func (m *TagUserMutation) TagIDs() (ids []int) {
+	if id := m.tag; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetTag resets all changes to the "tag" edge.
+func (m *TagUserMutation) ResetTag() {
+	m.tag = nil
+	m.clearedtag = false
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *TagUserMutation) ClearUser() {
+	m.cleareduser = true
+	m.clearedFields[taguser.FieldUserID] = struct{}{}
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *TagUserMutation) UserCleared() bool {
+	return m.UserIDCleared() || m.cleareduser
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *TagUserMutation) UserIDs() (ids []int) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *TagUserMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+}
+
+// Where appends a list predicates to the TagUserMutation builder.
+func (m *TagUserMutation) Where(ps ...predicate.TagUser) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the TagUserMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *TagUserMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.TagUser, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *TagUserMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *TagUserMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (TagUser).
+func (m *TagUserMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TagUserMutation) Fields() []string {
+	fields := make([]string, 0, 4)
+	if m.tag != nil {
+		fields = append(fields, taguser.FieldTagID)
+	}
+	if m.user != nil {
+		fields = append(fields, taguser.FieldUserID)
+	}
+	if m.is_read != nil {
+		fields = append(fields, taguser.FieldIsRead)
+	}
+	if m.is_favorite != nil {
+		fields = append(fields, taguser.FieldIsFavorite)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TagUserMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case taguser.FieldTagID:
+		return m.TagID()
+	case taguser.FieldUserID:
+		return m.UserID()
+	case taguser.FieldIsRead:
+		return m.IsRead()
+	case taguser.FieldIsFavorite:
+		return m.IsFavorite()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TagUserMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case taguser.FieldTagID:
+		return m.OldTagID(ctx)
+	case taguser.FieldUserID:
+		return m.OldUserID(ctx)
+	case taguser.FieldIsRead:
+		return m.OldIsRead(ctx)
+	case taguser.FieldIsFavorite:
+		return m.OldIsFavorite(ctx)
+	}
+	return nil, fmt.Errorf("unknown TagUser field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TagUserMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case taguser.FieldTagID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTagID(v)
+		return nil
+	case taguser.FieldUserID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case taguser.FieldIsRead:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsRead(v)
+		return nil
+	case taguser.FieldIsFavorite:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsFavorite(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TagUser field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TagUserMutation) AddedFields() []string {
+	var fields []string
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TagUserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TagUserMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown TagUser numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TagUserMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(taguser.FieldTagID) {
+		fields = append(fields, taguser.FieldTagID)
+	}
+	if m.FieldCleared(taguser.FieldUserID) {
+		fields = append(fields, taguser.FieldUserID)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TagUserMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TagUserMutation) ClearField(name string) error {
+	switch name {
+	case taguser.FieldTagID:
+		m.ClearTagID()
+		return nil
+	case taguser.FieldUserID:
+		m.ClearUserID()
+		return nil
+	}
+	return fmt.Errorf("unknown TagUser nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TagUserMutation) ResetField(name string) error {
+	switch name {
+	case taguser.FieldTagID:
+		m.ResetTagID()
+		return nil
+	case taguser.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case taguser.FieldIsRead:
+		m.ResetIsRead()
+		return nil
+	case taguser.FieldIsFavorite:
+		m.ResetIsFavorite()
+		return nil
+	}
+	return fmt.Errorf("unknown TagUser field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TagUserMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.tag != nil {
+		edges = append(edges, taguser.EdgeTag)
+	}
+	if m.user != nil {
+		edges = append(edges, taguser.EdgeUser)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TagUserMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case taguser.EdgeTag:
+		if id := m.tag; id != nil {
+			return []ent.Value{*id}
+		}
+	case taguser.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TagUserMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TagUserMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TagUserMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.clearedtag {
+		edges = append(edges, taguser.EdgeTag)
+	}
+	if m.cleareduser {
+		edges = append(edges, taguser.EdgeUser)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TagUserMutation) EdgeCleared(name string) bool {
+	switch name {
+	case taguser.EdgeTag:
+		return m.clearedtag
+	case taguser.EdgeUser:
+		return m.cleareduser
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TagUserMutation) ClearEdge(name string) error {
+	switch name {
+	case taguser.EdgeTag:
+		m.ClearTag()
+		return nil
+	case taguser.EdgeUser:
+		m.ClearUser()
+		return nil
+	}
+	return fmt.Errorf("unknown TagUser unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TagUserMutation) ResetEdge(name string) error {
+	switch name {
+	case taguser.EdgeTag:
+		m.ResetTag()
+		return nil
+	case taguser.EdgeUser:
+		m.ResetUser()
+		return nil
+	}
+	return fmt.Errorf("unknown TagUser edge %s", name)
 }
 
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	email                 *string
-	active                *bool
-	clearedFields         map[string]struct{}
-	favorite_items        map[int]struct{}
-	removedfavorite_items map[int]struct{}
-	clearedfavorite_items bool
-	favorite_tags         map[int]struct{}
-	removedfavorite_tags  map[int]struct{}
-	clearedfavorite_tags  bool
-	histories             map[int]struct{}
-	removedhistories      map[int]struct{}
-	clearedhistories      bool
-	progress              map[int]struct{}
-	removedprogress       map[int]struct{}
-	clearedprogress       bool
-	done                  bool
-	oldValue              func(context.Context) (*User, error)
-	predicates            []predicate.User
+	op                      Op
+	typ                     string
+	id                      *int
+	email                   *string
+	active                  *bool
+	clearedFields           map[string]struct{}
+	favorite_items          map[int]struct{}
+	removedfavorite_items   map[int]struct{}
+	clearedfavorite_items   bool
+	favorite_tags           map[int]struct{}
+	removedfavorite_tags    map[int]struct{}
+	clearedfavorite_tags    bool
+	histories               map[int]struct{}
+	removedhistories        map[int]struct{}
+	clearedhistories        bool
+	progress                map[int]struct{}
+	removedprogress         map[int]struct{}
+	clearedprogress         bool
+	tag_user_details        map[int]struct{}
+	removedtag_user_details map[int]struct{}
+	clearedtag_user_details bool
+	done                    bool
+	oldValue                func(context.Context) (*User, error)
+	predicates              []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -3886,6 +4606,60 @@ func (m *UserMutation) ResetProgress() {
 	m.removedprogress = nil
 }
 
+// AddTagUserDetailIDs adds the "tag_user_details" edge to the TagUser entity by ids.
+func (m *UserMutation) AddTagUserDetailIDs(ids ...int) {
+	if m.tag_user_details == nil {
+		m.tag_user_details = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.tag_user_details[ids[i]] = struct{}{}
+	}
+}
+
+// ClearTagUserDetails clears the "tag_user_details" edge to the TagUser entity.
+func (m *UserMutation) ClearTagUserDetails() {
+	m.clearedtag_user_details = true
+}
+
+// TagUserDetailsCleared reports if the "tag_user_details" edge to the TagUser entity was cleared.
+func (m *UserMutation) TagUserDetailsCleared() bool {
+	return m.clearedtag_user_details
+}
+
+// RemoveTagUserDetailIDs removes the "tag_user_details" edge to the TagUser entity by IDs.
+func (m *UserMutation) RemoveTagUserDetailIDs(ids ...int) {
+	if m.removedtag_user_details == nil {
+		m.removedtag_user_details = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.tag_user_details, ids[i])
+		m.removedtag_user_details[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedTagUserDetails returns the removed IDs of the "tag_user_details" edge to the TagUser entity.
+func (m *UserMutation) RemovedTagUserDetailsIDs() (ids []int) {
+	for id := range m.removedtag_user_details {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// TagUserDetailsIDs returns the "tag_user_details" edge IDs in the mutation.
+func (m *UserMutation) TagUserDetailsIDs() (ids []int) {
+	for id := range m.tag_user_details {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetTagUserDetails resets all changes to the "tag_user_details" edge.
+func (m *UserMutation) ResetTagUserDetails() {
+	m.tag_user_details = nil
+	m.clearedtag_user_details = false
+	m.removedtag_user_details = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -4036,7 +4810,7 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.favorite_items != nil {
 		edges = append(edges, user.EdgeFavoriteItems)
 	}
@@ -4048,6 +4822,9 @@ func (m *UserMutation) AddedEdges() []string {
 	}
 	if m.progress != nil {
 		edges = append(edges, user.EdgeProgress)
+	}
+	if m.tag_user_details != nil {
+		edges = append(edges, user.EdgeTagUserDetails)
 	}
 	return edges
 }
@@ -4080,13 +4857,19 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeTagUserDetails:
+		ids := make([]ent.Value, 0, len(m.tag_user_details))
+		for id := range m.tag_user_details {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedfavorite_items != nil {
 		edges = append(edges, user.EdgeFavoriteItems)
 	}
@@ -4098,6 +4881,9 @@ func (m *UserMutation) RemovedEdges() []string {
 	}
 	if m.removedprogress != nil {
 		edges = append(edges, user.EdgeProgress)
+	}
+	if m.removedtag_user_details != nil {
+		edges = append(edges, user.EdgeTagUserDetails)
 	}
 	return edges
 }
@@ -4130,13 +4916,19 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeTagUserDetails:
+		ids := make([]ent.Value, 0, len(m.removedtag_user_details))
+		for id := range m.removedtag_user_details {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedfavorite_items {
 		edges = append(edges, user.EdgeFavoriteItems)
 	}
@@ -4148,6 +4940,9 @@ func (m *UserMutation) ClearedEdges() []string {
 	}
 	if m.clearedprogress {
 		edges = append(edges, user.EdgeProgress)
+	}
+	if m.clearedtag_user_details {
+		edges = append(edges, user.EdgeTagUserDetails)
 	}
 	return edges
 }
@@ -4164,6 +4959,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 		return m.clearedhistories
 	case user.EdgeProgress:
 		return m.clearedprogress
+	case user.EdgeTagUserDetails:
+		return m.clearedtag_user_details
 	}
 	return false
 }
@@ -4191,6 +4988,9 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	case user.EdgeProgress:
 		m.ResetProgress()
+		return nil
+	case user.EdgeTagUserDetails:
+		m.ResetTagUserDetails()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

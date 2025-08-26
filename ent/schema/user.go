@@ -26,5 +26,6 @@ func (User) Edges() []ent.Edge {
 		edge.To("favorite_tags", Tag.Type),
 		edge.To("histories", History.Type),
 		edge.To("progress", Progress.Type),
+		edge.To("tag_user_details", TagUser.Type),
 	}
 }

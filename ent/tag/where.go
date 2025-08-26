@@ -256,6 +256,29 @@ func HasFavoriteOfUserWith(preds ...predicate.User) predicate.Tag {
 	})
 }
 
+// HasTagUserDetails applies the HasEdge predicate on the "tag_user_details" edge.
+func HasTagUserDetails() predicate.Tag {
+	return predicate.Tag(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TagUserDetailsTable, TagUserDetailsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTagUserDetailsWith applies the HasEdge predicate on the "tag_user_details" edge with a given conditions (other predicates).
+func HasTagUserDetailsWith(preds ...predicate.TagUser) predicate.Tag {
+	return predicate.Tag(func(s *sql.Selector) {
+		step := newTagUserDetailsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Tag) predicate.Tag {
 	return predicate.Tag(sql.AndPredicates(predicates...))
