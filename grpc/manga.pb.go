@@ -183,7 +183,7 @@ func (x *MangaListResponse) GetItems() []*MangaListResponseItem {
 
 type MangaListResponseItem struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	ID             int32                  `protobuf:"varint,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id             int32                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	Name           string                 `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
 	IsFavorite     bool                   `protobuf:"varint,3,opt,name=IsFavorite,proto3" json:"IsFavorite,omitempty"`
 	IsRead         bool                   `protobuf:"varint,4,opt,name=IsRead,proto3" json:"IsRead,omitempty"`
@@ -225,9 +225,9 @@ func (*MangaListResponseItem) Descriptor() ([]byte, []int) {
 	return file_manga_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *MangaListResponseItem) GetID() int32 {
+func (x *MangaListResponseItem) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -285,7 +285,7 @@ type MangaThumbnailRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Deprecated: Marked as deprecated in manga.proto.
 	Name          string `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	ID            int32  `protobuf:"varint,2,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,2,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -328,9 +328,9 @@ func (x *MangaThumbnailRequest) GetName() string {
 	return ""
 }
 
-func (x *MangaThumbnailRequest) GetID() int32 {
+func (x *MangaThumbnailRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -392,7 +392,7 @@ type MangaDetailRequest struct {
 	User  string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
 	// Deprecated: Marked as deprecated in manga.proto.
 	Name          string `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
-	ID            int32  `protobuf:"varint,3,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,3,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -442,9 +442,9 @@ func (x *MangaDetailRequest) GetName() string {
 	return ""
 }
 
-func (x *MangaDetailRequest) GetID() int32 {
+func (x *MangaDetailRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -527,7 +527,7 @@ func (x *MangaDetailResponse) GetTags() []*MangaDetailResponseTagItem {
 
 type MangaDetailResponseTagItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ID            int32                  `protobuf:"varint,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
 	IsFavorite    bool                   `protobuf:"varint,3,opt,name=IsFavorite,proto3" json:"IsFavorite,omitempty"`
 	IsHidden      bool                   `protobuf:"varint,4,opt,name=IsHidden,proto3" json:"IsHidden,omitempty"`
@@ -565,9 +565,9 @@ func (*MangaDetailResponseTagItem) Descriptor() ([]byte, []int) {
 	return file_manga_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *MangaDetailResponseTagItem) GetID() int32 {
+func (x *MangaDetailResponseTagItem) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -599,7 +599,7 @@ type MangaSetFavoriteRequest struct {
 	// Deprecated: Marked as deprecated in manga.proto.
 	Name          string `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
 	Favorite      bool   `protobuf:"varint,3,opt,name=Favorite,proto3" json:"Favorite,omitempty"`
-	ID            int32  `protobuf:"varint,4,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,4,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -656,9 +656,9 @@ func (x *MangaSetFavoriteRequest) GetFavorite() bool {
 	return false
 }
 
-func (x *MangaSetFavoriteRequest) GetID() int32 {
+func (x *MangaSetFavoriteRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -721,7 +721,7 @@ type MangaSetProgressRequest struct {
 	// Deprecated: Marked as deprecated in manga.proto.
 	Name          string `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
 	Page          int32  `protobuf:"varint,3,opt,name=Page,proto3" json:"Page,omitempty"`
-	ID            int32  `protobuf:"varint,4,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,4,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -778,9 +778,9 @@ func (x *MangaSetProgressRequest) GetPage() int32 {
 	return 0
 }
 
-func (x *MangaSetProgressRequest) GetID() int32 {
+func (x *MangaSetProgressRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -862,7 +862,7 @@ type MangaUpdateCoverRequest struct {
 	Width  int32                  `protobuf:"varint,5,opt,name=Width,proto3" json:"Width,omitempty"`
 	Height int32                  `protobuf:"varint,6,opt,name=Height,proto3" json:"Height,omitempty"`
 	// Deprecated: Marked as deprecated in manga.proto.
-	ID            int32 `protobuf:"varint,7,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32 `protobuf:"varint,7,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -940,9 +940,9 @@ func (x *MangaUpdateCoverRequest) GetHeight() int32 {
 }
 
 // Deprecated: Marked as deprecated in manga.proto.
-func (x *MangaUpdateCoverRequest) GetID() int32 {
+func (x *MangaUpdateCoverRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -999,7 +999,7 @@ type MangaPageImageRequest struct {
 	Index         int32  `protobuf:"varint,3,opt,name=Index,proto3" json:"Index,omitempty"`
 	Width         int32  `protobuf:"varint,4,opt,name=Width,proto3" json:"Width,omitempty"`
 	Height        int32  `protobuf:"varint,5,opt,name=Height,proto3" json:"Height,omitempty"`
-	ID            int32  `protobuf:"varint,6,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,6,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1070,9 +1070,9 @@ func (x *MangaPageImageRequest) GetHeight() int32 {
 	return 0
 }
 
-func (x *MangaPageImageRequest) GetID() int32 {
+func (x *MangaPageImageRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -1201,7 +1201,7 @@ type MangaRepairRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Deprecated: Marked as deprecated in manga.proto.
 	Name          string `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	ID            int32  `protobuf:"varint,3,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,3,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1244,9 +1244,9 @@ func (x *MangaRepairRequest) GetName() string {
 	return ""
 }
 
-func (x *MangaRepairRequest) GetID() int32 {
+func (x *MangaRepairRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -1307,7 +1307,7 @@ type MangaDownloadRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Deprecated: Marked as deprecated in manga.proto.
 	Name          string `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	ID            int32  `protobuf:"varint,2,opt,name=ID,proto3" json:"ID,omitempty"`
+	Id            int32  `protobuf:"varint,2,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1350,9 +1350,9 @@ func (x *MangaDownloadRequest) GetName() string {
 	return ""
 }
 
-func (x *MangaDownloadRequest) GetID() int32 {
+func (x *MangaDownloadRequest) GetId() int32 {
 	if x != nil {
-		return x.ID
+		return x.Id
 	}
 	return 0
 }
@@ -1444,7 +1444,7 @@ const file_manga_proto_rawDesc = "" +
 	"\tTotalPage\x18\x02 \x01(\x05R\tTotalPage\x12,\n" +
 	"\x05Items\x18\x03 \x03(\v2\x16.MangaListResponseItemR\x05Items\"\xfd\x01\n" +
 	"\x15MangaListResponseItem\x12\x0e\n" +
-	"\x02ID\x18\x01 \x01(\x05R\x02ID\x12\x12\n" +
+	"\x02Id\x18\x01 \x01(\x05R\x02Id\x12\x12\n" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x1e\n" +
 	"\n" +
 	"IsFavorite\x18\x03 \x01(\bR\n" +
@@ -1456,14 +1456,14 @@ const file_manga_proto_rawDesc = "" +
 	"\vMaxProgress\x18\b \x01(\x05R\vMaxProgress\"?\n" +
 	"\x15MangaThumbnailRequest\x12\x16\n" +
 	"\x04Name\x18\x01 \x01(\tB\x02\x18\x01R\x04Name\x12\x0e\n" +
-	"\x02ID\x18\x02 \x01(\x05R\x02ID\"N\n" +
+	"\x02Id\x18\x02 \x01(\x05R\x02Id\"N\n" +
 	"\x16MangaThumbnailResponse\x12 \n" +
 	"\vContentType\x18\x01 \x01(\tR\vContentType\x12\x12\n" +
 	"\x04Data\x18\x02 \x01(\fR\x04Data\"P\n" +
 	"\x12MangaDetailRequest\x12\x12\n" +
 	"\x04User\x18\x01 \x01(\tR\x04User\x12\x16\n" +
 	"\x04Name\x18\x02 \x01(\tB\x02\x18\x01R\x04Name\x12\x0e\n" +
-	"\x02ID\x18\x03 \x01(\x05R\x02ID\"\xb6\x01\n" +
+	"\x02Id\x18\x03 \x01(\x05R\x02Id\"\xb6\x01\n" +
 	"\x13MangaDetailResponse\x12\x12\n" +
 	"\x04Name\x18\x01 \x01(\tR\x04Name\x12\x1a\n" +
 	"\bFavorite\x18\x02 \x01(\bR\bFavorite\x12\x1c\n" +
@@ -1471,7 +1471,7 @@ const file_manga_proto_rawDesc = "" +
 	"\vCurrentPage\x18\x04 \x01(\x05R\vCurrentPage\x12/\n" +
 	"\x04Tags\x18\x05 \x03(\v2\x1b.MangaDetailResponseTagItemR\x04Tags\"|\n" +
 	"\x1aMangaDetailResponseTagItem\x12\x0e\n" +
-	"\x02ID\x18\x01 \x01(\x05R\x02ID\x12\x12\n" +
+	"\x02Id\x18\x01 \x01(\x05R\x02Id\x12\x12\n" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x1e\n" +
 	"\n" +
 	"IsFavorite\x18\x03 \x01(\bR\n" +
@@ -1481,7 +1481,7 @@ const file_manga_proto_rawDesc = "" +
 	"\x04User\x18\x01 \x01(\tR\x04User\x12\x16\n" +
 	"\x04Name\x18\x02 \x01(\tB\x02\x18\x01R\x04Name\x12\x1a\n" +
 	"\bFavorite\x18\x03 \x01(\bR\bFavorite\x12\x0e\n" +
-	"\x02ID\x18\x04 \x01(\x05R\x02ID\"J\n" +
+	"\x02Id\x18\x04 \x01(\x05R\x02Id\"J\n" +
 	"\x18MangaSetFavoriteResponse\x12\x12\n" +
 	"\x04Name\x18\x01 \x01(\tR\x04Name\x12\x1a\n" +
 	"\bFavorite\x18\x02 \x01(\bR\bFavorite\"i\n" +
@@ -1489,7 +1489,7 @@ const file_manga_proto_rawDesc = "" +
 	"\x04User\x18\x01 \x01(\tR\x04User\x12\x16\n" +
 	"\x04Name\x18\x02 \x01(\tB\x02\x18\x01R\x04Name\x12\x12\n" +
 	"\x04Page\x18\x03 \x01(\x05R\x04Page\x12\x0e\n" +
-	"\x02ID\x18\x04 \x01(\x05R\x02ID\"p\n" +
+	"\x02Id\x18\x04 \x01(\x05R\x02Id\"p\n" +
 	"\x18MangaSetProgressResponse\x12\x12\n" +
 	"\x04User\x18\x01 \x01(\tR\x04User\x12\x12\n" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x12\n" +
@@ -1502,7 +1502,7 @@ const file_manga_proto_rawDesc = "" +
 	"\x01Y\x18\x04 \x01(\x05R\x01Y\x12\x14\n" +
 	"\x05Width\x18\x05 \x01(\x05R\x05Width\x12\x16\n" +
 	"\x06Height\x18\x06 \x01(\x05R\x06Height\x12\x12\n" +
-	"\x02ID\x18\a \x01(\x05B\x02\x18\x01R\x02ID\"4\n" +
+	"\x02Id\x18\a \x01(\x05B\x02\x18\x01R\x02Id\"4\n" +
 	"\x18MangaUpdateCoverResponse\x12\x18\n" +
 	"\aSuccess\x18\x01 \x01(\bR\aSuccess\"\x97\x01\n" +
 	"\x15MangaPageImageRequest\x12\x12\n" +
@@ -1511,7 +1511,7 @@ const file_manga_proto_rawDesc = "" +
 	"\x05Index\x18\x03 \x01(\x05R\x05Index\x12\x14\n" +
 	"\x05Width\x18\x04 \x01(\x05R\x05Width\x12\x16\n" +
 	"\x06Height\x18\x05 \x01(\x05R\x06Height\x12\x0e\n" +
-	"\x02ID\x18\x06 \x01(\x05R\x02ID\"N\n" +
+	"\x02Id\x18\x06 \x01(\x05R\x02Id\"N\n" +
 	"\x16MangaPageImageResponse\x12 \n" +
 	"\vContentType\x18\x01 \x01(\tR\vContentType\x12\x12\n" +
 	"\x04Data\x18\x02 \x01(\fR\x04Data\"\x84\x01\n" +
@@ -1522,13 +1522,13 @@ const file_manga_proto_rawDesc = "" +
 	"\x04Size\x18\x04 \x01(\x05R\x04Size\"<\n" +
 	"\x12MangaRepairRequest\x12\x16\n" +
 	"\x04Name\x18\x01 \x01(\tB\x02\x18\x01R\x04Name\x12\x0e\n" +
-	"\x02ID\x18\x03 \x01(\x05R\x02ID\"G\n" +
+	"\x02Id\x18\x03 \x01(\x05R\x02Id\"G\n" +
 	"\x13MangaRepairResponse\x12\x12\n" +
 	"\x04Name\x18\x01 \x01(\tR\x04Name\x12\x1c\n" +
 	"\tIsSuccess\x18\x02 \x01(\bR\tIsSuccess\">\n" +
 	"\x14MangaDownloadRequest\x12\x16\n" +
 	"\x04Name\x18\x01 \x01(\tB\x02\x18\x01R\x04Name\x12\x0e\n" +
-	"\x02ID\x18\x02 \x01(\x05R\x02ID\"}\n" +
+	"\x02Id\x18\x02 \x01(\x05R\x02Id\"}\n" +
 	"\x15MangaDownloadResponse\x12\x1a\n" +
 	"\bFilename\x18\x01 \x01(\tR\bFilename\x12 \n" +
 	"\vContentType\x18\x02 \x01(\tR\vContentType\x12\x12\n" +
