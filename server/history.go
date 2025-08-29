@@ -19,7 +19,10 @@ type HistoryServer struct {
 	grpc.UnimplementedHistoryServer
 }
 
-func (s *HistoryServer) List(ctx context.Context, req *grpc.HistoryListRequest) (resp *grpc.HistoryListResponse, err error) {
+func (s *HistoryServer) List(
+	ctx context.Context,
+	req *grpc.HistoryListRequest,
+) (resp *grpc.HistoryListResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("History.List") }()
 
 	client := database.CreateEntClient()

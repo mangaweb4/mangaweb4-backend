@@ -17,7 +17,10 @@ type TagServer struct {
 	grpc.UnimplementedTagServer
 }
 
-func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *grpc.TagListResponse, err error) {
+func (s *TagServer) List(
+	ctx context.Context,
+	req *grpc.TagListRequest,
+) (resp *grpc.TagListResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.List") }()
 
 	client := database.CreateEntClient()
@@ -77,13 +80,16 @@ func (s *TagServer) List(ctx context.Context, req *grpc.TagListRequest) (resp *g
 	return
 }
 
-func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest) (resp *grpc.TagThumbnailResponse, err error) {
+func (s *TagServer) Thumbnail(
+	ctx context.Context,
+	req *grpc.TagThumbnailRequest,
+) (resp *grpc.TagThumbnailResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.Thumbnail") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on TagServer.Thumbnail") }()
 
-	t, err := tag.Read(ctx, client, req.Name)
+	t, err := client.Tag.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -106,13 +112,16 @@ func (s *TagServer) Thumbnail(ctx context.Context, req *grpc.TagThumbnailRequest
 	return
 }
 
-func (s *TagServer) SetFavorite(ctx context.Context, req *grpc.TagSetFavoriteRequest) (resp *grpc.TagSetFavoriteResponse, err error) {
+func (s *TagServer) SetFavorite(
+	ctx context.Context,
+	req *grpc.TagSetFavoriteRequest,
+) (resp *grpc.TagSetFavoriteResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.SetFavorite") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on TagServer.SetFavorite") }()
 
-	m, err := tag.Read(ctx, client, req.Tag)
+	t, err := client.Tag.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -123,16 +132,16 @@ func (s *TagServer) SetFavorite(ctx context.Context, req *grpc.TagSetFavoriteReq
 	}
 
 	if req.Favorite {
-		_, err = u.Update().AddFavoriteTags(m).Save(ctx)
+		_, err = u.Update().AddFavoriteTags(t).Save(ctx)
 	} else {
-		_, err = u.Update().RemoveFavoriteTags(m).Save(ctx)
+		_, err = u.Update().RemoveFavoriteTags(t).Save(ctx)
 	}
 	if err != nil {
 		return
 	}
 
 	resp = &grpc.TagSetFavoriteResponse{
-		Tag:      req.Tag,
+		Tag:      t.Name,
 		Favorite: req.Favorite,
 	}
 

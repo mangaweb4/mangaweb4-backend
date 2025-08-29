@@ -854,15 +854,15 @@ func (x *MangaSetProgressResponse) GetSucceed() bool {
 }
 
 type MangaUpdateCoverRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Name   string                 `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	Index  int32                  `protobuf:"varint,2,opt,name=Index,proto3" json:"Index,omitempty"`
-	X      int32                  `protobuf:"varint,3,opt,name=X,proto3" json:"X,omitempty"`
-	Y      int32                  `protobuf:"varint,4,opt,name=Y,proto3" json:"Y,omitempty"`
-	Width  int32                  `protobuf:"varint,5,opt,name=Width,proto3" json:"Width,omitempty"`
-	Height int32                  `protobuf:"varint,6,opt,name=Height,proto3" json:"Height,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// Deprecated: Marked as deprecated in manga.proto.
-	Id            int32 `protobuf:"varint,7,opt,name=Id,proto3" json:"Id,omitempty"`
+	Name          string `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Index         int32  `protobuf:"varint,2,opt,name=Index,proto3" json:"Index,omitempty"`
+	X             int32  `protobuf:"varint,3,opt,name=X,proto3" json:"X,omitempty"`
+	Y             int32  `protobuf:"varint,4,opt,name=Y,proto3" json:"Y,omitempty"`
+	Width         int32  `protobuf:"varint,5,opt,name=Width,proto3" json:"Width,omitempty"`
+	Height        int32  `protobuf:"varint,6,opt,name=Height,proto3" json:"Height,omitempty"`
+	Id            int32  `protobuf:"varint,7,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -897,6 +897,7 @@ func (*MangaUpdateCoverRequest) Descriptor() ([]byte, []int) {
 	return file_manga_proto_rawDescGZIP(), []int{12}
 }
 
+// Deprecated: Marked as deprecated in manga.proto.
 func (x *MangaUpdateCoverRequest) GetName() string {
 	if x != nil {
 		return x.Name
@@ -939,7 +940,6 @@ func (x *MangaUpdateCoverRequest) GetHeight() int32 {
 	return 0
 }
 
-// Deprecated: Marked as deprecated in manga.proto.
 func (x *MangaUpdateCoverRequest) GetId() int32 {
 	if x != nil {
 		return x.Id
@@ -1495,14 +1495,14 @@ const file_manga_proto_rawDesc = "" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x12\n" +
 	"\x04Page\x18\x03 \x01(\x05R\x04Page\x12\x18\n" +
 	"\aSucceed\x18\x04 \x01(\bR\aSucceed\"\xa1\x01\n" +
-	"\x17MangaUpdateCoverRequest\x12\x12\n" +
-	"\x04Name\x18\x01 \x01(\tR\x04Name\x12\x14\n" +
+	"\x17MangaUpdateCoverRequest\x12\x16\n" +
+	"\x04Name\x18\x01 \x01(\tB\x02\x18\x01R\x04Name\x12\x14\n" +
 	"\x05Index\x18\x02 \x01(\x05R\x05Index\x12\f\n" +
 	"\x01X\x18\x03 \x01(\x05R\x01X\x12\f\n" +
 	"\x01Y\x18\x04 \x01(\x05R\x01Y\x12\x14\n" +
 	"\x05Width\x18\x05 \x01(\x05R\x05Width\x12\x16\n" +
-	"\x06Height\x18\x06 \x01(\x05R\x06Height\x12\x12\n" +
-	"\x02Id\x18\a \x01(\x05B\x02\x18\x01R\x02Id\"4\n" +
+	"\x06Height\x18\x06 \x01(\x05R\x06Height\x12\x0e\n" +
+	"\x02Id\x18\a \x01(\x05R\x02Id\"4\n" +
 	"\x18MangaUpdateCoverResponse\x12\x18\n" +
 	"\aSuccess\x18\x01 \x01(\bR\aSuccess\"\x97\x01\n" +
 	"\x15MangaPageImageRequest\x12\x12\n" +
