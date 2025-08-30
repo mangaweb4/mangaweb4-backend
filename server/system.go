@@ -16,7 +16,10 @@ type SystemServer struct {
 	grpc.UnimplementedSystemServer
 }
 
-func (s *SystemServer) Info(ctx context.Context, req *grpc.SystemInfoRequest) (resp *grpc.SystemInfoResponse, err error) {
+func (s *SystemServer) Info(
+	ctx context.Context,
+	req *grpc.SystemInfoRequest,
+) (resp *grpc.SystemInfoResponse, err error) {
 	defer func() { log.Err(err).Msg("SystemServer.Info") }()
 	client := database.CreateEntClient()
 

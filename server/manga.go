@@ -17,7 +17,6 @@ import (
 	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
-	"github.com/mangaweb4/mangaweb4-backend/tag"
 	"github.com/mangaweb4/mangaweb4-backend/user"
 	"github.com/rs/zerolog/log"
 	grpclib "google.golang.org/grpc"
@@ -30,7 +29,9 @@ type MangaServer struct {
 	grpc.UnimplementedMangaServer
 }
 
-func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (resp *grpc.MangaListResponse, err error) {
+func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (
+	resp *grpc.MangaListResponse, err error,
+) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.List") }()
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.List") }()
@@ -46,7 +47,6 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 		meta.QueryParams{
 			SearchName:  req.Search,
 			Filter:      req.Filter,
-			SearchTag:   req.Tag,
 			SortBy:      req.Sort,
 			SortOrder:   req.Order,
 			Page:        int(req.Page),
@@ -60,7 +60,9 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 
 	items := make([]*grpc.MangaListResponseItem, len(allMeta))
 	for i, m := range allMeta {
-		progress, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+		progress, _ := client.Progress.Query().
+			Where(progress.UserID(u.ID), progress.ItemID(m.ID)).
+			Only(ctx)
 
 		currentPage := 0
 		maxProgress := 0
@@ -99,7 +101,6 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 		meta.QueryParams{
 			SearchName:  req.Search,
 			Filter:      req.Filter,
-			SearchTag:   req.Tag,
 			SortBy:      req.Sort,
 			SortOrder:   req.Order,
 			Page:        0,
@@ -127,26 +128,19 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (res
 		TotalPage: pageCount,
 	}
 
-	if req.Tag != "" {
-		tagObj, e := tag.Read(ctx, client, req.Tag)
-		if e != nil {
-			err = e
-			return
-		}
-
-		resp.TagFavorite = u.QueryFavoriteTags().Where(ent_tag.ID(tagObj.ID)).ExistX(ctx)
-	}
-
 	return
 }
 
-func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) (resp *grpc.MangaDetailResponse, err error) {
+func (s *MangaServer) Detail(
+	ctx context.Context,
+	req *grpc.MangaDetailRequest,
+) (resp *grpc.MangaDetailResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Detail") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Detail") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -165,7 +159,9 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 		return
 	}
 
-	progress, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+	progress, _ := client.Progress.Query().
+		Where(progress.UserID(u.ID), progress.ItemID(m.ID)).
+		Only(ctx)
 
 	currentPage := 0
 	if progress != nil {
@@ -175,7 +171,7 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 	grpcTags := make([]*grpc.MangaDetailResponseTagItem, len(tags))
 	for i := range tags {
 		grpcTags[i] = &grpc.MangaDetailResponseTagItem{
-			ID:         int32(tags[i].ID),
+			Id:         int32(tags[i].ID),
 			Name:       tags[i].Name,
 			IsFavorite: u.QueryFavoriteTags().Where(ent_tag.ID(tags[i].ID)).ExistX(ctx),
 			IsHidden:   tags[i].Hidden,
@@ -183,7 +179,7 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 	}
 
 	resp = &grpc.MangaDetailResponse{
-		Name:        req.Name,
+		Name:        m.Name,
 		Favorite:    u.QueryFavoriteItems().Where(ent_meta.ID(m.ID)).ExistX(ctx),
 		Tags:        grpcTags,
 		PageCount:   int32(len(m.FileIndices)),
@@ -198,13 +194,16 @@ func (s *MangaServer) Detail(ctx context.Context, req *grpc.MangaDetailRequest) 
 	return
 }
 
-func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailRequest) (resp *grpc.MangaThumbnailResponse, err error) {
+func (s *MangaServer) Thumbnail(
+	ctx context.Context,
+	req *grpc.MangaThumbnailRequest,
+) (resp *grpc.MangaThumbnailResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Thumbnail") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Thumbnail") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -222,7 +221,10 @@ func (s *MangaServer) Thumbnail(ctx context.Context, req *grpc.MangaThumbnailReq
 	return
 }
 
-func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavoriteRequest) (resp *grpc.MangaSetFavoriteResponse, err error) {
+func (s *MangaServer) SetFavorite(
+	ctx context.Context,
+	req *grpc.MangaSetFavoriteRequest,
+) (resp *grpc.MangaSetFavoriteResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.SetFavorite") }()
 
 	client := database.CreateEntClient()
@@ -233,7 +235,7 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 		return
 	}
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -250,18 +252,21 @@ func (s *MangaServer) SetFavorite(ctx context.Context, req *grpc.MangaSetFavorit
 
 	resp = &grpc.MangaSetFavoriteResponse{
 		Favorite: req.Favorite,
-		Name:     req.Name,
+		Name:     m.Name,
 	}
 
 	return
 }
 
-func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgressRequest) (resp *grpc.MangaSetProgressResponse, err error) {
+func (s *MangaServer) SetProgress(
+	ctx context.Context,
+	req *grpc.MangaSetProgressRequest,
+) (resp *grpc.MangaSetProgressResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.SetProgress") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.SetProgress") }()
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -271,7 +276,9 @@ func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgres
 		s.progressMutex.Lock()
 		defer s.progressMutex.Unlock()
 
-		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+		progressRec, _ := client.Progress.Query().
+			Where(progress.UserID(u.ID), progress.ItemID(m.ID)).
+			Only(ctx)
 
 		if progressRec == nil {
 			_, err = client.Progress.Create().
@@ -296,7 +303,7 @@ func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgres
 	}
 
 	resp = &grpc.MangaSetProgressResponse{
-		Name:    req.Name,
+		Name:    m.Name,
 		User:    req.User,
 		Page:    req.Page,
 		Succeed: true,
@@ -305,13 +312,16 @@ func (s *MangaServer) SetProgress(ctx context.Context, req *grpc.MangaSetProgres
 	return
 }
 
-func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCoverRequest) (resp *grpc.MangaUpdateCoverResponse, err error) {
+func (s *MangaServer) UpdateCover(
+	ctx context.Context,
+	req *grpc.MangaUpdateCoverRequest,
+) (resp *grpc.MangaUpdateCoverResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.UpdateCover") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.UpdateCover") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -339,13 +349,16 @@ func (s *MangaServer) UpdateCover(ctx context.Context, req *grpc.MangaUpdateCove
 	return
 }
 
-func (s *MangaServer) PageImage(ctx context.Context, req *grpc.MangaPageImageRequest) (resp *grpc.MangaPageImageResponse, err error) {
+func (s *MangaServer) PageImage(
+	ctx context.Context,
+	req *grpc.MangaPageImageRequest,
+) (resp *grpc.MangaPageImageResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.PageImage") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.PageImage") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -425,7 +438,7 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.PageImageStream") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return err
 	}
@@ -450,7 +463,9 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 		s.progressMutex.Lock()
 		defer s.progressMutex.Unlock()
 
-		progressRec, _ := client.Progress.Query().Where(progress.UserID(u.ID), progress.ItemID(m.ID)).Only(ctx)
+		progressRec, _ := client.Progress.Query().
+			Where(progress.UserID(u.ID), progress.ItemID(m.ID)).
+			Only(ctx)
 
 		if progressRec == nil {
 			_, err = client.Progress.Create().
@@ -528,13 +543,16 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 	return nil
 }
 
-func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) (resp *grpc.MangaRepairResponse, err error) {
+func (s *MangaServer) Repair(
+	ctx context.Context,
+	req *grpc.MangaRepairRequest,
+) (resp *grpc.MangaRepairResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Repair") }()
 
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Repair") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 		return
 	}
@@ -556,14 +574,17 @@ func (s *MangaServer) Repair(ctx context.Context, req *grpc.MangaRepairRequest) 
 	}
 
 	resp = &grpc.MangaRepairResponse{
-		Name:      req.Name,
+		Name:      m.Name,
 		IsSuccess: true,
 	}
 
 	return
 }
 
-func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.ServerStreamingServer[grpc.MangaDownloadResponse]) error {
+func (s *MangaServer) Download(
+	req *grpc.MangaDownloadRequest,
+	stream grpclib.ServerStreamingServer[grpc.MangaDownloadResponse],
+) error {
 	var err error
 
 	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.Download") }()
@@ -572,7 +593,7 @@ func (s *MangaServer) Download(req *grpc.MangaDownloadRequest, stream grpclib.Se
 	client := database.CreateEntClient()
 	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.Download") }()
 
-	m, err := meta.Read(ctx, client, req.Name)
+	m, err := client.Meta.Get(ctx, int(req.Id))
 	if err != nil {
 
 		return err

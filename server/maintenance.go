@@ -12,7 +12,10 @@ type MaintenanceServer struct {
 	grpc.UnimplementedMaintenanceServer
 }
 
-func (s *MaintenanceServer) PurgeCache(ctx context.Context, req *grpc.MaintenancePurgeCacheRequest) (resp *grpc.MaintenancePurgeCacheResponse, err error) {
+func (s *MaintenanceServer) PurgeCache(
+	ctx context.Context,
+	req *grpc.MaintenancePurgeCacheRequest,
+) (resp *grpc.MaintenancePurgeCacheResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MaintenanceServer.PurgeCache") }()
 
 	go maintenance.PurgeCache()
@@ -26,7 +29,10 @@ func (s *MaintenanceServer) PurgeCache(ctx context.Context, req *grpc.Maintenanc
 
 }
 
-func (s *MaintenanceServer) UpdateLibrary(ctx context.Context, req *grpc.MaintenanceUpdateLibraryRequest) (resp *grpc.MaintenanceUpdateLibraryResponse, err error) {
+func (s *MaintenanceServer) UpdateLibrary(
+	ctx context.Context,
+	req *grpc.MaintenanceUpdateLibraryRequest,
+) (resp *grpc.MaintenanceUpdateLibraryResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MaintenanceServer.UpdateLibrary") }()
 
 	go maintenance.UpdateLibrary(context.Background())
@@ -39,7 +45,10 @@ func (s *MaintenanceServer) UpdateLibrary(ctx context.Context, req *grpc.Mainten
 	return
 }
 
-func (s *MaintenanceServer) PopulateTags(ctx context.Context, req *grpc.MaintenancePopulateTagsRequest) (resp *grpc.MaintenancePopulateTagsResponse, err error) {
+func (s *MaintenanceServer) PopulateTags(
+	ctx context.Context,
+	req *grpc.MaintenancePopulateTagsRequest,
+) (resp *grpc.MaintenancePopulateTagsResponse, err error) {
 	defer func() { log.Err(err).Interface("request", req).Msg("MaintenanceServer.UpdateLibrary") }()
 
 	go maintenance.PopulateTags(context.Background())

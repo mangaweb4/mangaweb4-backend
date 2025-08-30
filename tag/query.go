@@ -39,7 +39,11 @@ type QueryParams struct {
 	Order       grpc.SortOrder
 }
 
-func CreateQuery(client *ent.Client, u *ent.User, params QueryParams) (query *ent.TagQuery, err error) {
+func CreateQuery(
+	client *ent.Client,
+	u *ent.User,
+	params QueryParams,
+) (query *ent.TagQuery, err error) {
 	query = client.Tag.Query()
 	if params.ItemPerPage > 0 {
 		query = query.Limit(params.ItemPerPage).
@@ -92,7 +96,12 @@ func CreateQuery(client *ent.Client, u *ent.User, params QueryParams) (query *en
 	return
 }
 
-func ReadPage(ctx context.Context, client *ent.Client, u *ent.User, params QueryParams) (tags []*ent.Tag, err error) {
+func ReadPage(
+	ctx context.Context,
+	client *ent.Client,
+	u *ent.User,
+	params QueryParams,
+) (tags []*ent.Tag, err error) {
 	query, err := CreateQuery(client, u, params)
 	if err != nil {
 		return
@@ -100,7 +109,12 @@ func ReadPage(ctx context.Context, client *ent.Client, u *ent.User, params Query
 	return query.All(ctx)
 }
 
-func Count(ctx context.Context, client *ent.Client, u *ent.User, params QueryParams) (count int, err error) {
+func Count(
+	ctx context.Context,
+	client *ent.Client,
+	u *ent.User,
+	params QueryParams,
+) (count int, err error) {
 	query, err := CreateQuery(client, u, params)
 	if err != nil {
 		return

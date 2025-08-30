@@ -15,7 +15,10 @@ type UserServer struct {
 	grpc.UnimplementedUserServer
 }
 
-func (s *UserServer) Info(ctx context.Context, req *grpc.UserInfoRequest) (resp *grpc.UserInfoResponse, err error) {
+func (s *UserServer) Info(
+	ctx context.Context,
+	req *grpc.UserInfoRequest,
+) (resp *grpc.UserInfoResponse, err error) {
 	defer func() { log.Err(err).Msg("UserServer.Info") }()
 
 	client := database.CreateEntClient()
@@ -32,7 +35,9 @@ func (s *UserServer) Info(ctx context.Context, req *grpc.UserInfoRequest) (resp 
 		return
 	}
 
-	countFavoriteManga, err := u.QueryFavoriteItems().Where(meta.Active(true), meta.Hidden(false)).Count(ctx)
+	countFavoriteManga, err := u.QueryFavoriteItems().
+		Where(meta.Active(true), meta.Hidden(false)).
+		Count(ctx)
 	if err != nil {
 		return
 	}
