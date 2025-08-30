@@ -22,14 +22,15 @@ const (
 )
 
 type TagListRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
-	Filter        Filter                 `protobuf:"varint,3,opt,name=Filter,proto3,enum=mangaweb4.types.Filter" json:"Filter,omitempty"`
-	Page          int32                  `protobuf:"varint,4,opt,name=Page,proto3" json:"Page,omitempty"`
-	ItemPerPage   int32                  `protobuf:"varint,5,opt,name=ItemPerPage,proto3" json:"ItemPerPage,omitempty"`
-	Search        string                 `protobuf:"bytes,6,opt,name=Search,proto3" json:"Search,omitempty"`
-	Sort          SortField              `protobuf:"varint,7,opt,name=Sort,proto3,enum=mangaweb4.types.SortField" json:"Sort,omitempty"`
-	Order         SortOrder              `protobuf:"varint,8,opt,name=Order,proto3,enum=mangaweb4.types.SortOrder" json:"Order,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	User  string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	// reserved = 2
+	Filter        Filter    `protobuf:"varint,3,opt,name=Filter,proto3,enum=mangaweb4.types.Filter" json:"Filter,omitempty"`
+	Page          int32     `protobuf:"varint,4,opt,name=Page,proto3" json:"Page,omitempty"`
+	ItemPerPage   int32     `protobuf:"varint,5,opt,name=ItemPerPage,proto3" json:"ItemPerPage,omitempty"`
+	Search        string    `protobuf:"bytes,6,opt,name=Search,proto3" json:"Search,omitempty"`
+	Sort          SortField `protobuf:"varint,7,opt,name=Sort,proto3,enum=mangaweb4.types.SortField" json:"Sort,omitempty"`
+	Order         SortOrder `protobuf:"varint,8,opt,name=Order,proto3,enum=mangaweb4.types.SortOrder" json:"Order,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -173,6 +174,274 @@ func (x *TagListResponse) GetItems() []*TagListResponseItem {
 	return nil
 }
 
+type TagDetailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	Id            int32                  `protobuf:"varint,2,opt,name=Id,proto3" json:"Id,omitempty"`
+	Page          int32                  `protobuf:"varint,3,opt,name=Page,proto3" json:"Page,omitempty"`
+	ItemPerPage   int32                  `protobuf:"varint,4,opt,name=ItemPerPage,proto3" json:"ItemPerPage,omitempty"`
+	Search        string                 `protobuf:"bytes,5,opt,name=Search,proto3" json:"Search,omitempty"`
+	Filter        Filter                 `protobuf:"varint,6,opt,name=Filter,proto3,enum=mangaweb4.types.Filter" json:"Filter,omitempty"`
+	Sort          SortField              `protobuf:"varint,7,opt,name=Sort,proto3,enum=mangaweb4.types.SortField" json:"Sort,omitempty"`
+	Order         SortOrder              `protobuf:"varint,8,opt,name=Order,proto3,enum=mangaweb4.types.SortOrder" json:"Order,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TagDetailRequest) Reset() {
+	*x = TagDetailRequest{}
+	mi := &file_tag_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TagDetailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TagDetailRequest) ProtoMessage() {}
+
+func (x *TagDetailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TagDetailRequest.ProtoReflect.Descriptor instead.
+func (*TagDetailRequest) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *TagDetailRequest) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *TagDetailRequest) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *TagDetailRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *TagDetailRequest) GetItemPerPage() int32 {
+	if x != nil {
+		return x.ItemPerPage
+	}
+	return 0
+}
+
+func (x *TagDetailRequest) GetSearch() string {
+	if x != nil {
+		return x.Search
+	}
+	return ""
+}
+
+func (x *TagDetailRequest) GetFilter() Filter {
+	if x != nil {
+		return x.Filter
+	}
+	return Filter_FILTER_UNKNOWN
+}
+
+func (x *TagDetailRequest) GetSort() SortField {
+	if x != nil {
+		return x.Sort
+	}
+	return SortField_SORT_FIELD_NAME
+}
+
+func (x *TagDetailRequest) GetOrder() SortOrder {
+	if x != nil {
+		return x.Order
+	}
+	return SortOrder_SORT_ORDER_ASCENDING
+}
+
+type TagDetailResponse struct {
+	state          protoimpl.MessageState   `protogen:"open.v1"`
+	Name           string                   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	TagFavorite    bool                     `protobuf:"varint,2,opt,name=TagFavorite,proto3" json:"TagFavorite,omitempty"`
+	TotalItemCount int32                    `protobuf:"varint,3,opt,name=TotalItemCount,proto3" json:"TotalItemCount,omitempty"`
+	Items          []*TagDetailResponseItem `protobuf:"bytes,4,rep,name=Items,proto3" json:"Items,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TagDetailResponse) Reset() {
+	*x = TagDetailResponse{}
+	mi := &file_tag_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TagDetailResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TagDetailResponse) ProtoMessage() {}
+
+func (x *TagDetailResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TagDetailResponse.ProtoReflect.Descriptor instead.
+func (*TagDetailResponse) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *TagDetailResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *TagDetailResponse) GetTagFavorite() bool {
+	if x != nil {
+		return x.TagFavorite
+	}
+	return false
+}
+
+func (x *TagDetailResponse) GetTotalItemCount() int32 {
+	if x != nil {
+		return x.TotalItemCount
+	}
+	return 0
+}
+
+func (x *TagDetailResponse) GetItems() []*TagDetailResponseItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type TagDetailResponseItem struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int32                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	Name           string                 `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
+	IsFavorite     bool                   `protobuf:"varint,3,opt,name=IsFavorite,proto3" json:"IsFavorite,omitempty"`
+	IsRead         bool                   `protobuf:"varint,4,opt,name=IsRead,proto3" json:"IsRead,omitempty"`
+	PageCount      int32                  `protobuf:"varint,5,opt,name=PageCount,proto3" json:"PageCount,omitempty"`
+	HasFavoriteTag bool                   `protobuf:"varint,6,opt,name=HasFavoriteTag,proto3" json:"HasFavoriteTag,omitempty"`
+	CurrentPage    int32                  `protobuf:"varint,7,opt,name=CurrentPage,proto3" json:"CurrentPage,omitempty"`
+	MaxProgress    int32                  `protobuf:"varint,8,opt,name=MaxProgress,proto3" json:"MaxProgress,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TagDetailResponseItem) Reset() {
+	*x = TagDetailResponseItem{}
+	mi := &file_tag_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TagDetailResponseItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TagDetailResponseItem) ProtoMessage() {}
+
+func (x *TagDetailResponseItem) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TagDetailResponseItem.ProtoReflect.Descriptor instead.
+func (*TagDetailResponseItem) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *TagDetailResponseItem) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *TagDetailResponseItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *TagDetailResponseItem) GetIsFavorite() bool {
+	if x != nil {
+		return x.IsFavorite
+	}
+	return false
+}
+
+func (x *TagDetailResponseItem) GetIsRead() bool {
+	if x != nil {
+		return x.IsRead
+	}
+	return false
+}
+
+func (x *TagDetailResponseItem) GetPageCount() int32 {
+	if x != nil {
+		return x.PageCount
+	}
+	return 0
+}
+
+func (x *TagDetailResponseItem) GetHasFavoriteTag() bool {
+	if x != nil {
+		return x.HasFavoriteTag
+	}
+	return false
+}
+
+func (x *TagDetailResponseItem) GetCurrentPage() int32 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *TagDetailResponseItem) GetMaxProgress() int32 {
+	if x != nil {
+		return x.MaxProgress
+	}
+	return 0
+}
+
 type TagListResponseItem struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Id             int32                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
@@ -187,7 +456,7 @@ type TagListResponseItem struct {
 
 func (x *TagListResponseItem) Reset() {
 	*x = TagListResponseItem{}
-	mi := &file_tag_proto_msgTypes[2]
+	mi := &file_tag_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +468,7 @@ func (x *TagListResponseItem) String() string {
 func (*TagListResponseItem) ProtoMessage() {}
 
 func (x *TagListResponseItem) ProtoReflect() protoreflect.Message {
-	mi := &file_tag_proto_msgTypes[2]
+	mi := &file_tag_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -212,7 +481,7 @@ func (x *TagListResponseItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TagListResponseItem.ProtoReflect.Descriptor instead.
 func (*TagListResponseItem) Descriptor() ([]byte, []int) {
-	return file_tag_proto_rawDescGZIP(), []int{2}
+	return file_tag_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *TagListResponseItem) GetId() int32 {
@@ -268,7 +537,7 @@ type TagThumbnailRequest struct {
 
 func (x *TagThumbnailRequest) Reset() {
 	*x = TagThumbnailRequest{}
-	mi := &file_tag_proto_msgTypes[3]
+	mi := &file_tag_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -280,7 +549,7 @@ func (x *TagThumbnailRequest) String() string {
 func (*TagThumbnailRequest) ProtoMessage() {}
 
 func (x *TagThumbnailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tag_proto_msgTypes[3]
+	mi := &file_tag_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -293,7 +562,7 @@ func (x *TagThumbnailRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TagThumbnailRequest.ProtoReflect.Descriptor instead.
 func (*TagThumbnailRequest) Descriptor() ([]byte, []int) {
-	return file_tag_proto_rawDescGZIP(), []int{3}
+	return file_tag_proto_rawDescGZIP(), []int{6}
 }
 
 // Deprecated: Marked as deprecated in tag.proto.
@@ -321,7 +590,7 @@ type TagThumbnailResponse struct {
 
 func (x *TagThumbnailResponse) Reset() {
 	*x = TagThumbnailResponse{}
-	mi := &file_tag_proto_msgTypes[4]
+	mi := &file_tag_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -333,7 +602,7 @@ func (x *TagThumbnailResponse) String() string {
 func (*TagThumbnailResponse) ProtoMessage() {}
 
 func (x *TagThumbnailResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tag_proto_msgTypes[4]
+	mi := &file_tag_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -346,7 +615,7 @@ func (x *TagThumbnailResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TagThumbnailResponse.ProtoReflect.Descriptor instead.
 func (*TagThumbnailResponse) Descriptor() ([]byte, []int) {
-	return file_tag_proto_rawDescGZIP(), []int{4}
+	return file_tag_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *TagThumbnailResponse) GetContentType() string {
@@ -376,7 +645,7 @@ type TagSetFavoriteRequest struct {
 
 func (x *TagSetFavoriteRequest) Reset() {
 	*x = TagSetFavoriteRequest{}
-	mi := &file_tag_proto_msgTypes[5]
+	mi := &file_tag_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -388,7 +657,7 @@ func (x *TagSetFavoriteRequest) String() string {
 func (*TagSetFavoriteRequest) ProtoMessage() {}
 
 func (x *TagSetFavoriteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tag_proto_msgTypes[5]
+	mi := &file_tag_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -401,7 +670,7 @@ func (x *TagSetFavoriteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TagSetFavoriteRequest.ProtoReflect.Descriptor instead.
 func (*TagSetFavoriteRequest) Descriptor() ([]byte, []int) {
-	return file_tag_proto_rawDescGZIP(), []int{5}
+	return file_tag_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *TagSetFavoriteRequest) GetUser() string {
@@ -443,7 +712,7 @@ type TagSetFavoriteResponse struct {
 
 func (x *TagSetFavoriteResponse) Reset() {
 	*x = TagSetFavoriteResponse{}
-	mi := &file_tag_proto_msgTypes[6]
+	mi := &file_tag_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -455,7 +724,7 @@ func (x *TagSetFavoriteResponse) String() string {
 func (*TagSetFavoriteResponse) ProtoMessage() {}
 
 func (x *TagSetFavoriteResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tag_proto_msgTypes[6]
+	mi := &file_tag_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -468,7 +737,7 @@ func (x *TagSetFavoriteResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TagSetFavoriteResponse.ProtoReflect.Descriptor instead.
 func (*TagSetFavoriteResponse) Descriptor() ([]byte, []int) {
-	return file_tag_proto_rawDescGZIP(), []int{6}
+	return file_tag_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *TagSetFavoriteResponse) GetTag() string {
@@ -501,7 +770,32 @@ const file_tag_proto_rawDesc = "" +
 	"\x0fTagListResponse\x12 \n" +
 	"\vTagFavorite\x18\x01 \x01(\bR\vTagFavorite\x12\x1c\n" +
 	"\tTotalPage\x18\x02 \x01(\x05R\tTotalPage\x12*\n" +
-	"\x05Items\x18\x03 \x03(\v2\x14.TagListResponseItemR\x05Items\"\xb7\x01\n" +
+	"\x05Items\x18\x03 \x03(\v2\x14.TagListResponseItemR\x05Items\"\x97\x02\n" +
+	"\x10TagDetailRequest\x12\x12\n" +
+	"\x04User\x18\x01 \x01(\tR\x04User\x12\x0e\n" +
+	"\x02Id\x18\x02 \x01(\x05R\x02Id\x12\x12\n" +
+	"\x04Page\x18\x03 \x01(\x05R\x04Page\x12 \n" +
+	"\vItemPerPage\x18\x04 \x01(\x05R\vItemPerPage\x12\x16\n" +
+	"\x06Search\x18\x05 \x01(\tR\x06Search\x12/\n" +
+	"\x06Filter\x18\x06 \x01(\x0e2\x17.mangaweb4.types.FilterR\x06Filter\x12.\n" +
+	"\x04Sort\x18\a \x01(\x0e2\x1a.mangaweb4.types.SortFieldR\x04Sort\x120\n" +
+	"\x05Order\x18\b \x01(\x0e2\x1a.mangaweb4.types.SortOrderR\x05Order\"\x9f\x01\n" +
+	"\x11TagDetailResponse\x12\x12\n" +
+	"\x04Name\x18\x01 \x01(\tR\x04Name\x12 \n" +
+	"\vTagFavorite\x18\x02 \x01(\bR\vTagFavorite\x12&\n" +
+	"\x0eTotalItemCount\x18\x03 \x01(\x05R\x0eTotalItemCount\x12,\n" +
+	"\x05Items\x18\x04 \x03(\v2\x16.TagDetailResponseItemR\x05Items\"\xfd\x01\n" +
+	"\x15TagDetailResponseItem\x12\x0e\n" +
+	"\x02Id\x18\x01 \x01(\x05R\x02Id\x12\x12\n" +
+	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x1e\n" +
+	"\n" +
+	"IsFavorite\x18\x03 \x01(\bR\n" +
+	"IsFavorite\x12\x16\n" +
+	"\x06IsRead\x18\x04 \x01(\bR\x06IsRead\x12\x1c\n" +
+	"\tPageCount\x18\x05 \x01(\x05R\tPageCount\x12&\n" +
+	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\x12 \n" +
+	"\vCurrentPage\x18\a \x01(\x05R\vCurrentPage\x12 \n" +
+	"\vMaxProgress\x18\b \x01(\x05R\vMaxProgress\"\xb7\x01\n" +
 	"\x13TagListResponseItem\x12\x0e\n" +
 	"\x02Id\x18\x01 \x01(\x05R\x02Id\x12\x12\n" +
 	"\x04Name\x18\x02 \x01(\tR\x04Name\x12\x1e\n" +
@@ -524,9 +818,10 @@ const file_tag_proto_rawDesc = "" +
 	"\x02Id\x18\x04 \x01(\x05R\x02Id\"F\n" +
 	"\x16TagSetFavoriteResponse\x12\x10\n" +
 	"\x03Tag\x18\x01 \x01(\tR\x03Tag\x12\x1a\n" +
-	"\bFavorite\x18\x02 \x01(\bR\bFavorite2\xb0\x01\n" +
+	"\bFavorite\x18\x02 \x01(\bR\bFavorite2\xe3\x01\n" +
 	"\x03Tag\x12+\n" +
-	"\x04List\x12\x0f.TagListRequest\x1a\x10.TagListResponse\"\x00\x12:\n" +
+	"\x04List\x12\x0f.TagListRequest\x1a\x10.TagListResponse\"\x00\x121\n" +
+	"\x06Detail\x12\x11.TagDetailRequest\x1a\x12.TagDetailResponse\"\x00\x12:\n" +
 	"\tThumbnail\x12\x14.TagThumbnailRequest\x1a\x15.TagThumbnailResponse\"\x00\x12@\n" +
 	"\vSetFavorite\x12\x16.TagSetFavoriteRequest\x1a\x17.TagSetFavoriteResponse\"\x00B-Z+github.com/mangaweb4/mangaweb4-backend/grpcb\x06proto3"
 
@@ -542,35 +837,44 @@ func file_tag_proto_rawDescGZIP() []byte {
 	return file_tag_proto_rawDescData
 }
 
-var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_tag_proto_goTypes = []any{
 	(*TagListRequest)(nil),         // 0: TagListRequest
 	(*TagListResponse)(nil),        // 1: TagListResponse
-	(*TagListResponseItem)(nil),    // 2: TagListResponseItem
-	(*TagThumbnailRequest)(nil),    // 3: TagThumbnailRequest
-	(*TagThumbnailResponse)(nil),   // 4: TagThumbnailResponse
-	(*TagSetFavoriteRequest)(nil),  // 5: TagSetFavoriteRequest
-	(*TagSetFavoriteResponse)(nil), // 6: TagSetFavoriteResponse
-	(Filter)(0),                    // 7: mangaweb4.types.Filter
-	(SortField)(0),                 // 8: mangaweb4.types.SortField
-	(SortOrder)(0),                 // 9: mangaweb4.types.SortOrder
+	(*TagDetailRequest)(nil),       // 2: TagDetailRequest
+	(*TagDetailResponse)(nil),      // 3: TagDetailResponse
+	(*TagDetailResponseItem)(nil),  // 4: TagDetailResponseItem
+	(*TagListResponseItem)(nil),    // 5: TagListResponseItem
+	(*TagThumbnailRequest)(nil),    // 6: TagThumbnailRequest
+	(*TagThumbnailResponse)(nil),   // 7: TagThumbnailResponse
+	(*TagSetFavoriteRequest)(nil),  // 8: TagSetFavoriteRequest
+	(*TagSetFavoriteResponse)(nil), // 9: TagSetFavoriteResponse
+	(Filter)(0),                    // 10: mangaweb4.types.Filter
+	(SortField)(0),                 // 11: mangaweb4.types.SortField
+	(SortOrder)(0),                 // 12: mangaweb4.types.SortOrder
 }
 var file_tag_proto_depIdxs = []int32{
-	7, // 0: TagListRequest.Filter:type_name -> mangaweb4.types.Filter
-	8, // 1: TagListRequest.Sort:type_name -> mangaweb4.types.SortField
-	9, // 2: TagListRequest.Order:type_name -> mangaweb4.types.SortOrder
-	2, // 3: TagListResponse.Items:type_name -> TagListResponseItem
-	0, // 4: Tag.List:input_type -> TagListRequest
-	3, // 5: Tag.Thumbnail:input_type -> TagThumbnailRequest
-	5, // 6: Tag.SetFavorite:input_type -> TagSetFavoriteRequest
-	1, // 7: Tag.List:output_type -> TagListResponse
-	4, // 8: Tag.Thumbnail:output_type -> TagThumbnailResponse
-	6, // 9: Tag.SetFavorite:output_type -> TagSetFavoriteResponse
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	10, // 0: TagListRequest.Filter:type_name -> mangaweb4.types.Filter
+	11, // 1: TagListRequest.Sort:type_name -> mangaweb4.types.SortField
+	12, // 2: TagListRequest.Order:type_name -> mangaweb4.types.SortOrder
+	5,  // 3: TagListResponse.Items:type_name -> TagListResponseItem
+	10, // 4: TagDetailRequest.Filter:type_name -> mangaweb4.types.Filter
+	11, // 5: TagDetailRequest.Sort:type_name -> mangaweb4.types.SortField
+	12, // 6: TagDetailRequest.Order:type_name -> mangaweb4.types.SortOrder
+	4,  // 7: TagDetailResponse.Items:type_name -> TagDetailResponseItem
+	0,  // 8: Tag.List:input_type -> TagListRequest
+	2,  // 9: Tag.Detail:input_type -> TagDetailRequest
+	6,  // 10: Tag.Thumbnail:input_type -> TagThumbnailRequest
+	8,  // 11: Tag.SetFavorite:input_type -> TagSetFavoriteRequest
+	1,  // 12: Tag.List:output_type -> TagListResponse
+	3,  // 13: Tag.Detail:output_type -> TagDetailResponse
+	7,  // 14: Tag.Thumbnail:output_type -> TagThumbnailResponse
+	9,  // 15: Tag.SetFavorite:output_type -> TagSetFavoriteResponse
+	12, // [12:16] is the sub-list for method output_type
+	8,  // [8:12] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_tag_proto_init() }
@@ -585,7 +889,7 @@ func file_tag_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tag_proto_rawDesc), len(file_tag_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

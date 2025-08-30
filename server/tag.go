@@ -4,7 +4,10 @@ import (
 	"context"
 
 	"github.com/mangaweb4/mangaweb4-backend/database"
+	"github.com/mangaweb4/mangaweb4-backend/ent"
+	"github.com/mangaweb4/mangaweb4-backend/ent/progress"
 	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
+	ent_user "github.com/mangaweb4/mangaweb4-backend/ent/user"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
 	"github.com/mangaweb4/mangaweb4-backend/tag"
@@ -75,6 +78,93 @@ func (s *TagServer) List(
 			IsFavorite: u.QueryFavoriteTags().Where(ent_tag.ID(t.ID)).ExistX(ctx),
 			PageCount:  int32(len(items)),
 		}
+	}
+
+	return
+}
+
+func (s *TagServer) Detail(
+	ctx context.Context,
+	req *grpc.TagDetailRequest,
+) (resp *grpc.TagDetailResponse, err error) {
+	defer func() { log.Err(err).Interface("request", req).Msg("TagServer.Detail") }()
+
+	client := database.CreateEntClient()
+	defer func() { log.Err(client.Close()).Msg("database client close on TagServer.Detail") }()
+
+	t, err := client.Tag.Get(ctx, int(req.Id))
+	if err != nil {
+		return
+	}
+
+	u, err := user.GetUser(ctx, client, req.User)
+	if err != nil {
+		return
+	}
+
+	items, err := tag.ReadMetaPage(ctx, client, t, u, tag.QueryMetaParams{
+		SearchName:  req.Search,
+		SortBy:      req.Sort,
+		SortOrder:   req.Order,
+		Filter:      req.Filter,
+		Page:        int(req.Page),
+		ItemPerPage: int(req.ItemPerPage),
+	})
+	if err != nil {
+		return
+	}
+
+	count, err := tag.MetaCount(ctx, client, t, u, tag.QueryMetaParams{
+		SearchName:  req.Search,
+		SortBy:      req.Sort,
+		SortOrder:   req.Order,
+		Filter:      req.Filter,
+		Page:        0,
+		ItemPerPage: 0,
+	})
+	if err != nil {
+		return
+	}
+
+	resp.TagFavorite, err = u.QueryFavoriteTags().Where(ent_tag.ID(t.ID)).Exist(ctx)
+	if err != nil {
+		return
+	}
+
+	resp.Name = t.Name
+	resp.TotalItemCount = int32(count)
+
+	for _, i := range items {
+		p, e := i.QueryProgress().Where(progress.UserID(u.ID)).First(ctx)
+
+		if e != nil {
+			if !ent.IsNotFound(e) {
+				err = e
+				return
+			}
+			p = nil
+		}
+
+		item := &grpc.TagDetailResponseItem{
+			Id:         int32(i.ID),
+			Name:       i.Name,
+			IsFavorite: i.QueryFavoriteOfUser().Where(ent_user.ID(u.ID)).ExistX(ctx),
+			IsRead:     false,
+			PageCount:  int32(len(i.FileIndices)),
+			HasFavoriteTag: i.QueryTags().
+				QueryFavoriteOfUser().
+				Where(ent_user.ID(u.ID)).
+				ExistX(ctx),
+			CurrentPage: 0,
+			MaxProgress: 0,
+		}
+
+		if p != nil {
+			item.IsRead = true
+			item.CurrentPage = int32(p.Page)
+			item.MaxProgress = int32(p.Max)
+		}
+		resp.Items = append(resp.Items, item)
 	}
 
 	return
