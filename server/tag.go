@@ -74,6 +74,7 @@ func (s *TagServer) List(
 			return
 		}
 		resp.Items[i] = &grpc.TagListResponseItem{
+			Id:         int32(t.ID),
 			Name:       t.Name,
 			IsFavorite: u.QueryFavoriteTags().Where(ent_tag.ID(t.ID)).ExistX(ctx),
 			PageCount:  int32(len(items)),
@@ -126,13 +127,15 @@ func (s *TagServer) Detail(
 		return
 	}
 
+	resp = &grpc.TagDetailResponse{
+		Name:           t.Name,
+		TotalItemCount: int32(count),
+	}
+
 	resp.TagFavorite, err = u.QueryFavoriteTags().Where(ent_tag.ID(t.ID)).Exist(ctx)
 	if err != nil {
 		return
 	}
-
-	resp.Name = t.Name
-	resp.TotalItemCount = int32(count)
 
 	for _, i := range items {
 		p, e := i.QueryProgress().Where(progress.UserID(u.ID)).First(ctx)
