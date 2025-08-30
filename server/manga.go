@@ -17,7 +17,6 @@ import (
 	ent_tag "github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/meta"
-	"github.com/mangaweb4/mangaweb4-backend/tag"
 	"github.com/mangaweb4/mangaweb4-backend/user"
 	"github.com/rs/zerolog/log"
 	grpclib "google.golang.org/grpc"
@@ -48,7 +47,6 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (
 		meta.QueryParams{
 			SearchName:  req.Search,
 			Filter:      req.Filter,
-			SearchTag:   req.Tag,
 			SortBy:      req.Sort,
 			SortOrder:   req.Order,
 			Page:        int(req.Page),
@@ -103,7 +101,6 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (
 		meta.QueryParams{
 			SearchName:  req.Search,
 			Filter:      req.Filter,
-			SearchTag:   req.Tag,
 			SortBy:      req.Sort,
 			SortOrder:   req.Order,
 			Page:        0,
@@ -129,16 +126,6 @@ func (s *MangaServer) List(ctx context.Context, req *grpc.MangaListRequest) (
 	resp = &grpc.MangaListResponse{
 		Items:     items,
 		TotalPage: pageCount,
-	}
-
-	if req.Tag != "" {
-		tagObj, e := tag.Read(ctx, client, req.Tag)
-		if e != nil {
-			err = e
-			return
-		}
-
-		resp.TagFavorite = u.QueryFavoriteTags().Where(ent_tag.ID(tagObj.ID)).ExistX(ctx)
 	}
 
 	return

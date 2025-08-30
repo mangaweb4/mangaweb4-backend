@@ -22,15 +22,14 @@ const (
 )
 
 type TagListRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	User  string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
-	// reserved = 2
-	Filter        Filter    `protobuf:"varint,3,opt,name=Filter,proto3,enum=mangaweb4.types.Filter" json:"Filter,omitempty"`
-	Page          int32     `protobuf:"varint,4,opt,name=Page,proto3" json:"Page,omitempty"`
-	ItemPerPage   int32     `protobuf:"varint,5,opt,name=ItemPerPage,proto3" json:"ItemPerPage,omitempty"`
-	Search        string    `protobuf:"bytes,6,opt,name=Search,proto3" json:"Search,omitempty"`
-	Sort          SortField `protobuf:"varint,7,opt,name=Sort,proto3,enum=mangaweb4.types.SortField" json:"Sort,omitempty"`
-	Order         SortOrder `protobuf:"varint,8,opt,name=Order,proto3,enum=mangaweb4.types.SortOrder" json:"Order,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	Filter        Filter                 `protobuf:"varint,3,opt,name=Filter,proto3,enum=mangaweb4.types.Filter" json:"Filter,omitempty"`
+	Page          int32                  `protobuf:"varint,4,opt,name=Page,proto3" json:"Page,omitempty"`
+	ItemPerPage   int32                  `protobuf:"varint,5,opt,name=ItemPerPage,proto3" json:"ItemPerPage,omitempty"`
+	Search        string                 `protobuf:"bytes,6,opt,name=Search,proto3" json:"Search,omitempty"`
+	Sort          SortField              `protobuf:"varint,7,opt,name=Sort,proto3,enum=mangaweb4.types.SortField" json:"Sort,omitempty"`
+	Order         SortOrder              `protobuf:"varint,8,opt,name=Order,proto3,enum=mangaweb4.types.SortOrder" json:"Order,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -527,10 +526,8 @@ func (x *TagListResponseItem) GetHasFavoriteTag() bool {
 }
 
 type TagThumbnailRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Deprecated: Marked as deprecated in tag.proto.
-	Name          string `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	Id            int32  `protobuf:"varint,2,opt,name=Id,proto3" json:"Id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,2,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -563,14 +560,6 @@ func (x *TagThumbnailRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TagThumbnailRequest.ProtoReflect.Descriptor instead.
 func (*TagThumbnailRequest) Descriptor() ([]byte, []int) {
 	return file_tag_proto_rawDescGZIP(), []int{6}
-}
-
-// Deprecated: Marked as deprecated in tag.proto.
-func (x *TagThumbnailRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
 }
 
 func (x *TagThumbnailRequest) GetId() int32 {
@@ -633,12 +622,10 @@ func (x *TagThumbnailResponse) GetData() []byte {
 }
 
 type TagSetFavoriteRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	User  string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
-	// Deprecated: Marked as deprecated in tag.proto.
-	Tag           string `protobuf:"bytes,2,opt,name=Tag,proto3" json:"Tag,omitempty"`
-	Favorite      bool   `protobuf:"varint,3,opt,name=Favorite,proto3" json:"Favorite,omitempty"`
-	Id            int32  `protobuf:"varint,4,opt,name=Id,proto3" json:"Id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          string                 `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	Favorite      bool                   `protobuf:"varint,3,opt,name=Favorite,proto3" json:"Favorite,omitempty"`
+	Id            int32                  `protobuf:"varint,4,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -676,14 +663,6 @@ func (*TagSetFavoriteRequest) Descriptor() ([]byte, []int) {
 func (x *TagSetFavoriteRequest) GetUser() string {
 	if x != nil {
 		return x.User
-	}
-	return ""
-}
-
-// Deprecated: Marked as deprecated in tag.proto.
-func (x *TagSetFavoriteRequest) GetTag() string {
-	if x != nil {
-		return x.Tag
 	}
 	return ""
 }
@@ -804,18 +783,16 @@ const file_tag_proto_rawDesc = "" +
 	"IsFavorite\x12\x16\n" +
 	"\x06IsRead\x18\x04 \x01(\bR\x06IsRead\x12\x1c\n" +
 	"\tPageCount\x18\x05 \x01(\x05R\tPageCount\x12&\n" +
-	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\"=\n" +
-	"\x13TagThumbnailRequest\x12\x16\n" +
-	"\x04Name\x18\x01 \x01(\tB\x02\x18\x01R\x04Name\x12\x0e\n" +
-	"\x02Id\x18\x02 \x01(\x05R\x02Id\"L\n" +
+	"\x0eHasFavoriteTag\x18\x06 \x01(\bR\x0eHasFavoriteTag\"+\n" +
+	"\x13TagThumbnailRequest\x12\x0e\n" +
+	"\x02Id\x18\x02 \x01(\x05R\x02IdJ\x04\b\x01\x10\x02\"L\n" +
 	"\x14TagThumbnailResponse\x12 \n" +
 	"\vContentType\x18\x01 \x01(\tR\vContentType\x12\x12\n" +
-	"\x04Data\x18\x02 \x01(\fR\x04Data\"m\n" +
+	"\x04Data\x18\x02 \x01(\fR\x04Data\"]\n" +
 	"\x15TagSetFavoriteRequest\x12\x12\n" +
-	"\x04User\x18\x01 \x01(\tR\x04User\x12\x14\n" +
-	"\x03Tag\x18\x02 \x01(\tB\x02\x18\x01R\x03Tag\x12\x1a\n" +
+	"\x04User\x18\x01 \x01(\tR\x04User\x12\x1a\n" +
 	"\bFavorite\x18\x03 \x01(\bR\bFavorite\x12\x0e\n" +
-	"\x02Id\x18\x04 \x01(\x05R\x02Id\"F\n" +
+	"\x02Id\x18\x04 \x01(\x05R\x02IdJ\x04\b\x02\x10\x03\"F\n" +
 	"\x16TagSetFavoriteResponse\x12\x10\n" +
 	"\x03Tag\x18\x01 \x01(\tR\x03Tag\x12\x1a\n" +
 	"\bFavorite\x18\x02 \x01(\bR\bFavorite2\xe3\x01\n" +
