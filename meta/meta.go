@@ -101,8 +101,9 @@ func CreateThumbnail(m *ent.Meta) (thumbnail image.Image, err error) {
 		return
 	}
 
+	var cropRect image.Rectangle
 	if m.ThumbnailWidth > 0 && m.ThumbnailHeight > 0 {
-		img = imaging.Crop(img, image.Rectangle{
+		cropRect = image.Rectangle{
 			Min: image.Point{
 				X: m.ThumbnailX,
 				Y: m.ThumbnailY,
@@ -111,8 +112,12 @@ func CreateThumbnail(m *ent.Meta) (thumbnail image.Image, err error) {
 				X: m.ThumbnailX + m.ThumbnailWidth,
 				Y: m.ThumbnailY + m.ThumbnailHeight,
 			},
-		})
+		}
+	} else {
+		cropRect = DefaultThumbnailCrop(img.Bounds().Dx(), img.Bounds().Dy())
 	}
+
+	img = imaging.Crop(img, cropRect)
 
 	if img.Bounds().Dy() > THUMBNAIL_HEIGHT {
 		resized := imaging.Resize(img, 0, THUMBNAIL_HEIGHT, imaging.MitchellNetravali)
