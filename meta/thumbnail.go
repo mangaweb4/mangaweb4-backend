@@ -6,6 +6,11 @@ import (
 )
 
 func DefaultThumbnailCrop(width, height int) image.Rectangle {
+	// Check for invalid dimensions
+	if width <= 0 || height <= 0 {
+		return image.Rect(0, 0, 0, 0)
+	}
+
 	const targetAspectRatio = 1.0 / 1.41421356237 // ISO A-series aspect ratio
 	aspectRatio := float64(width) / float64(height)
 

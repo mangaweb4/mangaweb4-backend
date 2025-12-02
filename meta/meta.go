@@ -117,6 +117,11 @@ func CreateThumbnail(m *ent.Meta) (thumbnail image.Image, err error) {
 		cropRect = DefaultThumbnailCrop(img.Bounds().Dx(), img.Bounds().Dy())
 	}
 
+	if cropRect.Dx() <= 0 || cropRect.Dy() <= 0 {
+		err = errors.New("invalid thumbnail dimensions")
+		return
+	}
+
 	img = imaging.Crop(img, cropRect)
 
 	if img.Bounds().Dy() > THUMBNAIL_HEIGHT {
