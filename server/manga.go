@@ -23,6 +23,14 @@ import (
 )
 
 const MESSAGE_SIZE = 1024 * 1024
+const HIGH_QUALITY_DIMENSION = 2048
+const LOW_QUALITY_DIMENSION = 1024
+
+var HIGH_QUALITY_ALGORITHM = imaging.MitchellNetravali
+var LOW_QUALITY_ALGORITHM = imaging.Lanczos
+
+const HIGH_QUALITY_JPEG_QUALITY = 95
+const LOW_QUALITY_JPEG_QUALITY = 75
 
 type MangaServer struct {
 	progressMutex sync.Mutex
@@ -353,75 +361,8 @@ func (s *MangaServer) PageImage(
 	ctx context.Context,
 	req *grpc.MangaPageImageRequest,
 ) (resp *grpc.MangaPageImageResponse, err error) {
-	defer func() { log.Err(err).Interface("request", req).Msg("MangaServer.PageImage") }()
 
-	client := database.CreateEntClient()
-	defer func() { log.Err(client.Close()).Msg("database client close on MangaServer.PageImage") }()
-
-	m, err := client.Meta.Get(ctx, int(req.Id))
-	if err != nil {
-		return
-	}
-
-	c, err := container.CreateContainer(m)
-	if err != nil {
-		return
-	}
-
-	steam, f, err := c.OpenItem(context.Background(), int(req.Index))
-	if err != nil {
-		return
-	}
-
-	data, err := io.ReadAll(steam)
-	if err != nil {
-		return
-	}
-
-	if req.Width == 0 && req.Height == 0 {
-		var contentType string
-		switch filepath.Ext(strings.ToLower(f)) {
-		case ".jpg", ".jpeg":
-			contentType = "image/jpeg"
-		case ".png":
-			contentType = "image/png"
-		case ".webp":
-			contentType = "image/webp"
-		}
-
-		resp = &grpc.MangaPageImageResponse{
-			ContentType: contentType,
-			Data:        data,
-		}
-
-		return
-	}
-
-	reader := bytes.NewBuffer(data)
-
-	img, err := imaging.Decode(reader, imaging.AutoOrientation(true))
-	if err != nil {
-		return
-	}
-
-	if img.Bounds().Dx() > int(req.Width) || img.Bounds().Dy() > int(req.Height) {
-		resized := imaging.Fit(img, int(req.Width), int(req.Height), imaging.MitchellNetravali)
-		img = resized
-	}
-
-	var buf bytes.Buffer
-
-	err = imaging.Encode(&buf, img, imaging.JPEG)
-
-	if err != nil {
-		return
-	}
-
-	resp = &grpc.MangaPageImageResponse{
-		ContentType: "image/jpeg",
-		Data:        buf.Bytes(),
-	}
-
+	err = fmt.Errorf("not implemented")
 	return
 }
 
@@ -488,7 +429,13 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 			return err
 		}
 	}
-	if req.Width == 0 && req.Height == 0 {
+
+	quality := grpc.ImageQuality_IMAGE_QUALITY_HIGH
+	if req.Quality != grpc.ImageQuality_IMAGE_QUALITY_UNSPECIFIED {
+		quality = req.Quality
+	}
+
+	if quality == grpc.ImageQuality_IMAGE_QUALITY_ORIGINAL {
 		switch filepath.Ext(strings.ToLower(filename)) {
 		case ".jpg", ".jpeg":
 			contentType = "image/jpeg"
@@ -508,14 +455,26 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 			return err
 		}
 
-		if img.Bounds().Dx() > int(req.Width) || img.Bounds().Dy() > int(req.Height) {
-			resized := imaging.Fit(img, int(req.Width), int(req.Height), imaging.MitchellNetravali)
+		targetDimension := HIGH_QUALITY_DIMENSION
+		algorithm := HIGH_QUALITY_ALGORITHM
+		jpegQuality := HIGH_QUALITY_JPEG_QUALITY
+
+		if quality == grpc.ImageQuality_IMAGE_QUALITY_LOW {
+			targetDimension = LOW_QUALITY_DIMENSION
+			algorithm = LOW_QUALITY_ALGORITHM
+			jpegQuality = LOW_QUALITY_JPEG_QUALITY
+		}
+
+		dimension := max(img.Bounds().Dx(), img.Bounds().Dy())
+
+		if dimension > targetDimension {
+			resized := imaging.Fit(img, targetDimension, targetDimension, algorithm)
 			img = resized
 		}
 
 		var buf bytes.Buffer
 
-		err = imaging.Encode(&buf, img, imaging.JPEG)
+		err = imaging.Encode(&buf, img, imaging.JPEG, imaging.JPEGQuality(jpegQuality))
 
 		if err != nil {
 			return err
