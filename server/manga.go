@@ -465,12 +465,16 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 			jpegQuality = LOW_QUALITY_JPEG_QUALITY
 		}
 
+		log.Debug().Int("targetDimension", targetDimension).Int("jpegQuality", jpegQuality).Msg("")
+
 		dimension := max(img.Bounds().Dx(), img.Bounds().Dy())
 
 		if dimension > targetDimension {
 			resized := imaging.Fit(img, targetDimension, targetDimension, algorithm)
 			img = resized
 		}
+
+		log.Debug().Interface("Bounds", img.Bounds()).Msg("image")
 
 		var buf bytes.Buffer
 
@@ -481,6 +485,7 @@ func (s *MangaServer) PageImageStream(req *grpc.MangaPageImageRequest,
 		}
 
 		filename = fmt.Sprintf("%s.jpeg", filepath.Base(filename))
+		data = buf.Bytes()
 	}
 
 	length := len(data)
