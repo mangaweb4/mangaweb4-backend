@@ -7,7 +7,7 @@ COPY . .
 ARG VERSION=Development
 RUN apk add git
 RUN go get ./...
-RUN go build -ldflags="-X 'github.com/mangaweb4/mangaweb4-backend/system.VersionString=$VERSION' " -o mangaweb4-backend .
+RUN go build -o mangaweb4-backend .
 
 # Stage 2 -- build the target image
 FROM alpine:latest

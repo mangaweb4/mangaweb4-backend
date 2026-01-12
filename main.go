@@ -15,7 +15,6 @@ import (
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
 	"github.com/mangaweb4/mangaweb4-backend/maintenance"
 	"github.com/mangaweb4/mangaweb4-backend/server"
-	"github.com/mangaweb4/mangaweb4-backend/system"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -33,7 +32,7 @@ func main() {
 		}
 		flag.PrintDefaults()
 
-		_, err = fmt.Fprintf(os.Stderr, "MangaWeb 4 version %s", system.VersionString)
+		_, err = fmt.Fprintf(os.Stderr, "MangaWeb 4 version %s.\n", Version)
 		if err != nil {
 			return
 		}
@@ -106,7 +105,7 @@ func main() {
 
 	log.Info().
 		Bool("debugMode", debugMode).
-		Str("version", system.VersionString).
+		Str("version", Version).
 		Str("dataPath", dataPath).
 		Str("cachePath", cachePath).
 		Bool("firstLevelDirAsTag", firstLevelDirAsTag).
@@ -114,7 +113,7 @@ func main() {
 
 	configuration.Init(configuration.Config{
 		DebugMode:          debugMode,
-		VersionString:      system.VersionString,
+		VersionString:      Version,
 		DataPath:           dataPath,
 		CachePath:          cachePath,
 		FirstLevelDirAsTag: firstLevelDirAsTag,
