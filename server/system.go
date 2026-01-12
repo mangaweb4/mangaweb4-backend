@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 
+	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/database"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
 	"github.com/mangaweb4/mangaweb4-backend/grpc"
-	"github.com/mangaweb4/mangaweb4-backend/system"
 
 	"github.com/rs/zerolog/log"
 )
@@ -35,8 +35,10 @@ func (s *SystemServer) Info(
 		return
 	}
 
+	config := configuration.Get()
+
 	resp = &grpc.SystemInfoResponse{
-		Version:   system.VersionString,
+		Version:   config.VersionString,
 		ItemCount: int32(countManga),
 		TagCount:  int32(countTag),
 	}
