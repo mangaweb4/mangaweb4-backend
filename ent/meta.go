@@ -129,7 +129,7 @@ func (*Meta) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Meta fields.
-func (m *Meta) assignValues(columns []string, values []any) error {
+func (_m *Meta) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -140,30 +140,30 @@ func (m *Meta) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			m.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case meta.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				m.Name = value.String
+				_m.Name = value.String
 			}
 		case meta.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				m.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case meta.FieldFavorite:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field favorite", values[i])
 			} else if value.Valid {
-				m.Favorite = value.Bool
+				_m.Favorite = value.Bool
 			}
 		case meta.FieldFileIndices:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field file_indices", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &m.FileIndices); err != nil {
+				if err := json.Unmarshal(*value, &_m.FileIndices); err != nil {
 					return fmt.Errorf("unmarshal field file_indices: %w", err)
 				}
 			}
@@ -171,58 +171,58 @@ func (m *Meta) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field read", values[i])
 			} else if value.Valid {
-				m.Read = value.Bool
+				_m.Read = value.Bool
 			}
 		case meta.FieldActive:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field active", values[i])
 			} else if value.Valid {
-				m.Active = value.Bool
+				_m.Active = value.Bool
 			}
 		case meta.FieldHidden:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field hidden", values[i])
 			} else if value.Valid {
-				m.Hidden = value.Bool
+				_m.Hidden = value.Bool
 			}
 		case meta.FieldContainerType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field container_type", values[i])
 			} else if value.Valid {
-				m.ContainerType = meta.ContainerType(value.String)
+				_m.ContainerType = meta.ContainerType(value.String)
 			}
 		case meta.FieldThumbnailIndex:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field thumbnail_index", values[i])
 			} else if value.Valid {
-				m.ThumbnailIndex = int(value.Int64)
+				_m.ThumbnailIndex = int(value.Int64)
 			}
 		case meta.FieldThumbnailX:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field thumbnail_x", values[i])
 			} else if value.Valid {
-				m.ThumbnailX = int(value.Int64)
+				_m.ThumbnailX = int(value.Int64)
 			}
 		case meta.FieldThumbnailY:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field thumbnail_y", values[i])
 			} else if value.Valid {
-				m.ThumbnailY = int(value.Int64)
+				_m.ThumbnailY = int(value.Int64)
 			}
 		case meta.FieldThumbnailWidth:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field thumbnail_width", values[i])
 			} else if value.Valid {
-				m.ThumbnailWidth = int(value.Int64)
+				_m.ThumbnailWidth = int(value.Int64)
 			}
 		case meta.FieldThumbnailHeight:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field thumbnail_height", values[i])
 			} else if value.Valid {
-				m.ThumbnailHeight = int(value.Int64)
+				_m.ThumbnailHeight = int(value.Int64)
 			}
 		default:
-			m.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -230,91 +230,91 @@ func (m *Meta) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Meta.
 // This includes values selected through modifiers, order, etc.
-func (m *Meta) Value(name string) (ent.Value, error) {
-	return m.selectValues.Get(name)
+func (_m *Meta) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryTags queries the "tags" edge of the Meta entity.
-func (m *Meta) QueryTags() *TagQuery {
-	return NewMetaClient(m.config).QueryTags(m)
+func (_m *Meta) QueryTags() *TagQuery {
+	return NewMetaClient(_m.config).QueryTags(_m)
 }
 
 // QueryHistories queries the "histories" edge of the Meta entity.
-func (m *Meta) QueryHistories() *HistoryQuery {
-	return NewMetaClient(m.config).QueryHistories(m)
+func (_m *Meta) QueryHistories() *HistoryQuery {
+	return NewMetaClient(_m.config).QueryHistories(_m)
 }
 
 // QueryFavoriteOfUser queries the "favorite_of_user" edge of the Meta entity.
-func (m *Meta) QueryFavoriteOfUser() *UserQuery {
-	return NewMetaClient(m.config).QueryFavoriteOfUser(m)
+func (_m *Meta) QueryFavoriteOfUser() *UserQuery {
+	return NewMetaClient(_m.config).QueryFavoriteOfUser(_m)
 }
 
 // QueryProgress queries the "progress" edge of the Meta entity.
-func (m *Meta) QueryProgress() *ProgressQuery {
-	return NewMetaClient(m.config).QueryProgress(m)
+func (_m *Meta) QueryProgress() *ProgressQuery {
+	return NewMetaClient(_m.config).QueryProgress(_m)
 }
 
 // Update returns a builder for updating this Meta.
 // Note that you need to call Meta.Unwrap() before calling this method if this Meta
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (m *Meta) Update() *MetaUpdateOne {
-	return NewMetaClient(m.config).UpdateOne(m)
+func (_m *Meta) Update() *MetaUpdateOne {
+	return NewMetaClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Meta entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (m *Meta) Unwrap() *Meta {
-	_tx, ok := m.config.driver.(*txDriver)
+func (_m *Meta) Unwrap() *Meta {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Meta is not a transactional entity")
 	}
-	m.config.driver = _tx.drv
-	return m
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (m *Meta) String() string {
+func (_m *Meta) String() string {
 	var builder strings.Builder
 	builder.WriteString("Meta(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", m.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("name=")
-	builder.WriteString(m.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("create_time=")
-	builder.WriteString(m.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("favorite=")
-	builder.WriteString(fmt.Sprintf("%v", m.Favorite))
+	builder.WriteString(fmt.Sprintf("%v", _m.Favorite))
 	builder.WriteString(", ")
 	builder.WriteString("file_indices=")
-	builder.WriteString(fmt.Sprintf("%v", m.FileIndices))
+	builder.WriteString(fmt.Sprintf("%v", _m.FileIndices))
 	builder.WriteString(", ")
 	builder.WriteString("read=")
-	builder.WriteString(fmt.Sprintf("%v", m.Read))
+	builder.WriteString(fmt.Sprintf("%v", _m.Read))
 	builder.WriteString(", ")
 	builder.WriteString("active=")
-	builder.WriteString(fmt.Sprintf("%v", m.Active))
+	builder.WriteString(fmt.Sprintf("%v", _m.Active))
 	builder.WriteString(", ")
 	builder.WriteString("hidden=")
-	builder.WriteString(fmt.Sprintf("%v", m.Hidden))
+	builder.WriteString(fmt.Sprintf("%v", _m.Hidden))
 	builder.WriteString(", ")
 	builder.WriteString("container_type=")
-	builder.WriteString(fmt.Sprintf("%v", m.ContainerType))
+	builder.WriteString(fmt.Sprintf("%v", _m.ContainerType))
 	builder.WriteString(", ")
 	builder.WriteString("thumbnail_index=")
-	builder.WriteString(fmt.Sprintf("%v", m.ThumbnailIndex))
+	builder.WriteString(fmt.Sprintf("%v", _m.ThumbnailIndex))
 	builder.WriteString(", ")
 	builder.WriteString("thumbnail_x=")
-	builder.WriteString(fmt.Sprintf("%v", m.ThumbnailX))
+	builder.WriteString(fmt.Sprintf("%v", _m.ThumbnailX))
 	builder.WriteString(", ")
 	builder.WriteString("thumbnail_y=")
-	builder.WriteString(fmt.Sprintf("%v", m.ThumbnailY))
+	builder.WriteString(fmt.Sprintf("%v", _m.ThumbnailY))
 	builder.WriteString(", ")
 	builder.WriteString("thumbnail_width=")
-	builder.WriteString(fmt.Sprintf("%v", m.ThumbnailWidth))
+	builder.WriteString(fmt.Sprintf("%v", _m.ThumbnailWidth))
 	builder.WriteString(", ")
 	builder.WriteString("thumbnail_height=")
-	builder.WriteString(fmt.Sprintf("%v", m.ThumbnailHeight))
+	builder.WriteString(fmt.Sprintf("%v", _m.ThumbnailHeight))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -24,128 +24,128 @@ type ProgressUpdate struct {
 }
 
 // Where appends a list predicates to the ProgressUpdate builder.
-func (pu *ProgressUpdate) Where(ps ...predicate.Progress) *ProgressUpdate {
-	pu.mutation.Where(ps...)
-	return pu
+func (_u *ProgressUpdate) Where(ps ...predicate.Progress) *ProgressUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetPage sets the "page" field.
-func (pu *ProgressUpdate) SetPage(i int) *ProgressUpdate {
-	pu.mutation.ResetPage()
-	pu.mutation.SetPage(i)
-	return pu
+func (_u *ProgressUpdate) SetPage(v int) *ProgressUpdate {
+	_u.mutation.ResetPage()
+	_u.mutation.SetPage(v)
+	return _u
 }
 
 // SetNillablePage sets the "page" field if the given value is not nil.
-func (pu *ProgressUpdate) SetNillablePage(i *int) *ProgressUpdate {
-	if i != nil {
-		pu.SetPage(*i)
+func (_u *ProgressUpdate) SetNillablePage(v *int) *ProgressUpdate {
+	if v != nil {
+		_u.SetPage(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddPage adds i to the "page" field.
-func (pu *ProgressUpdate) AddPage(i int) *ProgressUpdate {
-	pu.mutation.AddPage(i)
-	return pu
+// AddPage adds value to the "page" field.
+func (_u *ProgressUpdate) AddPage(v int) *ProgressUpdate {
+	_u.mutation.AddPage(v)
+	return _u
 }
 
 // SetMax sets the "max" field.
-func (pu *ProgressUpdate) SetMax(i int) *ProgressUpdate {
-	pu.mutation.ResetMax()
-	pu.mutation.SetMax(i)
-	return pu
+func (_u *ProgressUpdate) SetMax(v int) *ProgressUpdate {
+	_u.mutation.ResetMax()
+	_u.mutation.SetMax(v)
+	return _u
 }
 
 // SetNillableMax sets the "max" field if the given value is not nil.
-func (pu *ProgressUpdate) SetNillableMax(i *int) *ProgressUpdate {
-	if i != nil {
-		pu.SetMax(*i)
+func (_u *ProgressUpdate) SetNillableMax(v *int) *ProgressUpdate {
+	if v != nil {
+		_u.SetMax(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddMax adds i to the "max" field.
-func (pu *ProgressUpdate) AddMax(i int) *ProgressUpdate {
-	pu.mutation.AddMax(i)
-	return pu
+// AddMax adds value to the "max" field.
+func (_u *ProgressUpdate) AddMax(v int) *ProgressUpdate {
+	_u.mutation.AddMax(v)
+	return _u
 }
 
 // SetItemID sets the "item_id" field.
-func (pu *ProgressUpdate) SetItemID(i int) *ProgressUpdate {
-	pu.mutation.SetItemID(i)
-	return pu
+func (_u *ProgressUpdate) SetItemID(v int) *ProgressUpdate {
+	_u.mutation.SetItemID(v)
+	return _u
 }
 
 // SetNillableItemID sets the "item_id" field if the given value is not nil.
-func (pu *ProgressUpdate) SetNillableItemID(i *int) *ProgressUpdate {
-	if i != nil {
-		pu.SetItemID(*i)
+func (_u *ProgressUpdate) SetNillableItemID(v *int) *ProgressUpdate {
+	if v != nil {
+		_u.SetItemID(*v)
 	}
-	return pu
+	return _u
 }
 
 // ClearItemID clears the value of the "item_id" field.
-func (pu *ProgressUpdate) ClearItemID() *ProgressUpdate {
-	pu.mutation.ClearItemID()
-	return pu
+func (_u *ProgressUpdate) ClearItemID() *ProgressUpdate {
+	_u.mutation.ClearItemID()
+	return _u
 }
 
 // SetUserID sets the "user_id" field.
-func (pu *ProgressUpdate) SetUserID(i int) *ProgressUpdate {
-	pu.mutation.SetUserID(i)
-	return pu
+func (_u *ProgressUpdate) SetUserID(v int) *ProgressUpdate {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (pu *ProgressUpdate) SetNillableUserID(i *int) *ProgressUpdate {
-	if i != nil {
-		pu.SetUserID(*i)
+func (_u *ProgressUpdate) SetNillableUserID(v *int) *ProgressUpdate {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return pu
+	return _u
 }
 
 // ClearUserID clears the value of the "user_id" field.
-func (pu *ProgressUpdate) ClearUserID() *ProgressUpdate {
-	pu.mutation.ClearUserID()
-	return pu
+func (_u *ProgressUpdate) ClearUserID() *ProgressUpdate {
+	_u.mutation.ClearUserID()
+	return _u
 }
 
 // SetItem sets the "item" edge to the Meta entity.
-func (pu *ProgressUpdate) SetItem(m *Meta) *ProgressUpdate {
-	return pu.SetItemID(m.ID)
+func (_u *ProgressUpdate) SetItem(v *Meta) *ProgressUpdate {
+	return _u.SetItemID(v.ID)
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (pu *ProgressUpdate) SetUser(u *User) *ProgressUpdate {
-	return pu.SetUserID(u.ID)
+func (_u *ProgressUpdate) SetUser(v *User) *ProgressUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the ProgressMutation object of the builder.
-func (pu *ProgressUpdate) Mutation() *ProgressMutation {
-	return pu.mutation
+func (_u *ProgressUpdate) Mutation() *ProgressMutation {
+	return _u.mutation
 }
 
 // ClearItem clears the "item" edge to the Meta entity.
-func (pu *ProgressUpdate) ClearItem() *ProgressUpdate {
-	pu.mutation.ClearItem()
-	return pu
+func (_u *ProgressUpdate) ClearItem() *ProgressUpdate {
+	_u.mutation.ClearItem()
+	return _u
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (pu *ProgressUpdate) ClearUser() *ProgressUpdate {
-	pu.mutation.ClearUser()
-	return pu
+func (_u *ProgressUpdate) ClearUser() *ProgressUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (pu *ProgressUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, pu.sqlSave, pu.mutation, pu.hooks)
+func (_u *ProgressUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pu *ProgressUpdate) SaveX(ctx context.Context) int {
-	affected, err := pu.Save(ctx)
+func (_u *ProgressUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -153,40 +153,40 @@ func (pu *ProgressUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (pu *ProgressUpdate) Exec(ctx context.Context) error {
-	_, err := pu.Save(ctx)
+func (_u *ProgressUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pu *ProgressUpdate) ExecX(ctx context.Context) {
-	if err := pu.Exec(ctx); err != nil {
+func (_u *ProgressUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (_u *ProgressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(progress.Table, progress.Columns, sqlgraph.NewFieldSpec(progress.FieldID, field.TypeInt))
-	if ps := pu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := pu.mutation.Page(); ok {
+	if value, ok := _u.mutation.Page(); ok {
 		_spec.SetField(progress.FieldPage, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AddedPage(); ok {
+	if value, ok := _u.mutation.AddedPage(); ok {
 		_spec.AddField(progress.FieldPage, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.Max(); ok {
+	if value, ok := _u.mutation.Max(); ok {
 		_spec.SetField(progress.FieldMax, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AddedMax(); ok {
+	if value, ok := _u.mutation.AddedMax(); ok {
 		_spec.AddField(progress.FieldMax, field.TypeInt, value)
 	}
-	if pu.mutation.ItemCleared() {
+	if _u.mutation.ItemCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -199,7 +199,7 @@ func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.ItemIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ItemIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -215,7 +215,7 @@ func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if pu.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -228,7 +228,7 @@ func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -244,7 +244,7 @@ func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{progress.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -252,8 +252,8 @@ func (pu *ProgressUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	pu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // ProgressUpdateOne is the builder for updating a single Progress entity.
@@ -265,135 +265,135 @@ type ProgressUpdateOne struct {
 }
 
 // SetPage sets the "page" field.
-func (puo *ProgressUpdateOne) SetPage(i int) *ProgressUpdateOne {
-	puo.mutation.ResetPage()
-	puo.mutation.SetPage(i)
-	return puo
+func (_u *ProgressUpdateOne) SetPage(v int) *ProgressUpdateOne {
+	_u.mutation.ResetPage()
+	_u.mutation.SetPage(v)
+	return _u
 }
 
 // SetNillablePage sets the "page" field if the given value is not nil.
-func (puo *ProgressUpdateOne) SetNillablePage(i *int) *ProgressUpdateOne {
-	if i != nil {
-		puo.SetPage(*i)
+func (_u *ProgressUpdateOne) SetNillablePage(v *int) *ProgressUpdateOne {
+	if v != nil {
+		_u.SetPage(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddPage adds i to the "page" field.
-func (puo *ProgressUpdateOne) AddPage(i int) *ProgressUpdateOne {
-	puo.mutation.AddPage(i)
-	return puo
+// AddPage adds value to the "page" field.
+func (_u *ProgressUpdateOne) AddPage(v int) *ProgressUpdateOne {
+	_u.mutation.AddPage(v)
+	return _u
 }
 
 // SetMax sets the "max" field.
-func (puo *ProgressUpdateOne) SetMax(i int) *ProgressUpdateOne {
-	puo.mutation.ResetMax()
-	puo.mutation.SetMax(i)
-	return puo
+func (_u *ProgressUpdateOne) SetMax(v int) *ProgressUpdateOne {
+	_u.mutation.ResetMax()
+	_u.mutation.SetMax(v)
+	return _u
 }
 
 // SetNillableMax sets the "max" field if the given value is not nil.
-func (puo *ProgressUpdateOne) SetNillableMax(i *int) *ProgressUpdateOne {
-	if i != nil {
-		puo.SetMax(*i)
+func (_u *ProgressUpdateOne) SetNillableMax(v *int) *ProgressUpdateOne {
+	if v != nil {
+		_u.SetMax(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddMax adds i to the "max" field.
-func (puo *ProgressUpdateOne) AddMax(i int) *ProgressUpdateOne {
-	puo.mutation.AddMax(i)
-	return puo
+// AddMax adds value to the "max" field.
+func (_u *ProgressUpdateOne) AddMax(v int) *ProgressUpdateOne {
+	_u.mutation.AddMax(v)
+	return _u
 }
 
 // SetItemID sets the "item_id" field.
-func (puo *ProgressUpdateOne) SetItemID(i int) *ProgressUpdateOne {
-	puo.mutation.SetItemID(i)
-	return puo
+func (_u *ProgressUpdateOne) SetItemID(v int) *ProgressUpdateOne {
+	_u.mutation.SetItemID(v)
+	return _u
 }
 
 // SetNillableItemID sets the "item_id" field if the given value is not nil.
-func (puo *ProgressUpdateOne) SetNillableItemID(i *int) *ProgressUpdateOne {
-	if i != nil {
-		puo.SetItemID(*i)
+func (_u *ProgressUpdateOne) SetNillableItemID(v *int) *ProgressUpdateOne {
+	if v != nil {
+		_u.SetItemID(*v)
 	}
-	return puo
+	return _u
 }
 
 // ClearItemID clears the value of the "item_id" field.
-func (puo *ProgressUpdateOne) ClearItemID() *ProgressUpdateOne {
-	puo.mutation.ClearItemID()
-	return puo
+func (_u *ProgressUpdateOne) ClearItemID() *ProgressUpdateOne {
+	_u.mutation.ClearItemID()
+	return _u
 }
 
 // SetUserID sets the "user_id" field.
-func (puo *ProgressUpdateOne) SetUserID(i int) *ProgressUpdateOne {
-	puo.mutation.SetUserID(i)
-	return puo
+func (_u *ProgressUpdateOne) SetUserID(v int) *ProgressUpdateOne {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (puo *ProgressUpdateOne) SetNillableUserID(i *int) *ProgressUpdateOne {
-	if i != nil {
-		puo.SetUserID(*i)
+func (_u *ProgressUpdateOne) SetNillableUserID(v *int) *ProgressUpdateOne {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return puo
+	return _u
 }
 
 // ClearUserID clears the value of the "user_id" field.
-func (puo *ProgressUpdateOne) ClearUserID() *ProgressUpdateOne {
-	puo.mutation.ClearUserID()
-	return puo
+func (_u *ProgressUpdateOne) ClearUserID() *ProgressUpdateOne {
+	_u.mutation.ClearUserID()
+	return _u
 }
 
 // SetItem sets the "item" edge to the Meta entity.
-func (puo *ProgressUpdateOne) SetItem(m *Meta) *ProgressUpdateOne {
-	return puo.SetItemID(m.ID)
+func (_u *ProgressUpdateOne) SetItem(v *Meta) *ProgressUpdateOne {
+	return _u.SetItemID(v.ID)
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (puo *ProgressUpdateOne) SetUser(u *User) *ProgressUpdateOne {
-	return puo.SetUserID(u.ID)
+func (_u *ProgressUpdateOne) SetUser(v *User) *ProgressUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the ProgressMutation object of the builder.
-func (puo *ProgressUpdateOne) Mutation() *ProgressMutation {
-	return puo.mutation
+func (_u *ProgressUpdateOne) Mutation() *ProgressMutation {
+	return _u.mutation
 }
 
 // ClearItem clears the "item" edge to the Meta entity.
-func (puo *ProgressUpdateOne) ClearItem() *ProgressUpdateOne {
-	puo.mutation.ClearItem()
-	return puo
+func (_u *ProgressUpdateOne) ClearItem() *ProgressUpdateOne {
+	_u.mutation.ClearItem()
+	return _u
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (puo *ProgressUpdateOne) ClearUser() *ProgressUpdateOne {
-	puo.mutation.ClearUser()
-	return puo
+func (_u *ProgressUpdateOne) ClearUser() *ProgressUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the ProgressUpdate builder.
-func (puo *ProgressUpdateOne) Where(ps ...predicate.Progress) *ProgressUpdateOne {
-	puo.mutation.Where(ps...)
-	return puo
+func (_u *ProgressUpdateOne) Where(ps ...predicate.Progress) *ProgressUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (puo *ProgressUpdateOne) Select(field string, fields ...string) *ProgressUpdateOne {
-	puo.fields = append([]string{field}, fields...)
-	return puo
+func (_u *ProgressUpdateOne) Select(field string, fields ...string) *ProgressUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Progress entity.
-func (puo *ProgressUpdateOne) Save(ctx context.Context) (*Progress, error) {
-	return withHooks(ctx, puo.sqlSave, puo.mutation, puo.hooks)
+func (_u *ProgressUpdateOne) Save(ctx context.Context) (*Progress, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (puo *ProgressUpdateOne) SaveX(ctx context.Context) *Progress {
-	node, err := puo.Save(ctx)
+func (_u *ProgressUpdateOne) SaveX(ctx context.Context) *Progress {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -401,26 +401,26 @@ func (puo *ProgressUpdateOne) SaveX(ctx context.Context) *Progress {
 }
 
 // Exec executes the query on the entity.
-func (puo *ProgressUpdateOne) Exec(ctx context.Context) error {
-	_, err := puo.Save(ctx)
+func (_u *ProgressUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (puo *ProgressUpdateOne) ExecX(ctx context.Context) {
-	if err := puo.Exec(ctx); err != nil {
+func (_u *ProgressUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err error) {
+func (_u *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err error) {
 	_spec := sqlgraph.NewUpdateSpec(progress.Table, progress.Columns, sqlgraph.NewFieldSpec(progress.FieldID, field.TypeInt))
-	id, ok := puo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Progress.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := puo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, progress.FieldID)
 		for _, f := range fields {
@@ -432,26 +432,26 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 			}
 		}
 	}
-	if ps := puo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := puo.mutation.Page(); ok {
+	if value, ok := _u.mutation.Page(); ok {
 		_spec.SetField(progress.FieldPage, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AddedPage(); ok {
+	if value, ok := _u.mutation.AddedPage(); ok {
 		_spec.AddField(progress.FieldPage, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.Max(); ok {
+	if value, ok := _u.mutation.Max(); ok {
 		_spec.SetField(progress.FieldMax, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AddedMax(); ok {
+	if value, ok := _u.mutation.AddedMax(); ok {
 		_spec.AddField(progress.FieldMax, field.TypeInt, value)
 	}
-	if puo.mutation.ItemCleared() {
+	if _u.mutation.ItemCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -464,7 +464,7 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.ItemIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ItemIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -480,7 +480,7 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if puo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -493,7 +493,7 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -509,10 +509,10 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Progress{config: puo.config}
+	_node = &Progress{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, puo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{progress.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -520,6 +520,6 @@ func (puo *ProgressUpdateOne) sqlSave(ctx context.Context) (_node *Progress, err
 		}
 		return nil, err
 	}
-	puo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

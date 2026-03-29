@@ -81,7 +81,7 @@ func (*Progress) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Progress fields.
-func (pr *Progress) assignValues(columns []string, values []any) error {
+func (_m *Progress) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -92,33 +92,33 @@ func (pr *Progress) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pr.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case progress.FieldPage:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field page", values[i])
 			} else if value.Valid {
-				pr.Page = int(value.Int64)
+				_m.Page = int(value.Int64)
 			}
 		case progress.FieldMax:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field max", values[i])
 			} else if value.Valid {
-				pr.Max = int(value.Int64)
+				_m.Max = int(value.Int64)
 			}
 		case progress.FieldItemID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field item_id", values[i])
 			} else if value.Valid {
-				pr.ItemID = int(value.Int64)
+				_m.ItemID = int(value.Int64)
 			}
 		case progress.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				pr.UserID = int(value.Int64)
+				_m.UserID = int(value.Int64)
 			}
 		default:
-			pr.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -126,54 +126,54 @@ func (pr *Progress) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Progress.
 // This includes values selected through modifiers, order, etc.
-func (pr *Progress) Value(name string) (ent.Value, error) {
-	return pr.selectValues.Get(name)
+func (_m *Progress) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryItem queries the "item" edge of the Progress entity.
-func (pr *Progress) QueryItem() *MetaQuery {
-	return NewProgressClient(pr.config).QueryItem(pr)
+func (_m *Progress) QueryItem() *MetaQuery {
+	return NewProgressClient(_m.config).QueryItem(_m)
 }
 
 // QueryUser queries the "user" edge of the Progress entity.
-func (pr *Progress) QueryUser() *UserQuery {
-	return NewProgressClient(pr.config).QueryUser(pr)
+func (_m *Progress) QueryUser() *UserQuery {
+	return NewProgressClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this Progress.
 // Note that you need to call Progress.Unwrap() before calling this method if this Progress
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (pr *Progress) Update() *ProgressUpdateOne {
-	return NewProgressClient(pr.config).UpdateOne(pr)
+func (_m *Progress) Update() *ProgressUpdateOne {
+	return NewProgressClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Progress entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (pr *Progress) Unwrap() *Progress {
-	_tx, ok := pr.config.driver.(*txDriver)
+func (_m *Progress) Unwrap() *Progress {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Progress is not a transactional entity")
 	}
-	pr.config.driver = _tx.drv
-	return pr
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (pr *Progress) String() string {
+func (_m *Progress) String() string {
 	var builder strings.Builder
 	builder.WriteString("Progress(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", pr.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("page=")
-	builder.WriteString(fmt.Sprintf("%v", pr.Page))
+	builder.WriteString(fmt.Sprintf("%v", _m.Page))
 	builder.WriteString(", ")
 	builder.WriteString("max=")
-	builder.WriteString(fmt.Sprintf("%v", pr.Max))
+	builder.WriteString(fmt.Sprintf("%v", _m.Max))
 	builder.WriteString(", ")
 	builder.WriteString("item_id=")
-	builder.WriteString(fmt.Sprintf("%v", pr.ItemID))
+	builder.WriteString(fmt.Sprintf("%v", _m.ItemID))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", pr.UserID))
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

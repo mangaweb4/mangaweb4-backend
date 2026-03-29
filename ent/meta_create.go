@@ -27,245 +27,245 @@ type MetaCreate struct {
 }
 
 // SetName sets the "name" field.
-func (mc *MetaCreate) SetName(s string) *MetaCreate {
-	mc.mutation.SetName(s)
-	return mc
+func (_c *MetaCreate) SetName(v string) *MetaCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetCreateTime sets the "create_time" field.
-func (mc *MetaCreate) SetCreateTime(t time.Time) *MetaCreate {
-	mc.mutation.SetCreateTime(t)
-	return mc
+func (_c *MetaCreate) SetCreateTime(v time.Time) *MetaCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableCreateTime(t *time.Time) *MetaCreate {
-	if t != nil {
-		mc.SetCreateTime(*t)
+func (_c *MetaCreate) SetNillableCreateTime(v *time.Time) *MetaCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetFavorite sets the "favorite" field.
-func (mc *MetaCreate) SetFavorite(b bool) *MetaCreate {
-	mc.mutation.SetFavorite(b)
-	return mc
+func (_c *MetaCreate) SetFavorite(v bool) *MetaCreate {
+	_c.mutation.SetFavorite(v)
+	return _c
 }
 
 // SetNillableFavorite sets the "favorite" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableFavorite(b *bool) *MetaCreate {
-	if b != nil {
-		mc.SetFavorite(*b)
+func (_c *MetaCreate) SetNillableFavorite(v *bool) *MetaCreate {
+	if v != nil {
+		_c.SetFavorite(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetFileIndices sets the "file_indices" field.
-func (mc *MetaCreate) SetFileIndices(i []int) *MetaCreate {
-	mc.mutation.SetFileIndices(i)
-	return mc
+func (_c *MetaCreate) SetFileIndices(v []int) *MetaCreate {
+	_c.mutation.SetFileIndices(v)
+	return _c
 }
 
 // SetRead sets the "read" field.
-func (mc *MetaCreate) SetRead(b bool) *MetaCreate {
-	mc.mutation.SetRead(b)
-	return mc
+func (_c *MetaCreate) SetRead(v bool) *MetaCreate {
+	_c.mutation.SetRead(v)
+	return _c
 }
 
 // SetNillableRead sets the "read" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableRead(b *bool) *MetaCreate {
-	if b != nil {
-		mc.SetRead(*b)
+func (_c *MetaCreate) SetNillableRead(v *bool) *MetaCreate {
+	if v != nil {
+		_c.SetRead(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetActive sets the "active" field.
-func (mc *MetaCreate) SetActive(b bool) *MetaCreate {
-	mc.mutation.SetActive(b)
-	return mc
+func (_c *MetaCreate) SetActive(v bool) *MetaCreate {
+	_c.mutation.SetActive(v)
+	return _c
 }
 
 // SetNillableActive sets the "active" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableActive(b *bool) *MetaCreate {
-	if b != nil {
-		mc.SetActive(*b)
+func (_c *MetaCreate) SetNillableActive(v *bool) *MetaCreate {
+	if v != nil {
+		_c.SetActive(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetHidden sets the "hidden" field.
-func (mc *MetaCreate) SetHidden(b bool) *MetaCreate {
-	mc.mutation.SetHidden(b)
-	return mc
+func (_c *MetaCreate) SetHidden(v bool) *MetaCreate {
+	_c.mutation.SetHidden(v)
+	return _c
 }
 
 // SetNillableHidden sets the "hidden" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableHidden(b *bool) *MetaCreate {
-	if b != nil {
-		mc.SetHidden(*b)
+func (_c *MetaCreate) SetNillableHidden(v *bool) *MetaCreate {
+	if v != nil {
+		_c.SetHidden(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetContainerType sets the "container_type" field.
-func (mc *MetaCreate) SetContainerType(mt meta.ContainerType) *MetaCreate {
-	mc.mutation.SetContainerType(mt)
-	return mc
+func (_c *MetaCreate) SetContainerType(v meta.ContainerType) *MetaCreate {
+	_c.mutation.SetContainerType(v)
+	return _c
 }
 
 // SetNillableContainerType sets the "container_type" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableContainerType(mt *meta.ContainerType) *MetaCreate {
-	if mt != nil {
-		mc.SetContainerType(*mt)
+func (_c *MetaCreate) SetNillableContainerType(v *meta.ContainerType) *MetaCreate {
+	if v != nil {
+		_c.SetContainerType(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetThumbnailIndex sets the "thumbnail_index" field.
-func (mc *MetaCreate) SetThumbnailIndex(i int) *MetaCreate {
-	mc.mutation.SetThumbnailIndex(i)
-	return mc
+func (_c *MetaCreate) SetThumbnailIndex(v int) *MetaCreate {
+	_c.mutation.SetThumbnailIndex(v)
+	return _c
 }
 
 // SetNillableThumbnailIndex sets the "thumbnail_index" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableThumbnailIndex(i *int) *MetaCreate {
-	if i != nil {
-		mc.SetThumbnailIndex(*i)
+func (_c *MetaCreate) SetNillableThumbnailIndex(v *int) *MetaCreate {
+	if v != nil {
+		_c.SetThumbnailIndex(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetThumbnailX sets the "thumbnail_x" field.
-func (mc *MetaCreate) SetThumbnailX(i int) *MetaCreate {
-	mc.mutation.SetThumbnailX(i)
-	return mc
+func (_c *MetaCreate) SetThumbnailX(v int) *MetaCreate {
+	_c.mutation.SetThumbnailX(v)
+	return _c
 }
 
 // SetNillableThumbnailX sets the "thumbnail_x" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableThumbnailX(i *int) *MetaCreate {
-	if i != nil {
-		mc.SetThumbnailX(*i)
+func (_c *MetaCreate) SetNillableThumbnailX(v *int) *MetaCreate {
+	if v != nil {
+		_c.SetThumbnailX(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetThumbnailY sets the "thumbnail_y" field.
-func (mc *MetaCreate) SetThumbnailY(i int) *MetaCreate {
-	mc.mutation.SetThumbnailY(i)
-	return mc
+func (_c *MetaCreate) SetThumbnailY(v int) *MetaCreate {
+	_c.mutation.SetThumbnailY(v)
+	return _c
 }
 
 // SetNillableThumbnailY sets the "thumbnail_y" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableThumbnailY(i *int) *MetaCreate {
-	if i != nil {
-		mc.SetThumbnailY(*i)
+func (_c *MetaCreate) SetNillableThumbnailY(v *int) *MetaCreate {
+	if v != nil {
+		_c.SetThumbnailY(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetThumbnailWidth sets the "thumbnail_width" field.
-func (mc *MetaCreate) SetThumbnailWidth(i int) *MetaCreate {
-	mc.mutation.SetThumbnailWidth(i)
-	return mc
+func (_c *MetaCreate) SetThumbnailWidth(v int) *MetaCreate {
+	_c.mutation.SetThumbnailWidth(v)
+	return _c
 }
 
 // SetNillableThumbnailWidth sets the "thumbnail_width" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableThumbnailWidth(i *int) *MetaCreate {
-	if i != nil {
-		mc.SetThumbnailWidth(*i)
+func (_c *MetaCreate) SetNillableThumbnailWidth(v *int) *MetaCreate {
+	if v != nil {
+		_c.SetThumbnailWidth(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetThumbnailHeight sets the "thumbnail_height" field.
-func (mc *MetaCreate) SetThumbnailHeight(i int) *MetaCreate {
-	mc.mutation.SetThumbnailHeight(i)
-	return mc
+func (_c *MetaCreate) SetThumbnailHeight(v int) *MetaCreate {
+	_c.mutation.SetThumbnailHeight(v)
+	return _c
 }
 
 // SetNillableThumbnailHeight sets the "thumbnail_height" field if the given value is not nil.
-func (mc *MetaCreate) SetNillableThumbnailHeight(i *int) *MetaCreate {
-	if i != nil {
-		mc.SetThumbnailHeight(*i)
+func (_c *MetaCreate) SetNillableThumbnailHeight(v *int) *MetaCreate {
+	if v != nil {
+		_c.SetThumbnailHeight(*v)
 	}
-	return mc
+	return _c
 }
 
 // AddTagIDs adds the "tags" edge to the Tag entity by IDs.
-func (mc *MetaCreate) AddTagIDs(ids ...int) *MetaCreate {
-	mc.mutation.AddTagIDs(ids...)
-	return mc
+func (_c *MetaCreate) AddTagIDs(ids ...int) *MetaCreate {
+	_c.mutation.AddTagIDs(ids...)
+	return _c
 }
 
 // AddTags adds the "tags" edges to the Tag entity.
-func (mc *MetaCreate) AddTags(t ...*Tag) *MetaCreate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+func (_c *MetaCreate) AddTags(v ...*Tag) *MetaCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mc.AddTagIDs(ids...)
+	return _c.AddTagIDs(ids...)
 }
 
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
-func (mc *MetaCreate) AddHistoryIDs(ids ...int) *MetaCreate {
-	mc.mutation.AddHistoryIDs(ids...)
-	return mc
+func (_c *MetaCreate) AddHistoryIDs(ids ...int) *MetaCreate {
+	_c.mutation.AddHistoryIDs(ids...)
+	return _c
 }
 
 // AddHistories adds the "histories" edges to the History entity.
-func (mc *MetaCreate) AddHistories(h ...*History) *MetaCreate {
-	ids := make([]int, len(h))
-	for i := range h {
-		ids[i] = h[i].ID
+func (_c *MetaCreate) AddHistories(v ...*History) *MetaCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mc.AddHistoryIDs(ids...)
+	return _c.AddHistoryIDs(ids...)
 }
 
 // AddFavoriteOfUserIDs adds the "favorite_of_user" edge to the User entity by IDs.
-func (mc *MetaCreate) AddFavoriteOfUserIDs(ids ...int) *MetaCreate {
-	mc.mutation.AddFavoriteOfUserIDs(ids...)
-	return mc
+func (_c *MetaCreate) AddFavoriteOfUserIDs(ids ...int) *MetaCreate {
+	_c.mutation.AddFavoriteOfUserIDs(ids...)
+	return _c
 }
 
 // AddFavoriteOfUser adds the "favorite_of_user" edges to the User entity.
-func (mc *MetaCreate) AddFavoriteOfUser(u ...*User) *MetaCreate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_c *MetaCreate) AddFavoriteOfUser(v ...*User) *MetaCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mc.AddFavoriteOfUserIDs(ids...)
+	return _c.AddFavoriteOfUserIDs(ids...)
 }
 
 // AddProgresIDs adds the "progress" edge to the Progress entity by IDs.
-func (mc *MetaCreate) AddProgresIDs(ids ...int) *MetaCreate {
-	mc.mutation.AddProgresIDs(ids...)
-	return mc
+func (_c *MetaCreate) AddProgresIDs(ids ...int) *MetaCreate {
+	_c.mutation.AddProgresIDs(ids...)
+	return _c
 }
 
 // AddProgress adds the "progress" edges to the Progress entity.
-func (mc *MetaCreate) AddProgress(p ...*Progress) *MetaCreate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *MetaCreate) AddProgress(v ...*Progress) *MetaCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mc.AddProgresIDs(ids...)
+	return _c.AddProgresIDs(ids...)
 }
 
 // Mutation returns the MetaMutation object of the builder.
-func (mc *MetaCreate) Mutation() *MetaMutation {
-	return mc.mutation
+func (_c *MetaCreate) Mutation() *MetaMutation {
+	return _c.mutation
 }
 
 // Save creates the Meta in the database.
-func (mc *MetaCreate) Save(ctx context.Context) (*Meta, error) {
-	mc.defaults()
-	return withHooks(ctx, mc.sqlSave, mc.mutation, mc.hooks)
+func (_c *MetaCreate) Save(ctx context.Context) (*Meta, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (mc *MetaCreate) SaveX(ctx context.Context) *Meta {
-	v, err := mc.Save(ctx)
+func (_c *MetaCreate) SaveX(ctx context.Context) *Meta {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -273,102 +273,102 @@ func (mc *MetaCreate) SaveX(ctx context.Context) *Meta {
 }
 
 // Exec executes the query.
-func (mc *MetaCreate) Exec(ctx context.Context) error {
-	_, err := mc.Save(ctx)
+func (_c *MetaCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (mc *MetaCreate) ExecX(ctx context.Context) {
-	if err := mc.Exec(ctx); err != nil {
+func (_c *MetaCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (mc *MetaCreate) defaults() {
-	if _, ok := mc.mutation.CreateTime(); !ok {
+func (_c *MetaCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := meta.DefaultCreateTime()
-		mc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := mc.mutation.Favorite(); !ok {
+	if _, ok := _c.mutation.Favorite(); !ok {
 		v := meta.DefaultFavorite
-		mc.mutation.SetFavorite(v)
+		_c.mutation.SetFavorite(v)
 	}
-	if _, ok := mc.mutation.FileIndices(); !ok {
+	if _, ok := _c.mutation.FileIndices(); !ok {
 		v := meta.DefaultFileIndices
-		mc.mutation.SetFileIndices(v)
+		_c.mutation.SetFileIndices(v)
 	}
-	if _, ok := mc.mutation.Read(); !ok {
+	if _, ok := _c.mutation.Read(); !ok {
 		v := meta.DefaultRead
-		mc.mutation.SetRead(v)
+		_c.mutation.SetRead(v)
 	}
-	if _, ok := mc.mutation.Active(); !ok {
+	if _, ok := _c.mutation.Active(); !ok {
 		v := meta.DefaultActive
-		mc.mutation.SetActive(v)
+		_c.mutation.SetActive(v)
 	}
-	if _, ok := mc.mutation.Hidden(); !ok {
+	if _, ok := _c.mutation.Hidden(); !ok {
 		v := meta.DefaultHidden
-		mc.mutation.SetHidden(v)
+		_c.mutation.SetHidden(v)
 	}
-	if _, ok := mc.mutation.ContainerType(); !ok {
+	if _, ok := _c.mutation.ContainerType(); !ok {
 		v := meta.DefaultContainerType
-		mc.mutation.SetContainerType(v)
+		_c.mutation.SetContainerType(v)
 	}
-	if _, ok := mc.mutation.ThumbnailIndex(); !ok {
+	if _, ok := _c.mutation.ThumbnailIndex(); !ok {
 		v := meta.DefaultThumbnailIndex
-		mc.mutation.SetThumbnailIndex(v)
+		_c.mutation.SetThumbnailIndex(v)
 	}
-	if _, ok := mc.mutation.ThumbnailX(); !ok {
+	if _, ok := _c.mutation.ThumbnailX(); !ok {
 		v := meta.DefaultThumbnailX
-		mc.mutation.SetThumbnailX(v)
+		_c.mutation.SetThumbnailX(v)
 	}
-	if _, ok := mc.mutation.ThumbnailY(); !ok {
+	if _, ok := _c.mutation.ThumbnailY(); !ok {
 		v := meta.DefaultThumbnailY
-		mc.mutation.SetThumbnailY(v)
+		_c.mutation.SetThumbnailY(v)
 	}
-	if _, ok := mc.mutation.ThumbnailWidth(); !ok {
+	if _, ok := _c.mutation.ThumbnailWidth(); !ok {
 		v := meta.DefaultThumbnailWidth
-		mc.mutation.SetThumbnailWidth(v)
+		_c.mutation.SetThumbnailWidth(v)
 	}
-	if _, ok := mc.mutation.ThumbnailHeight(); !ok {
+	if _, ok := _c.mutation.ThumbnailHeight(); !ok {
 		v := meta.DefaultThumbnailHeight
-		mc.mutation.SetThumbnailHeight(v)
+		_c.mutation.SetThumbnailHeight(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (mc *MetaCreate) check() error {
-	if _, ok := mc.mutation.Name(); !ok {
+func (_c *MetaCreate) check() error {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Meta.name"`)}
 	}
-	if v, ok := mc.mutation.Name(); ok {
+	if v, ok := _c.mutation.Name(); ok {
 		if err := meta.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Meta.name": %w`, err)}
 		}
 	}
-	if _, ok := mc.mutation.CreateTime(); !ok {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Meta.create_time"`)}
 	}
-	if _, ok := mc.mutation.Favorite(); !ok {
+	if _, ok := _c.mutation.Favorite(); !ok {
 		return &ValidationError{Name: "favorite", err: errors.New(`ent: missing required field "Meta.favorite"`)}
 	}
-	if _, ok := mc.mutation.FileIndices(); !ok {
+	if _, ok := _c.mutation.FileIndices(); !ok {
 		return &ValidationError{Name: "file_indices", err: errors.New(`ent: missing required field "Meta.file_indices"`)}
 	}
-	if _, ok := mc.mutation.Read(); !ok {
+	if _, ok := _c.mutation.Read(); !ok {
 		return &ValidationError{Name: "read", err: errors.New(`ent: missing required field "Meta.read"`)}
 	}
-	if _, ok := mc.mutation.Active(); !ok {
+	if _, ok := _c.mutation.Active(); !ok {
 		return &ValidationError{Name: "active", err: errors.New(`ent: missing required field "Meta.active"`)}
 	}
-	if _, ok := mc.mutation.Hidden(); !ok {
+	if _, ok := _c.mutation.Hidden(); !ok {
 		return &ValidationError{Name: "hidden", err: errors.New(`ent: missing required field "Meta.hidden"`)}
 	}
-	if _, ok := mc.mutation.ContainerType(); !ok {
+	if _, ok := _c.mutation.ContainerType(); !ok {
 		return &ValidationError{Name: "container_type", err: errors.New(`ent: missing required field "Meta.container_type"`)}
 	}
-	if v, ok := mc.mutation.ContainerType(); ok {
+	if v, ok := _c.mutation.ContainerType(); ok {
 		if err := meta.ContainerTypeValidator(v); err != nil {
 			return &ValidationError{Name: "container_type", err: fmt.Errorf(`ent: validator failed for field "Meta.container_type": %w`, err)}
 		}
@@ -376,12 +376,12 @@ func (mc *MetaCreate) check() error {
 	return nil
 }
 
-func (mc *MetaCreate) sqlSave(ctx context.Context) (*Meta, error) {
-	if err := mc.check(); err != nil {
+func (_c *MetaCreate) sqlSave(ctx context.Context) (*Meta, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := mc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, mc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -389,70 +389,70 @@ func (mc *MetaCreate) sqlSave(ctx context.Context) (*Meta, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	mc.mutation.id = &_node.ID
-	mc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (mc *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
+func (_c *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Meta{config: mc.config}
+		_node = &Meta{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(meta.Table, sqlgraph.NewFieldSpec(meta.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = mc.conflict
-	if value, ok := mc.mutation.Name(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(meta.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := mc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(meta.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
-	if value, ok := mc.mutation.Favorite(); ok {
+	if value, ok := _c.mutation.Favorite(); ok {
 		_spec.SetField(meta.FieldFavorite, field.TypeBool, value)
 		_node.Favorite = value
 	}
-	if value, ok := mc.mutation.FileIndices(); ok {
+	if value, ok := _c.mutation.FileIndices(); ok {
 		_spec.SetField(meta.FieldFileIndices, field.TypeJSON, value)
 		_node.FileIndices = value
 	}
-	if value, ok := mc.mutation.Read(); ok {
+	if value, ok := _c.mutation.Read(); ok {
 		_spec.SetField(meta.FieldRead, field.TypeBool, value)
 		_node.Read = value
 	}
-	if value, ok := mc.mutation.Active(); ok {
+	if value, ok := _c.mutation.Active(); ok {
 		_spec.SetField(meta.FieldActive, field.TypeBool, value)
 		_node.Active = value
 	}
-	if value, ok := mc.mutation.Hidden(); ok {
+	if value, ok := _c.mutation.Hidden(); ok {
 		_spec.SetField(meta.FieldHidden, field.TypeBool, value)
 		_node.Hidden = value
 	}
-	if value, ok := mc.mutation.ContainerType(); ok {
+	if value, ok := _c.mutation.ContainerType(); ok {
 		_spec.SetField(meta.FieldContainerType, field.TypeEnum, value)
 		_node.ContainerType = value
 	}
-	if value, ok := mc.mutation.ThumbnailIndex(); ok {
+	if value, ok := _c.mutation.ThumbnailIndex(); ok {
 		_spec.SetField(meta.FieldThumbnailIndex, field.TypeInt, value)
 		_node.ThumbnailIndex = value
 	}
-	if value, ok := mc.mutation.ThumbnailX(); ok {
+	if value, ok := _c.mutation.ThumbnailX(); ok {
 		_spec.SetField(meta.FieldThumbnailX, field.TypeInt, value)
 		_node.ThumbnailX = value
 	}
-	if value, ok := mc.mutation.ThumbnailY(); ok {
+	if value, ok := _c.mutation.ThumbnailY(); ok {
 		_spec.SetField(meta.FieldThumbnailY, field.TypeInt, value)
 		_node.ThumbnailY = value
 	}
-	if value, ok := mc.mutation.ThumbnailWidth(); ok {
+	if value, ok := _c.mutation.ThumbnailWidth(); ok {
 		_spec.SetField(meta.FieldThumbnailWidth, field.TypeInt, value)
 		_node.ThumbnailWidth = value
 	}
-	if value, ok := mc.mutation.ThumbnailHeight(); ok {
+	if value, ok := _c.mutation.ThumbnailHeight(); ok {
 		_spec.SetField(meta.FieldThumbnailHeight, field.TypeInt, value)
 		_node.ThumbnailHeight = value
 	}
-	if nodes := mc.mutation.TagsIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.TagsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -468,7 +468,7 @@ func (mc *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := mc.mutation.HistoriesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.HistoriesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -484,7 +484,7 @@ func (mc *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := mc.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -500,7 +500,7 @@ func (mc *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := mc.mutation.ProgressIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.ProgressIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -535,10 +535,10 @@ func (mc *MetaCreate) createSpec() (*Meta, *sqlgraph.CreateSpec) {
 //			SetName(v+v).
 //		}).
 //		Exec(ctx)
-func (mc *MetaCreate) OnConflict(opts ...sql.ConflictOption) *MetaUpsertOne {
-	mc.conflict = opts
+func (_c *MetaCreate) OnConflict(opts ...sql.ConflictOption) *MetaUpsertOne {
+	_c.conflict = opts
 	return &MetaUpsertOne{
-		create: mc,
+		create: _c,
 	}
 }
 
@@ -548,10 +548,10 @@ func (mc *MetaCreate) OnConflict(opts ...sql.ConflictOption) *MetaUpsertOne {
 //	client.Meta.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (mc *MetaCreate) OnConflictColumns(columns ...string) *MetaUpsertOne {
-	mc.conflict = append(mc.conflict, sql.ConflictColumns(columns...))
+func (_c *MetaCreate) OnConflictColumns(columns ...string) *MetaUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &MetaUpsertOne{
-		create: mc,
+		create: _c,
 	}
 }
 
@@ -1118,16 +1118,16 @@ type MetaCreateBulk struct {
 }
 
 // Save creates the Meta entities in the database.
-func (mcb *MetaCreateBulk) Save(ctx context.Context) ([]*Meta, error) {
-	if mcb.err != nil {
-		return nil, mcb.err
+func (_c *MetaCreateBulk) Save(ctx context.Context) ([]*Meta, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(mcb.builders))
-	nodes := make([]*Meta, len(mcb.builders))
-	mutators := make([]Mutator, len(mcb.builders))
-	for i := range mcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Meta, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := mcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*MetaMutation)
@@ -1141,12 +1141,12 @@ func (mcb *MetaCreateBulk) Save(ctx context.Context) ([]*Meta, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, mcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = mcb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, mcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -1170,7 +1170,7 @@ func (mcb *MetaCreateBulk) Save(ctx context.Context) ([]*Meta, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, mcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -1178,8 +1178,8 @@ func (mcb *MetaCreateBulk) Save(ctx context.Context) ([]*Meta, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (mcb *MetaCreateBulk) SaveX(ctx context.Context) []*Meta {
-	v, err := mcb.Save(ctx)
+func (_c *MetaCreateBulk) SaveX(ctx context.Context) []*Meta {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -1187,14 +1187,14 @@ func (mcb *MetaCreateBulk) SaveX(ctx context.Context) []*Meta {
 }
 
 // Exec executes the query.
-func (mcb *MetaCreateBulk) Exec(ctx context.Context) error {
-	_, err := mcb.Save(ctx)
+func (_c *MetaCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (mcb *MetaCreateBulk) ExecX(ctx context.Context) {
-	if err := mcb.Exec(ctx); err != nil {
+func (_c *MetaCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -1214,10 +1214,10 @@ func (mcb *MetaCreateBulk) ExecX(ctx context.Context) {
 //			SetName(v+v).
 //		}).
 //		Exec(ctx)
-func (mcb *MetaCreateBulk) OnConflict(opts ...sql.ConflictOption) *MetaUpsertBulk {
-	mcb.conflict = opts
+func (_c *MetaCreateBulk) OnConflict(opts ...sql.ConflictOption) *MetaUpsertBulk {
+	_c.conflict = opts
 	return &MetaUpsertBulk{
-		create: mcb,
+		create: _c,
 	}
 }
 
@@ -1227,10 +1227,10 @@ func (mcb *MetaCreateBulk) OnConflict(opts ...sql.ConflictOption) *MetaUpsertBul
 //	client.Meta.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (mcb *MetaCreateBulk) OnConflictColumns(columns ...string) *MetaUpsertBulk {
-	mcb.conflict = append(mcb.conflict, sql.ConflictColumns(columns...))
+func (_c *MetaCreateBulk) OnConflictColumns(columns ...string) *MetaUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &MetaUpsertBulk{
-		create: mcb,
+		create: _c,
 	}
 }
 

@@ -25,88 +25,88 @@ type HistoryUpdate struct {
 }
 
 // Where appends a list predicates to the HistoryUpdate builder.
-func (hu *HistoryUpdate) Where(ps ...predicate.History) *HistoryUpdate {
-	hu.mutation.Where(ps...)
-	return hu
+func (_u *HistoryUpdate) Where(ps ...predicate.History) *HistoryUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetCreateTime sets the "create_time" field.
-func (hu *HistoryUpdate) SetCreateTime(t time.Time) *HistoryUpdate {
-	hu.mutation.SetCreateTime(t)
-	return hu
+func (_u *HistoryUpdate) SetCreateTime(v time.Time) *HistoryUpdate {
+	_u.mutation.SetCreateTime(v)
+	return _u
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (hu *HistoryUpdate) SetNillableCreateTime(t *time.Time) *HistoryUpdate {
-	if t != nil {
-		hu.SetCreateTime(*t)
+func (_u *HistoryUpdate) SetNillableCreateTime(v *time.Time) *HistoryUpdate {
+	if v != nil {
+		_u.SetCreateTime(*v)
 	}
-	return hu
+	return _u
 }
 
 // SetItemID sets the "item" edge to the Meta entity by ID.
-func (hu *HistoryUpdate) SetItemID(id int) *HistoryUpdate {
-	hu.mutation.SetItemID(id)
-	return hu
+func (_u *HistoryUpdate) SetItemID(id int) *HistoryUpdate {
+	_u.mutation.SetItemID(id)
+	return _u
 }
 
 // SetNillableItemID sets the "item" edge to the Meta entity by ID if the given value is not nil.
-func (hu *HistoryUpdate) SetNillableItemID(id *int) *HistoryUpdate {
+func (_u *HistoryUpdate) SetNillableItemID(id *int) *HistoryUpdate {
 	if id != nil {
-		hu = hu.SetItemID(*id)
+		_u = _u.SetItemID(*id)
 	}
-	return hu
+	return _u
 }
 
 // SetItem sets the "item" edge to the Meta entity.
-func (hu *HistoryUpdate) SetItem(m *Meta) *HistoryUpdate {
-	return hu.SetItemID(m.ID)
+func (_u *HistoryUpdate) SetItem(v *Meta) *HistoryUpdate {
+	return _u.SetItemID(v.ID)
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (hu *HistoryUpdate) SetUserID(id int) *HistoryUpdate {
-	hu.mutation.SetUserID(id)
-	return hu
+func (_u *HistoryUpdate) SetUserID(id int) *HistoryUpdate {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
-func (hu *HistoryUpdate) SetNillableUserID(id *int) *HistoryUpdate {
+func (_u *HistoryUpdate) SetNillableUserID(id *int) *HistoryUpdate {
 	if id != nil {
-		hu = hu.SetUserID(*id)
+		_u = _u.SetUserID(*id)
 	}
-	return hu
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (hu *HistoryUpdate) SetUser(u *User) *HistoryUpdate {
-	return hu.SetUserID(u.ID)
+func (_u *HistoryUpdate) SetUser(v *User) *HistoryUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the HistoryMutation object of the builder.
-func (hu *HistoryUpdate) Mutation() *HistoryMutation {
-	return hu.mutation
+func (_u *HistoryUpdate) Mutation() *HistoryMutation {
+	return _u.mutation
 }
 
 // ClearItem clears the "item" edge to the Meta entity.
-func (hu *HistoryUpdate) ClearItem() *HistoryUpdate {
-	hu.mutation.ClearItem()
-	return hu
+func (_u *HistoryUpdate) ClearItem() *HistoryUpdate {
+	_u.mutation.ClearItem()
+	return _u
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (hu *HistoryUpdate) ClearUser() *HistoryUpdate {
-	hu.mutation.ClearUser()
-	return hu
+func (_u *HistoryUpdate) ClearUser() *HistoryUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (hu *HistoryUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, hu.sqlSave, hu.mutation, hu.hooks)
+func (_u *HistoryUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (hu *HistoryUpdate) SaveX(ctx context.Context) int {
-	affected, err := hu.Save(ctx)
+func (_u *HistoryUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -114,31 +114,31 @@ func (hu *HistoryUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (hu *HistoryUpdate) Exec(ctx context.Context) error {
-	_, err := hu.Save(ctx)
+func (_u *HistoryUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (hu *HistoryUpdate) ExecX(ctx context.Context) {
-	if err := hu.Exec(ctx); err != nil {
+func (_u *HistoryUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (hu *HistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (_u *HistoryUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(history.Table, history.Columns, sqlgraph.NewFieldSpec(history.FieldID, field.TypeInt))
-	if ps := hu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := hu.mutation.CreateTime(); ok {
+	if value, ok := _u.mutation.CreateTime(); ok {
 		_spec.SetField(history.FieldCreateTime, field.TypeTime, value)
 	}
-	if hu.mutation.ItemCleared() {
+	if _u.mutation.ItemCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -151,7 +151,7 @@ func (hu *HistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.ItemIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ItemIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -167,7 +167,7 @@ func (hu *HistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if hu.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -180,7 +180,7 @@ func (hu *HistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -196,7 +196,7 @@ func (hu *HistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, hu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{history.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -204,8 +204,8 @@ func (hu *HistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	hu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // HistoryUpdateOne is the builder for updating a single History entity.
@@ -217,95 +217,95 @@ type HistoryUpdateOne struct {
 }
 
 // SetCreateTime sets the "create_time" field.
-func (huo *HistoryUpdateOne) SetCreateTime(t time.Time) *HistoryUpdateOne {
-	huo.mutation.SetCreateTime(t)
-	return huo
+func (_u *HistoryUpdateOne) SetCreateTime(v time.Time) *HistoryUpdateOne {
+	_u.mutation.SetCreateTime(v)
+	return _u
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (huo *HistoryUpdateOne) SetNillableCreateTime(t *time.Time) *HistoryUpdateOne {
-	if t != nil {
-		huo.SetCreateTime(*t)
+func (_u *HistoryUpdateOne) SetNillableCreateTime(v *time.Time) *HistoryUpdateOne {
+	if v != nil {
+		_u.SetCreateTime(*v)
 	}
-	return huo
+	return _u
 }
 
 // SetItemID sets the "item" edge to the Meta entity by ID.
-func (huo *HistoryUpdateOne) SetItemID(id int) *HistoryUpdateOne {
-	huo.mutation.SetItemID(id)
-	return huo
+func (_u *HistoryUpdateOne) SetItemID(id int) *HistoryUpdateOne {
+	_u.mutation.SetItemID(id)
+	return _u
 }
 
 // SetNillableItemID sets the "item" edge to the Meta entity by ID if the given value is not nil.
-func (huo *HistoryUpdateOne) SetNillableItemID(id *int) *HistoryUpdateOne {
+func (_u *HistoryUpdateOne) SetNillableItemID(id *int) *HistoryUpdateOne {
 	if id != nil {
-		huo = huo.SetItemID(*id)
+		_u = _u.SetItemID(*id)
 	}
-	return huo
+	return _u
 }
 
 // SetItem sets the "item" edge to the Meta entity.
-func (huo *HistoryUpdateOne) SetItem(m *Meta) *HistoryUpdateOne {
-	return huo.SetItemID(m.ID)
+func (_u *HistoryUpdateOne) SetItem(v *Meta) *HistoryUpdateOne {
+	return _u.SetItemID(v.ID)
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (huo *HistoryUpdateOne) SetUserID(id int) *HistoryUpdateOne {
-	huo.mutation.SetUserID(id)
-	return huo
+func (_u *HistoryUpdateOne) SetUserID(id int) *HistoryUpdateOne {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
-func (huo *HistoryUpdateOne) SetNillableUserID(id *int) *HistoryUpdateOne {
+func (_u *HistoryUpdateOne) SetNillableUserID(id *int) *HistoryUpdateOne {
 	if id != nil {
-		huo = huo.SetUserID(*id)
+		_u = _u.SetUserID(*id)
 	}
-	return huo
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (huo *HistoryUpdateOne) SetUser(u *User) *HistoryUpdateOne {
-	return huo.SetUserID(u.ID)
+func (_u *HistoryUpdateOne) SetUser(v *User) *HistoryUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the HistoryMutation object of the builder.
-func (huo *HistoryUpdateOne) Mutation() *HistoryMutation {
-	return huo.mutation
+func (_u *HistoryUpdateOne) Mutation() *HistoryMutation {
+	return _u.mutation
 }
 
 // ClearItem clears the "item" edge to the Meta entity.
-func (huo *HistoryUpdateOne) ClearItem() *HistoryUpdateOne {
-	huo.mutation.ClearItem()
-	return huo
+func (_u *HistoryUpdateOne) ClearItem() *HistoryUpdateOne {
+	_u.mutation.ClearItem()
+	return _u
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (huo *HistoryUpdateOne) ClearUser() *HistoryUpdateOne {
-	huo.mutation.ClearUser()
-	return huo
+func (_u *HistoryUpdateOne) ClearUser() *HistoryUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the HistoryUpdate builder.
-func (huo *HistoryUpdateOne) Where(ps ...predicate.History) *HistoryUpdateOne {
-	huo.mutation.Where(ps...)
-	return huo
+func (_u *HistoryUpdateOne) Where(ps ...predicate.History) *HistoryUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (huo *HistoryUpdateOne) Select(field string, fields ...string) *HistoryUpdateOne {
-	huo.fields = append([]string{field}, fields...)
-	return huo
+func (_u *HistoryUpdateOne) Select(field string, fields ...string) *HistoryUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated History entity.
-func (huo *HistoryUpdateOne) Save(ctx context.Context) (*History, error) {
-	return withHooks(ctx, huo.sqlSave, huo.mutation, huo.hooks)
+func (_u *HistoryUpdateOne) Save(ctx context.Context) (*History, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (huo *HistoryUpdateOne) SaveX(ctx context.Context) *History {
-	node, err := huo.Save(ctx)
+func (_u *HistoryUpdateOne) SaveX(ctx context.Context) *History {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -313,26 +313,26 @@ func (huo *HistoryUpdateOne) SaveX(ctx context.Context) *History {
 }
 
 // Exec executes the query on the entity.
-func (huo *HistoryUpdateOne) Exec(ctx context.Context) error {
-	_, err := huo.Save(ctx)
+func (_u *HistoryUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (huo *HistoryUpdateOne) ExecX(ctx context.Context) {
-	if err := huo.Exec(ctx); err != nil {
+func (_u *HistoryUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err error) {
+func (_u *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err error) {
 	_spec := sqlgraph.NewUpdateSpec(history.Table, history.Columns, sqlgraph.NewFieldSpec(history.FieldID, field.TypeInt))
-	id, ok := huo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "History.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := huo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, history.FieldID)
 		for _, f := range fields {
@@ -344,17 +344,17 @@ func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err e
 			}
 		}
 	}
-	if ps := huo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := huo.mutation.CreateTime(); ok {
+	if value, ok := _u.mutation.CreateTime(); ok {
 		_spec.SetField(history.FieldCreateTime, field.TypeTime, value)
 	}
-	if huo.mutation.ItemCleared() {
+	if _u.mutation.ItemCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -367,7 +367,7 @@ func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.ItemIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ItemIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -383,7 +383,7 @@ func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err e
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if huo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -396,7 +396,7 @@ func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -412,10 +412,10 @@ func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err e
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &History{config: huo.config}
+	_node = &History{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, huo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{history.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -423,6 +423,6 @@ func (huo *HistoryUpdateOne) sqlSave(ctx context.Context) (_node *History, err e
 		}
 		return nil, err
 	}
-	huo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

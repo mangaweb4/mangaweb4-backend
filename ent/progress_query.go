@@ -32,44 +32,44 @@ type ProgressQuery struct {
 }
 
 // Where adds a new predicate for the ProgressQuery builder.
-func (pq *ProgressQuery) Where(ps ...predicate.Progress) *ProgressQuery {
-	pq.predicates = append(pq.predicates, ps...)
-	return pq
+func (_q *ProgressQuery) Where(ps ...predicate.Progress) *ProgressQuery {
+	_q.predicates = append(_q.predicates, ps...)
+	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (pq *ProgressQuery) Limit(limit int) *ProgressQuery {
-	pq.ctx.Limit = &limit
-	return pq
+func (_q *ProgressQuery) Limit(limit int) *ProgressQuery {
+	_q.ctx.Limit = &limit
+	return _q
 }
 
 // Offset to start from.
-func (pq *ProgressQuery) Offset(offset int) *ProgressQuery {
-	pq.ctx.Offset = &offset
-	return pq
+func (_q *ProgressQuery) Offset(offset int) *ProgressQuery {
+	_q.ctx.Offset = &offset
+	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (pq *ProgressQuery) Unique(unique bool) *ProgressQuery {
-	pq.ctx.Unique = &unique
-	return pq
+func (_q *ProgressQuery) Unique(unique bool) *ProgressQuery {
+	_q.ctx.Unique = &unique
+	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (pq *ProgressQuery) Order(o ...progress.OrderOption) *ProgressQuery {
-	pq.order = append(pq.order, o...)
-	return pq
+func (_q *ProgressQuery) Order(o ...progress.OrderOption) *ProgressQuery {
+	_q.order = append(_q.order, o...)
+	return _q
 }
 
 // QueryItem chains the current query on the "item" edge.
-func (pq *ProgressQuery) QueryItem() *MetaQuery {
-	query := (&MetaClient{config: pq.config}).Query()
+func (_q *ProgressQuery) QueryItem() *MetaQuery {
+	query := (&MetaClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := pq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := pq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -78,20 +78,20 @@ func (pq *ProgressQuery) QueryItem() *MetaQuery {
 			sqlgraph.To(meta.Table, meta.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, progress.ItemTable, progress.ItemColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
 }
 
 // QueryUser chains the current query on the "user" edge.
-func (pq *ProgressQuery) QueryUser() *UserQuery {
-	query := (&UserClient{config: pq.config}).Query()
+func (_q *ProgressQuery) QueryUser() *UserQuery {
+	query := (&UserClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := pq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := pq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -100,7 +100,7 @@ func (pq *ProgressQuery) QueryUser() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, progress.UserTable, progress.UserColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
@@ -108,8 +108,8 @@ func (pq *ProgressQuery) QueryUser() *UserQuery {
 
 // First returns the first Progress entity from the query.
 // Returns a *NotFoundError when no Progress was found.
-func (pq *ProgressQuery) First(ctx context.Context) (*Progress, error) {
-	nodes, err := pq.Limit(1).All(setContextOp(ctx, pq.ctx, ent.OpQueryFirst))
+func (_q *ProgressQuery) First(ctx context.Context) (*Progress, error) {
+	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -120,8 +120,8 @@ func (pq *ProgressQuery) First(ctx context.Context) (*Progress, error) {
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (pq *ProgressQuery) FirstX(ctx context.Context) *Progress {
-	node, err := pq.First(ctx)
+func (_q *ProgressQuery) FirstX(ctx context.Context) *Progress {
+	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -130,9 +130,9 @@ func (pq *ProgressQuery) FirstX(ctx context.Context) *Progress {
 
 // FirstID returns the first Progress ID from the query.
 // Returns a *NotFoundError when no Progress ID was found.
-func (pq *ProgressQuery) FirstID(ctx context.Context) (id int, err error) {
+func (_q *ProgressQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = pq.Limit(1).IDs(setContextOp(ctx, pq.ctx, ent.OpQueryFirstID)); err != nil {
+	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -143,8 +143,8 @@ func (pq *ProgressQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (pq *ProgressQuery) FirstIDX(ctx context.Context) int {
-	id, err := pq.FirstID(ctx)
+func (_q *ProgressQuery) FirstIDX(ctx context.Context) int {
+	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -154,8 +154,8 @@ func (pq *ProgressQuery) FirstIDX(ctx context.Context) int {
 // Only returns a single Progress entity found by the query, ensuring it only returns one.
 // Returns a *NotSingularError when more than one Progress entity is found.
 // Returns a *NotFoundError when no Progress entities are found.
-func (pq *ProgressQuery) Only(ctx context.Context) (*Progress, error) {
-	nodes, err := pq.Limit(2).All(setContextOp(ctx, pq.ctx, ent.OpQueryOnly))
+func (_q *ProgressQuery) Only(ctx context.Context) (*Progress, error) {
+	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -170,8 +170,8 @@ func (pq *ProgressQuery) Only(ctx context.Context) (*Progress, error) {
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (pq *ProgressQuery) OnlyX(ctx context.Context) *Progress {
-	node, err := pq.Only(ctx)
+func (_q *ProgressQuery) OnlyX(ctx context.Context) *Progress {
+	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -181,9 +181,9 @@ func (pq *ProgressQuery) OnlyX(ctx context.Context) *Progress {
 // OnlyID is like Only, but returns the only Progress ID in the query.
 // Returns a *NotSingularError when more than one Progress ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (pq *ProgressQuery) OnlyID(ctx context.Context) (id int, err error) {
+func (_q *ProgressQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = pq.Limit(2).IDs(setContextOp(ctx, pq.ctx, ent.OpQueryOnlyID)); err != nil {
+	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -198,8 +198,8 @@ func (pq *ProgressQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (pq *ProgressQuery) OnlyIDX(ctx context.Context) int {
-	id, err := pq.OnlyID(ctx)
+func (_q *ProgressQuery) OnlyIDX(ctx context.Context) int {
+	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -207,18 +207,18 @@ func (pq *ProgressQuery) OnlyIDX(ctx context.Context) int {
 }
 
 // All executes the query and returns a list of Progresses.
-func (pq *ProgressQuery) All(ctx context.Context) ([]*Progress, error) {
-	ctx = setContextOp(ctx, pq.ctx, ent.OpQueryAll)
-	if err := pq.prepareQuery(ctx); err != nil {
+func (_q *ProgressQuery) All(ctx context.Context) ([]*Progress, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
 	qr := querierAll[[]*Progress, *ProgressQuery]()
-	return withInterceptors[[]*Progress](ctx, pq, qr, pq.inters)
+	return withInterceptors[[]*Progress](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (pq *ProgressQuery) AllX(ctx context.Context) []*Progress {
-	nodes, err := pq.All(ctx)
+func (_q *ProgressQuery) AllX(ctx context.Context) []*Progress {
+	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -226,20 +226,20 @@ func (pq *ProgressQuery) AllX(ctx context.Context) []*Progress {
 }
 
 // IDs executes the query and returns a list of Progress IDs.
-func (pq *ProgressQuery) IDs(ctx context.Context) (ids []int, err error) {
-	if pq.ctx.Unique == nil && pq.path != nil {
-		pq.Unique(true)
+func (_q *ProgressQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if _q.ctx.Unique == nil && _q.path != nil {
+		_q.Unique(true)
 	}
-	ctx = setContextOp(ctx, pq.ctx, ent.OpQueryIDs)
-	if err = pq.Select(progress.FieldID).Scan(ctx, &ids); err != nil {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryIDs)
+	if err = _q.Select(progress.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (pq *ProgressQuery) IDsX(ctx context.Context) []int {
-	ids, err := pq.IDs(ctx)
+func (_q *ProgressQuery) IDsX(ctx context.Context) []int {
+	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -247,17 +247,17 @@ func (pq *ProgressQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (pq *ProgressQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, pq.ctx, ent.OpQueryCount)
-	if err := pq.prepareQuery(ctx); err != nil {
+func (_q *ProgressQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, pq, querierCount[*ProgressQuery](), pq.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*ProgressQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (pq *ProgressQuery) CountX(ctx context.Context) int {
-	count, err := pq.Count(ctx)
+func (_q *ProgressQuery) CountX(ctx context.Context) int {
+	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -265,9 +265,9 @@ func (pq *ProgressQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (pq *ProgressQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, pq.ctx, ent.OpQueryExist)
-	switch _, err := pq.FirstID(ctx); {
+func (_q *ProgressQuery) Exist(ctx context.Context) (bool, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
+	switch _, err := _q.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
 	case err != nil:
@@ -278,8 +278,8 @@ func (pq *ProgressQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (pq *ProgressQuery) ExistX(ctx context.Context) bool {
-	exist, err := pq.Exist(ctx)
+func (_q *ProgressQuery) ExistX(ctx context.Context) bool {
+	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -288,44 +288,44 @@ func (pq *ProgressQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the ProgressQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (pq *ProgressQuery) Clone() *ProgressQuery {
-	if pq == nil {
+func (_q *ProgressQuery) Clone() *ProgressQuery {
+	if _q == nil {
 		return nil
 	}
 	return &ProgressQuery{
-		config:     pq.config,
-		ctx:        pq.ctx.Clone(),
-		order:      append([]progress.OrderOption{}, pq.order...),
-		inters:     append([]Interceptor{}, pq.inters...),
-		predicates: append([]predicate.Progress{}, pq.predicates...),
-		withItem:   pq.withItem.Clone(),
-		withUser:   pq.withUser.Clone(),
+		config:     _q.config,
+		ctx:        _q.ctx.Clone(),
+		order:      append([]progress.OrderOption{}, _q.order...),
+		inters:     append([]Interceptor{}, _q.inters...),
+		predicates: append([]predicate.Progress{}, _q.predicates...),
+		withItem:   _q.withItem.Clone(),
+		withUser:   _q.withUser.Clone(),
 		// clone intermediate query.
-		sql:  pq.sql.Clone(),
-		path: pq.path,
+		sql:  _q.sql.Clone(),
+		path: _q.path,
 	}
 }
 
 // WithItem tells the query-builder to eager-load the nodes that are connected to
 // the "item" edge. The optional arguments are used to configure the query builder of the edge.
-func (pq *ProgressQuery) WithItem(opts ...func(*MetaQuery)) *ProgressQuery {
-	query := (&MetaClient{config: pq.config}).Query()
+func (_q *ProgressQuery) WithItem(opts ...func(*MetaQuery)) *ProgressQuery {
+	query := (&MetaClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	pq.withItem = query
-	return pq
+	_q.withItem = query
+	return _q
 }
 
 // WithUser tells the query-builder to eager-load the nodes that are connected to
 // the "user" edge. The optional arguments are used to configure the query builder of the edge.
-func (pq *ProgressQuery) WithUser(opts ...func(*UserQuery)) *ProgressQuery {
-	query := (&UserClient{config: pq.config}).Query()
+func (_q *ProgressQuery) WithUser(opts ...func(*UserQuery)) *ProgressQuery {
+	query := (&UserClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	pq.withUser = query
-	return pq
+	_q.withUser = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -342,10 +342,10 @@ func (pq *ProgressQuery) WithUser(opts ...func(*UserQuery)) *ProgressQuery {
 //		GroupBy(progress.FieldPage).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (pq *ProgressQuery) GroupBy(field string, fields ...string) *ProgressGroupBy {
-	pq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &ProgressGroupBy{build: pq}
-	grbuild.flds = &pq.ctx.Fields
+func (_q *ProgressQuery) GroupBy(field string, fields ...string) *ProgressGroupBy {
+	_q.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &ProgressGroupBy{build: _q}
+	grbuild.flds = &_q.ctx.Fields
 	grbuild.label = progress.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -363,59 +363,59 @@ func (pq *ProgressQuery) GroupBy(field string, fields ...string) *ProgressGroupB
 //	client.Progress.Query().
 //		Select(progress.FieldPage).
 //		Scan(ctx, &v)
-func (pq *ProgressQuery) Select(fields ...string) *ProgressSelect {
-	pq.ctx.Fields = append(pq.ctx.Fields, fields...)
-	sbuild := &ProgressSelect{ProgressQuery: pq}
+func (_q *ProgressQuery) Select(fields ...string) *ProgressSelect {
+	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
+	sbuild := &ProgressSelect{ProgressQuery: _q}
 	sbuild.label = progress.Label
-	sbuild.flds, sbuild.scan = &pq.ctx.Fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
 // Aggregate returns a ProgressSelect configured with the given aggregations.
-func (pq *ProgressQuery) Aggregate(fns ...AggregateFunc) *ProgressSelect {
-	return pq.Select().Aggregate(fns...)
+func (_q *ProgressQuery) Aggregate(fns ...AggregateFunc) *ProgressSelect {
+	return _q.Select().Aggregate(fns...)
 }
 
-func (pq *ProgressQuery) prepareQuery(ctx context.Context) error {
-	for _, inter := range pq.inters {
+func (_q *ProgressQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
 		}
 		if trv, ok := inter.(Traverser); ok {
-			if err := trv.Traverse(ctx, pq); err != nil {
+			if err := trv.Traverse(ctx, _q); err != nil {
 				return err
 			}
 		}
 	}
-	for _, f := range pq.ctx.Fields {
+	for _, f := range _q.ctx.Fields {
 		if !progress.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
-	if pq.path != nil {
-		prev, err := pq.path(ctx)
+	if _q.path != nil {
+		prev, err := _q.path(ctx)
 		if err != nil {
 			return err
 		}
-		pq.sql = prev
+		_q.sql = prev
 	}
 	return nil
 }
 
-func (pq *ProgressQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Progress, error) {
+func (_q *ProgressQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Progress, error) {
 	var (
 		nodes       = []*Progress{}
-		_spec       = pq.querySpec()
+		_spec       = _q.querySpec()
 		loadedTypes = [2]bool{
-			pq.withItem != nil,
-			pq.withUser != nil,
+			_q.withItem != nil,
+			_q.withUser != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Progress).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &Progress{config: pq.config}
+		node := &Progress{config: _q.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
@@ -423,20 +423,20 @@ func (pq *ProgressQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Pro
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
-	if err := sqlgraph.QueryNodes(ctx, pq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, _q.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := pq.withItem; query != nil {
-		if err := pq.loadItem(ctx, query, nodes, nil,
+	if query := _q.withItem; query != nil {
+		if err := _q.loadItem(ctx, query, nodes, nil,
 			func(n *Progress, e *Meta) { n.Edges.Item = e }); err != nil {
 			return nil, err
 		}
 	}
-	if query := pq.withUser; query != nil {
-		if err := pq.loadUser(ctx, query, nodes, nil,
+	if query := _q.withUser; query != nil {
+		if err := _q.loadUser(ctx, query, nodes, nil,
 			func(n *Progress, e *User) { n.Edges.User = e }); err != nil {
 			return nil, err
 		}
@@ -444,7 +444,7 @@ func (pq *ProgressQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Pro
 	return nodes, nil
 }
 
-func (pq *ProgressQuery) loadItem(ctx context.Context, query *MetaQuery, nodes []*Progress, init func(*Progress), assign func(*Progress, *Meta)) error {
+func (_q *ProgressQuery) loadItem(ctx context.Context, query *MetaQuery, nodes []*Progress, init func(*Progress), assign func(*Progress, *Meta)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Progress)
 	for i := range nodes {
@@ -473,7 +473,7 @@ func (pq *ProgressQuery) loadItem(ctx context.Context, query *MetaQuery, nodes [
 	}
 	return nil
 }
-func (pq *ProgressQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Progress, init func(*Progress), assign func(*Progress, *User)) error {
+func (_q *ProgressQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Progress, init func(*Progress), assign func(*Progress, *User)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Progress)
 	for i := range nodes {
@@ -503,24 +503,24 @@ func (pq *ProgressQuery) loadUser(ctx context.Context, query *UserQuery, nodes [
 	return nil
 }
 
-func (pq *ProgressQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := pq.querySpec()
-	_spec.Node.Columns = pq.ctx.Fields
-	if len(pq.ctx.Fields) > 0 {
-		_spec.Unique = pq.ctx.Unique != nil && *pq.ctx.Unique
+func (_q *ProgressQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := _q.querySpec()
+	_spec.Node.Columns = _q.ctx.Fields
+	if len(_q.ctx.Fields) > 0 {
+		_spec.Unique = _q.ctx.Unique != nil && *_q.ctx.Unique
 	}
-	return sqlgraph.CountNodes(ctx, pq.driver, _spec)
+	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (pq *ProgressQuery) querySpec() *sqlgraph.QuerySpec {
+func (_q *ProgressQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := sqlgraph.NewQuerySpec(progress.Table, progress.Columns, sqlgraph.NewFieldSpec(progress.FieldID, field.TypeInt))
-	_spec.From = pq.sql
-	if unique := pq.ctx.Unique; unique != nil {
+	_spec.From = _q.sql
+	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
-	} else if pq.path != nil {
+	} else if _q.path != nil {
 		_spec.Unique = true
 	}
-	if fields := pq.ctx.Fields; len(fields) > 0 {
+	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, progress.FieldID)
 		for i := range fields {
@@ -528,27 +528,27 @@ func (pq *ProgressQuery) querySpec() *sqlgraph.QuerySpec {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
-		if pq.withItem != nil {
+		if _q.withItem != nil {
 			_spec.Node.AddColumnOnce(progress.FieldItemID)
 		}
-		if pq.withUser != nil {
+		if _q.withUser != nil {
 			_spec.Node.AddColumnOnce(progress.FieldUserID)
 		}
 	}
-	if ps := pq.predicates; len(ps) > 0 {
+	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := pq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := pq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := pq.order; len(ps) > 0 {
+	if ps := _q.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -558,33 +558,33 @@ func (pq *ProgressQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (pq *ProgressQuery) sqlQuery(ctx context.Context) *sql.Selector {
-	builder := sql.Dialect(pq.driver.Dialect())
+func (_q *ProgressQuery) sqlQuery(ctx context.Context) *sql.Selector {
+	builder := sql.Dialect(_q.driver.Dialect())
 	t1 := builder.Table(progress.Table)
-	columns := pq.ctx.Fields
+	columns := _q.ctx.Fields
 	if len(columns) == 0 {
 		columns = progress.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
-	if pq.sql != nil {
-		selector = pq.sql
+	if _q.sql != nil {
+		selector = _q.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if pq.ctx.Unique != nil && *pq.ctx.Unique {
+	if _q.ctx.Unique != nil && *_q.ctx.Unique {
 		selector.Distinct()
 	}
-	for _, p := range pq.predicates {
+	for _, p := range _q.predicates {
 		p(selector)
 	}
-	for _, p := range pq.order {
+	for _, p := range _q.order {
 		p(selector)
 	}
-	if offset := pq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := pq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -597,41 +597,41 @@ type ProgressGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (pgb *ProgressGroupBy) Aggregate(fns ...AggregateFunc) *ProgressGroupBy {
-	pgb.fns = append(pgb.fns, fns...)
-	return pgb
+func (_g *ProgressGroupBy) Aggregate(fns ...AggregateFunc) *ProgressGroupBy {
+	_g.fns = append(_g.fns, fns...)
+	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (pgb *ProgressGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, pgb.build.ctx, ent.OpQueryGroupBy)
-	if err := pgb.build.prepareQuery(ctx); err != nil {
+func (_g *ProgressGroupBy) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
+	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*ProgressQuery, *ProgressGroupBy](ctx, pgb.build, pgb, pgb.build.inters, v)
+	return scanWithInterceptors[*ProgressQuery, *ProgressGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (pgb *ProgressGroupBy) sqlScan(ctx context.Context, root *ProgressQuery, v any) error {
+func (_g *ProgressGroupBy) sqlScan(ctx context.Context, root *ProgressQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
-	aggregation := make([]string, 0, len(pgb.fns))
-	for _, fn := range pgb.fns {
+	aggregation := make([]string, 0, len(_g.fns))
+	for _, fn := range _g.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
 	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(*pgb.flds)+len(pgb.fns))
-		for _, f := range *pgb.flds {
+		columns := make([]string, 0, len(*_g.flds)+len(_g.fns))
+		for _, f := range *_g.flds {
 			columns = append(columns, selector.C(f))
 		}
 		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
-	selector.GroupBy(selector.Columns(*pgb.flds...)...)
+	selector.GroupBy(selector.Columns(*_g.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := pgb.build.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _g.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -645,27 +645,27 @@ type ProgressSelect struct {
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (ps *ProgressSelect) Aggregate(fns ...AggregateFunc) *ProgressSelect {
-	ps.fns = append(ps.fns, fns...)
-	return ps
+func (_s *ProgressSelect) Aggregate(fns ...AggregateFunc) *ProgressSelect {
+	_s.fns = append(_s.fns, fns...)
+	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ps *ProgressSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ps.ctx, ent.OpQuerySelect)
-	if err := ps.prepareQuery(ctx); err != nil {
+func (_s *ProgressSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
+	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*ProgressQuery, *ProgressSelect](ctx, ps.ProgressQuery, ps, ps.inters, v)
+	return scanWithInterceptors[*ProgressQuery, *ProgressSelect](ctx, _s.ProgressQuery, _s, _s.inters, v)
 }
 
-func (ps *ProgressSelect) sqlScan(ctx context.Context, root *ProgressQuery, v any) error {
+func (_s *ProgressSelect) sqlScan(ctx context.Context, root *ProgressQuery, v any) error {
 	selector := root.sqlQuery(ctx)
-	aggregation := make([]string, 0, len(ps.fns))
-	for _, fn := range ps.fns {
+	aggregation := make([]string, 0, len(_s.fns))
+	for _, fn := range _s.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	switch n := len(*ps.selector.flds); {
+	switch n := len(*_s.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
 		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
@@ -673,7 +673,7 @@ func (ps *ProgressSelect) sqlScan(ctx context.Context, root *ProgressQuery, v an
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := ps.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _s.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()

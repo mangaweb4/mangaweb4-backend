@@ -28,413 +28,413 @@ type MetaUpdate struct {
 }
 
 // Where appends a list predicates to the MetaUpdate builder.
-func (mu *MetaUpdate) Where(ps ...predicate.Meta) *MetaUpdate {
-	mu.mutation.Where(ps...)
-	return mu
+func (_u *MetaUpdate) Where(ps ...predicate.Meta) *MetaUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetName sets the "name" field.
-func (mu *MetaUpdate) SetName(s string) *MetaUpdate {
-	mu.mutation.SetName(s)
-	return mu
+func (_u *MetaUpdate) SetName(v string) *MetaUpdate {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableName(s *string) *MetaUpdate {
-	if s != nil {
-		mu.SetName(*s)
+func (_u *MetaUpdate) SetNillableName(v *string) *MetaUpdate {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetCreateTime sets the "create_time" field.
-func (mu *MetaUpdate) SetCreateTime(t time.Time) *MetaUpdate {
-	mu.mutation.SetCreateTime(t)
-	return mu
+func (_u *MetaUpdate) SetCreateTime(v time.Time) *MetaUpdate {
+	_u.mutation.SetCreateTime(v)
+	return _u
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableCreateTime(t *time.Time) *MetaUpdate {
-	if t != nil {
-		mu.SetCreateTime(*t)
+func (_u *MetaUpdate) SetNillableCreateTime(v *time.Time) *MetaUpdate {
+	if v != nil {
+		_u.SetCreateTime(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetFavorite sets the "favorite" field.
-func (mu *MetaUpdate) SetFavorite(b bool) *MetaUpdate {
-	mu.mutation.SetFavorite(b)
-	return mu
+func (_u *MetaUpdate) SetFavorite(v bool) *MetaUpdate {
+	_u.mutation.SetFavorite(v)
+	return _u
 }
 
 // SetNillableFavorite sets the "favorite" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableFavorite(b *bool) *MetaUpdate {
-	if b != nil {
-		mu.SetFavorite(*b)
+func (_u *MetaUpdate) SetNillableFavorite(v *bool) *MetaUpdate {
+	if v != nil {
+		_u.SetFavorite(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetFileIndices sets the "file_indices" field.
-func (mu *MetaUpdate) SetFileIndices(i []int) *MetaUpdate {
-	mu.mutation.SetFileIndices(i)
-	return mu
+func (_u *MetaUpdate) SetFileIndices(v []int) *MetaUpdate {
+	_u.mutation.SetFileIndices(v)
+	return _u
 }
 
-// AppendFileIndices appends i to the "file_indices" field.
-func (mu *MetaUpdate) AppendFileIndices(i []int) *MetaUpdate {
-	mu.mutation.AppendFileIndices(i)
-	return mu
+// AppendFileIndices appends value to the "file_indices" field.
+func (_u *MetaUpdate) AppendFileIndices(v []int) *MetaUpdate {
+	_u.mutation.AppendFileIndices(v)
+	return _u
 }
 
 // SetRead sets the "read" field.
-func (mu *MetaUpdate) SetRead(b bool) *MetaUpdate {
-	mu.mutation.SetRead(b)
-	return mu
+func (_u *MetaUpdate) SetRead(v bool) *MetaUpdate {
+	_u.mutation.SetRead(v)
+	return _u
 }
 
 // SetNillableRead sets the "read" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableRead(b *bool) *MetaUpdate {
-	if b != nil {
-		mu.SetRead(*b)
+func (_u *MetaUpdate) SetNillableRead(v *bool) *MetaUpdate {
+	if v != nil {
+		_u.SetRead(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetActive sets the "active" field.
-func (mu *MetaUpdate) SetActive(b bool) *MetaUpdate {
-	mu.mutation.SetActive(b)
-	return mu
+func (_u *MetaUpdate) SetActive(v bool) *MetaUpdate {
+	_u.mutation.SetActive(v)
+	return _u
 }
 
 // SetNillableActive sets the "active" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableActive(b *bool) *MetaUpdate {
-	if b != nil {
-		mu.SetActive(*b)
+func (_u *MetaUpdate) SetNillableActive(v *bool) *MetaUpdate {
+	if v != nil {
+		_u.SetActive(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetHidden sets the "hidden" field.
-func (mu *MetaUpdate) SetHidden(b bool) *MetaUpdate {
-	mu.mutation.SetHidden(b)
-	return mu
+func (_u *MetaUpdate) SetHidden(v bool) *MetaUpdate {
+	_u.mutation.SetHidden(v)
+	return _u
 }
 
 // SetNillableHidden sets the "hidden" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableHidden(b *bool) *MetaUpdate {
-	if b != nil {
-		mu.SetHidden(*b)
+func (_u *MetaUpdate) SetNillableHidden(v *bool) *MetaUpdate {
+	if v != nil {
+		_u.SetHidden(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetContainerType sets the "container_type" field.
-func (mu *MetaUpdate) SetContainerType(mt meta.ContainerType) *MetaUpdate {
-	mu.mutation.SetContainerType(mt)
-	return mu
+func (_u *MetaUpdate) SetContainerType(v meta.ContainerType) *MetaUpdate {
+	_u.mutation.SetContainerType(v)
+	return _u
 }
 
 // SetNillableContainerType sets the "container_type" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableContainerType(mt *meta.ContainerType) *MetaUpdate {
-	if mt != nil {
-		mu.SetContainerType(*mt)
+func (_u *MetaUpdate) SetNillableContainerType(v *meta.ContainerType) *MetaUpdate {
+	if v != nil {
+		_u.SetContainerType(*v)
 	}
-	return mu
+	return _u
 }
 
 // SetThumbnailIndex sets the "thumbnail_index" field.
-func (mu *MetaUpdate) SetThumbnailIndex(i int) *MetaUpdate {
-	mu.mutation.ResetThumbnailIndex()
-	mu.mutation.SetThumbnailIndex(i)
-	return mu
+func (_u *MetaUpdate) SetThumbnailIndex(v int) *MetaUpdate {
+	_u.mutation.ResetThumbnailIndex()
+	_u.mutation.SetThumbnailIndex(v)
+	return _u
 }
 
 // SetNillableThumbnailIndex sets the "thumbnail_index" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableThumbnailIndex(i *int) *MetaUpdate {
-	if i != nil {
-		mu.SetThumbnailIndex(*i)
+func (_u *MetaUpdate) SetNillableThumbnailIndex(v *int) *MetaUpdate {
+	if v != nil {
+		_u.SetThumbnailIndex(*v)
 	}
-	return mu
+	return _u
 }
 
-// AddThumbnailIndex adds i to the "thumbnail_index" field.
-func (mu *MetaUpdate) AddThumbnailIndex(i int) *MetaUpdate {
-	mu.mutation.AddThumbnailIndex(i)
-	return mu
+// AddThumbnailIndex adds value to the "thumbnail_index" field.
+func (_u *MetaUpdate) AddThumbnailIndex(v int) *MetaUpdate {
+	_u.mutation.AddThumbnailIndex(v)
+	return _u
 }
 
 // ClearThumbnailIndex clears the value of the "thumbnail_index" field.
-func (mu *MetaUpdate) ClearThumbnailIndex() *MetaUpdate {
-	mu.mutation.ClearThumbnailIndex()
-	return mu
+func (_u *MetaUpdate) ClearThumbnailIndex() *MetaUpdate {
+	_u.mutation.ClearThumbnailIndex()
+	return _u
 }
 
 // SetThumbnailX sets the "thumbnail_x" field.
-func (mu *MetaUpdate) SetThumbnailX(i int) *MetaUpdate {
-	mu.mutation.ResetThumbnailX()
-	mu.mutation.SetThumbnailX(i)
-	return mu
+func (_u *MetaUpdate) SetThumbnailX(v int) *MetaUpdate {
+	_u.mutation.ResetThumbnailX()
+	_u.mutation.SetThumbnailX(v)
+	return _u
 }
 
 // SetNillableThumbnailX sets the "thumbnail_x" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableThumbnailX(i *int) *MetaUpdate {
-	if i != nil {
-		mu.SetThumbnailX(*i)
+func (_u *MetaUpdate) SetNillableThumbnailX(v *int) *MetaUpdate {
+	if v != nil {
+		_u.SetThumbnailX(*v)
 	}
-	return mu
+	return _u
 }
 
-// AddThumbnailX adds i to the "thumbnail_x" field.
-func (mu *MetaUpdate) AddThumbnailX(i int) *MetaUpdate {
-	mu.mutation.AddThumbnailX(i)
-	return mu
+// AddThumbnailX adds value to the "thumbnail_x" field.
+func (_u *MetaUpdate) AddThumbnailX(v int) *MetaUpdate {
+	_u.mutation.AddThumbnailX(v)
+	return _u
 }
 
 // ClearThumbnailX clears the value of the "thumbnail_x" field.
-func (mu *MetaUpdate) ClearThumbnailX() *MetaUpdate {
-	mu.mutation.ClearThumbnailX()
-	return mu
+func (_u *MetaUpdate) ClearThumbnailX() *MetaUpdate {
+	_u.mutation.ClearThumbnailX()
+	return _u
 }
 
 // SetThumbnailY sets the "thumbnail_y" field.
-func (mu *MetaUpdate) SetThumbnailY(i int) *MetaUpdate {
-	mu.mutation.ResetThumbnailY()
-	mu.mutation.SetThumbnailY(i)
-	return mu
+func (_u *MetaUpdate) SetThumbnailY(v int) *MetaUpdate {
+	_u.mutation.ResetThumbnailY()
+	_u.mutation.SetThumbnailY(v)
+	return _u
 }
 
 // SetNillableThumbnailY sets the "thumbnail_y" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableThumbnailY(i *int) *MetaUpdate {
-	if i != nil {
-		mu.SetThumbnailY(*i)
+func (_u *MetaUpdate) SetNillableThumbnailY(v *int) *MetaUpdate {
+	if v != nil {
+		_u.SetThumbnailY(*v)
 	}
-	return mu
+	return _u
 }
 
-// AddThumbnailY adds i to the "thumbnail_y" field.
-func (mu *MetaUpdate) AddThumbnailY(i int) *MetaUpdate {
-	mu.mutation.AddThumbnailY(i)
-	return mu
+// AddThumbnailY adds value to the "thumbnail_y" field.
+func (_u *MetaUpdate) AddThumbnailY(v int) *MetaUpdate {
+	_u.mutation.AddThumbnailY(v)
+	return _u
 }
 
 // ClearThumbnailY clears the value of the "thumbnail_y" field.
-func (mu *MetaUpdate) ClearThumbnailY() *MetaUpdate {
-	mu.mutation.ClearThumbnailY()
-	return mu
+func (_u *MetaUpdate) ClearThumbnailY() *MetaUpdate {
+	_u.mutation.ClearThumbnailY()
+	return _u
 }
 
 // SetThumbnailWidth sets the "thumbnail_width" field.
-func (mu *MetaUpdate) SetThumbnailWidth(i int) *MetaUpdate {
-	mu.mutation.ResetThumbnailWidth()
-	mu.mutation.SetThumbnailWidth(i)
-	return mu
+func (_u *MetaUpdate) SetThumbnailWidth(v int) *MetaUpdate {
+	_u.mutation.ResetThumbnailWidth()
+	_u.mutation.SetThumbnailWidth(v)
+	return _u
 }
 
 // SetNillableThumbnailWidth sets the "thumbnail_width" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableThumbnailWidth(i *int) *MetaUpdate {
-	if i != nil {
-		mu.SetThumbnailWidth(*i)
+func (_u *MetaUpdate) SetNillableThumbnailWidth(v *int) *MetaUpdate {
+	if v != nil {
+		_u.SetThumbnailWidth(*v)
 	}
-	return mu
+	return _u
 }
 
-// AddThumbnailWidth adds i to the "thumbnail_width" field.
-func (mu *MetaUpdate) AddThumbnailWidth(i int) *MetaUpdate {
-	mu.mutation.AddThumbnailWidth(i)
-	return mu
+// AddThumbnailWidth adds value to the "thumbnail_width" field.
+func (_u *MetaUpdate) AddThumbnailWidth(v int) *MetaUpdate {
+	_u.mutation.AddThumbnailWidth(v)
+	return _u
 }
 
 // ClearThumbnailWidth clears the value of the "thumbnail_width" field.
-func (mu *MetaUpdate) ClearThumbnailWidth() *MetaUpdate {
-	mu.mutation.ClearThumbnailWidth()
-	return mu
+func (_u *MetaUpdate) ClearThumbnailWidth() *MetaUpdate {
+	_u.mutation.ClearThumbnailWidth()
+	return _u
 }
 
 // SetThumbnailHeight sets the "thumbnail_height" field.
-func (mu *MetaUpdate) SetThumbnailHeight(i int) *MetaUpdate {
-	mu.mutation.ResetThumbnailHeight()
-	mu.mutation.SetThumbnailHeight(i)
-	return mu
+func (_u *MetaUpdate) SetThumbnailHeight(v int) *MetaUpdate {
+	_u.mutation.ResetThumbnailHeight()
+	_u.mutation.SetThumbnailHeight(v)
+	return _u
 }
 
 // SetNillableThumbnailHeight sets the "thumbnail_height" field if the given value is not nil.
-func (mu *MetaUpdate) SetNillableThumbnailHeight(i *int) *MetaUpdate {
-	if i != nil {
-		mu.SetThumbnailHeight(*i)
+func (_u *MetaUpdate) SetNillableThumbnailHeight(v *int) *MetaUpdate {
+	if v != nil {
+		_u.SetThumbnailHeight(*v)
 	}
-	return mu
+	return _u
 }
 
-// AddThumbnailHeight adds i to the "thumbnail_height" field.
-func (mu *MetaUpdate) AddThumbnailHeight(i int) *MetaUpdate {
-	mu.mutation.AddThumbnailHeight(i)
-	return mu
+// AddThumbnailHeight adds value to the "thumbnail_height" field.
+func (_u *MetaUpdate) AddThumbnailHeight(v int) *MetaUpdate {
+	_u.mutation.AddThumbnailHeight(v)
+	return _u
 }
 
 // ClearThumbnailHeight clears the value of the "thumbnail_height" field.
-func (mu *MetaUpdate) ClearThumbnailHeight() *MetaUpdate {
-	mu.mutation.ClearThumbnailHeight()
-	return mu
+func (_u *MetaUpdate) ClearThumbnailHeight() *MetaUpdate {
+	_u.mutation.ClearThumbnailHeight()
+	return _u
 }
 
 // AddTagIDs adds the "tags" edge to the Tag entity by IDs.
-func (mu *MetaUpdate) AddTagIDs(ids ...int) *MetaUpdate {
-	mu.mutation.AddTagIDs(ids...)
-	return mu
+func (_u *MetaUpdate) AddTagIDs(ids ...int) *MetaUpdate {
+	_u.mutation.AddTagIDs(ids...)
+	return _u
 }
 
 // AddTags adds the "tags" edges to the Tag entity.
-func (mu *MetaUpdate) AddTags(t ...*Tag) *MetaUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+func (_u *MetaUpdate) AddTags(v ...*Tag) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.AddTagIDs(ids...)
+	return _u.AddTagIDs(ids...)
 }
 
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
-func (mu *MetaUpdate) AddHistoryIDs(ids ...int) *MetaUpdate {
-	mu.mutation.AddHistoryIDs(ids...)
-	return mu
+func (_u *MetaUpdate) AddHistoryIDs(ids ...int) *MetaUpdate {
+	_u.mutation.AddHistoryIDs(ids...)
+	return _u
 }
 
 // AddHistories adds the "histories" edges to the History entity.
-func (mu *MetaUpdate) AddHistories(h ...*History) *MetaUpdate {
-	ids := make([]int, len(h))
-	for i := range h {
-		ids[i] = h[i].ID
+func (_u *MetaUpdate) AddHistories(v ...*History) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.AddHistoryIDs(ids...)
+	return _u.AddHistoryIDs(ids...)
 }
 
 // AddFavoriteOfUserIDs adds the "favorite_of_user" edge to the User entity by IDs.
-func (mu *MetaUpdate) AddFavoriteOfUserIDs(ids ...int) *MetaUpdate {
-	mu.mutation.AddFavoriteOfUserIDs(ids...)
-	return mu
+func (_u *MetaUpdate) AddFavoriteOfUserIDs(ids ...int) *MetaUpdate {
+	_u.mutation.AddFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // AddFavoriteOfUser adds the "favorite_of_user" edges to the User entity.
-func (mu *MetaUpdate) AddFavoriteOfUser(u ...*User) *MetaUpdate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *MetaUpdate) AddFavoriteOfUser(v ...*User) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.AddFavoriteOfUserIDs(ids...)
+	return _u.AddFavoriteOfUserIDs(ids...)
 }
 
 // AddProgresIDs adds the "progress" edge to the Progress entity by IDs.
-func (mu *MetaUpdate) AddProgresIDs(ids ...int) *MetaUpdate {
-	mu.mutation.AddProgresIDs(ids...)
-	return mu
+func (_u *MetaUpdate) AddProgresIDs(ids ...int) *MetaUpdate {
+	_u.mutation.AddProgresIDs(ids...)
+	return _u
 }
 
 // AddProgress adds the "progress" edges to the Progress entity.
-func (mu *MetaUpdate) AddProgress(p ...*Progress) *MetaUpdate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *MetaUpdate) AddProgress(v ...*Progress) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.AddProgresIDs(ids...)
+	return _u.AddProgresIDs(ids...)
 }
 
 // Mutation returns the MetaMutation object of the builder.
-func (mu *MetaUpdate) Mutation() *MetaMutation {
-	return mu.mutation
+func (_u *MetaUpdate) Mutation() *MetaMutation {
+	return _u.mutation
 }
 
 // ClearTags clears all "tags" edges to the Tag entity.
-func (mu *MetaUpdate) ClearTags() *MetaUpdate {
-	mu.mutation.ClearTags()
-	return mu
+func (_u *MetaUpdate) ClearTags() *MetaUpdate {
+	_u.mutation.ClearTags()
+	return _u
 }
 
 // RemoveTagIDs removes the "tags" edge to Tag entities by IDs.
-func (mu *MetaUpdate) RemoveTagIDs(ids ...int) *MetaUpdate {
-	mu.mutation.RemoveTagIDs(ids...)
-	return mu
+func (_u *MetaUpdate) RemoveTagIDs(ids ...int) *MetaUpdate {
+	_u.mutation.RemoveTagIDs(ids...)
+	return _u
 }
 
 // RemoveTags removes "tags" edges to Tag entities.
-func (mu *MetaUpdate) RemoveTags(t ...*Tag) *MetaUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+func (_u *MetaUpdate) RemoveTags(v ...*Tag) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.RemoveTagIDs(ids...)
+	return _u.RemoveTagIDs(ids...)
 }
 
 // ClearHistories clears all "histories" edges to the History entity.
-func (mu *MetaUpdate) ClearHistories() *MetaUpdate {
-	mu.mutation.ClearHistories()
-	return mu
+func (_u *MetaUpdate) ClearHistories() *MetaUpdate {
+	_u.mutation.ClearHistories()
+	return _u
 }
 
 // RemoveHistoryIDs removes the "histories" edge to History entities by IDs.
-func (mu *MetaUpdate) RemoveHistoryIDs(ids ...int) *MetaUpdate {
-	mu.mutation.RemoveHistoryIDs(ids...)
-	return mu
+func (_u *MetaUpdate) RemoveHistoryIDs(ids ...int) *MetaUpdate {
+	_u.mutation.RemoveHistoryIDs(ids...)
+	return _u
 }
 
 // RemoveHistories removes "histories" edges to History entities.
-func (mu *MetaUpdate) RemoveHistories(h ...*History) *MetaUpdate {
-	ids := make([]int, len(h))
-	for i := range h {
-		ids[i] = h[i].ID
+func (_u *MetaUpdate) RemoveHistories(v ...*History) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.RemoveHistoryIDs(ids...)
+	return _u.RemoveHistoryIDs(ids...)
 }
 
 // ClearFavoriteOfUser clears all "favorite_of_user" edges to the User entity.
-func (mu *MetaUpdate) ClearFavoriteOfUser() *MetaUpdate {
-	mu.mutation.ClearFavoriteOfUser()
-	return mu
+func (_u *MetaUpdate) ClearFavoriteOfUser() *MetaUpdate {
+	_u.mutation.ClearFavoriteOfUser()
+	return _u
 }
 
 // RemoveFavoriteOfUserIDs removes the "favorite_of_user" edge to User entities by IDs.
-func (mu *MetaUpdate) RemoveFavoriteOfUserIDs(ids ...int) *MetaUpdate {
-	mu.mutation.RemoveFavoriteOfUserIDs(ids...)
-	return mu
+func (_u *MetaUpdate) RemoveFavoriteOfUserIDs(ids ...int) *MetaUpdate {
+	_u.mutation.RemoveFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // RemoveFavoriteOfUser removes "favorite_of_user" edges to User entities.
-func (mu *MetaUpdate) RemoveFavoriteOfUser(u ...*User) *MetaUpdate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *MetaUpdate) RemoveFavoriteOfUser(v ...*User) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.RemoveFavoriteOfUserIDs(ids...)
+	return _u.RemoveFavoriteOfUserIDs(ids...)
 }
 
 // ClearProgress clears all "progress" edges to the Progress entity.
-func (mu *MetaUpdate) ClearProgress() *MetaUpdate {
-	mu.mutation.ClearProgress()
-	return mu
+func (_u *MetaUpdate) ClearProgress() *MetaUpdate {
+	_u.mutation.ClearProgress()
+	return _u
 }
 
 // RemoveProgresIDs removes the "progress" edge to Progress entities by IDs.
-func (mu *MetaUpdate) RemoveProgresIDs(ids ...int) *MetaUpdate {
-	mu.mutation.RemoveProgresIDs(ids...)
-	return mu
+func (_u *MetaUpdate) RemoveProgresIDs(ids ...int) *MetaUpdate {
+	_u.mutation.RemoveProgresIDs(ids...)
+	return _u
 }
 
 // RemoveProgress removes "progress" edges to Progress entities.
-func (mu *MetaUpdate) RemoveProgress(p ...*Progress) *MetaUpdate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *MetaUpdate) RemoveProgress(v ...*Progress) *MetaUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return mu.RemoveProgresIDs(ids...)
+	return _u.RemoveProgresIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (mu *MetaUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, mu.sqlSave, mu.mutation, mu.hooks)
+func (_u *MetaUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (mu *MetaUpdate) SaveX(ctx context.Context) int {
-	affected, err := mu.Save(ctx)
+func (_u *MetaUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -442,26 +442,26 @@ func (mu *MetaUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (mu *MetaUpdate) Exec(ctx context.Context) error {
-	_, err := mu.Save(ctx)
+func (_u *MetaUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (mu *MetaUpdate) ExecX(ctx context.Context) {
-	if err := mu.Exec(ctx); err != nil {
+func (_u *MetaUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (mu *MetaUpdate) check() error {
-	if v, ok := mu.mutation.Name(); ok {
+func (_u *MetaUpdate) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := meta.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Meta.name": %w`, err)}
 		}
 	}
-	if v, ok := mu.mutation.ContainerType(); ok {
+	if v, ok := _u.mutation.ContainerType(); ok {
 		if err := meta.ContainerTypeValidator(v); err != nil {
 			return &ValidationError{Name: "container_type", err: fmt.Errorf(`ent: validator failed for field "Meta.container_type": %w`, err)}
 		}
@@ -469,93 +469,93 @@ func (mu *MetaUpdate) check() error {
 	return nil
 }
 
-func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := mu.check(); err != nil {
-		return n, err
+func (_u *MetaUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(meta.Table, meta.Columns, sqlgraph.NewFieldSpec(meta.FieldID, field.TypeInt))
-	if ps := mu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := mu.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(meta.FieldName, field.TypeString, value)
 	}
-	if value, ok := mu.mutation.CreateTime(); ok {
+	if value, ok := _u.mutation.CreateTime(); ok {
 		_spec.SetField(meta.FieldCreateTime, field.TypeTime, value)
 	}
-	if value, ok := mu.mutation.Favorite(); ok {
+	if value, ok := _u.mutation.Favorite(); ok {
 		_spec.SetField(meta.FieldFavorite, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.FileIndices(); ok {
+	if value, ok := _u.mutation.FileIndices(); ok {
 		_spec.SetField(meta.FieldFileIndices, field.TypeJSON, value)
 	}
-	if value, ok := mu.mutation.AppendedFileIndices(); ok {
+	if value, ok := _u.mutation.AppendedFileIndices(); ok {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, meta.FieldFileIndices, value)
 		})
 	}
-	if value, ok := mu.mutation.Read(); ok {
+	if value, ok := _u.mutation.Read(); ok {
 		_spec.SetField(meta.FieldRead, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.Active(); ok {
+	if value, ok := _u.mutation.Active(); ok {
 		_spec.SetField(meta.FieldActive, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.Hidden(); ok {
+	if value, ok := _u.mutation.Hidden(); ok {
 		_spec.SetField(meta.FieldHidden, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.ContainerType(); ok {
+	if value, ok := _u.mutation.ContainerType(); ok {
 		_spec.SetField(meta.FieldContainerType, field.TypeEnum, value)
 	}
-	if value, ok := mu.mutation.ThumbnailIndex(); ok {
+	if value, ok := _u.mutation.ThumbnailIndex(); ok {
 		_spec.SetField(meta.FieldThumbnailIndex, field.TypeInt, value)
 	}
-	if value, ok := mu.mutation.AddedThumbnailIndex(); ok {
+	if value, ok := _u.mutation.AddedThumbnailIndex(); ok {
 		_spec.AddField(meta.FieldThumbnailIndex, field.TypeInt, value)
 	}
-	if mu.mutation.ThumbnailIndexCleared() {
+	if _u.mutation.ThumbnailIndexCleared() {
 		_spec.ClearField(meta.FieldThumbnailIndex, field.TypeInt)
 	}
-	if value, ok := mu.mutation.ThumbnailX(); ok {
+	if value, ok := _u.mutation.ThumbnailX(); ok {
 		_spec.SetField(meta.FieldThumbnailX, field.TypeInt, value)
 	}
-	if value, ok := mu.mutation.AddedThumbnailX(); ok {
+	if value, ok := _u.mutation.AddedThumbnailX(); ok {
 		_spec.AddField(meta.FieldThumbnailX, field.TypeInt, value)
 	}
-	if mu.mutation.ThumbnailXCleared() {
+	if _u.mutation.ThumbnailXCleared() {
 		_spec.ClearField(meta.FieldThumbnailX, field.TypeInt)
 	}
-	if value, ok := mu.mutation.ThumbnailY(); ok {
+	if value, ok := _u.mutation.ThumbnailY(); ok {
 		_spec.SetField(meta.FieldThumbnailY, field.TypeInt, value)
 	}
-	if value, ok := mu.mutation.AddedThumbnailY(); ok {
+	if value, ok := _u.mutation.AddedThumbnailY(); ok {
 		_spec.AddField(meta.FieldThumbnailY, field.TypeInt, value)
 	}
-	if mu.mutation.ThumbnailYCleared() {
+	if _u.mutation.ThumbnailYCleared() {
 		_spec.ClearField(meta.FieldThumbnailY, field.TypeInt)
 	}
-	if value, ok := mu.mutation.ThumbnailWidth(); ok {
+	if value, ok := _u.mutation.ThumbnailWidth(); ok {
 		_spec.SetField(meta.FieldThumbnailWidth, field.TypeInt, value)
 	}
-	if value, ok := mu.mutation.AddedThumbnailWidth(); ok {
+	if value, ok := _u.mutation.AddedThumbnailWidth(); ok {
 		_spec.AddField(meta.FieldThumbnailWidth, field.TypeInt, value)
 	}
-	if mu.mutation.ThumbnailWidthCleared() {
+	if _u.mutation.ThumbnailWidthCleared() {
 		_spec.ClearField(meta.FieldThumbnailWidth, field.TypeInt)
 	}
-	if value, ok := mu.mutation.ThumbnailHeight(); ok {
+	if value, ok := _u.mutation.ThumbnailHeight(); ok {
 		_spec.SetField(meta.FieldThumbnailHeight, field.TypeInt, value)
 	}
-	if value, ok := mu.mutation.AddedThumbnailHeight(); ok {
+	if value, ok := _u.mutation.AddedThumbnailHeight(); ok {
 		_spec.AddField(meta.FieldThumbnailHeight, field.TypeInt, value)
 	}
-	if mu.mutation.ThumbnailHeightCleared() {
+	if _u.mutation.ThumbnailHeightCleared() {
 		_spec.ClearField(meta.FieldThumbnailHeight, field.TypeInt)
 	}
-	if mu.mutation.TagsCleared() {
+	if _u.mutation.TagsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -568,23 +568,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.RemovedTagsIDs(); len(nodes) > 0 && !mu.mutation.TagsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   meta.TagsTable,
-			Columns: meta.TagsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := mu.mutation.TagsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RemovedTagsIDs(); len(nodes) > 0 && !_u.mutation.TagsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -598,9 +582,25 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.TagsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   meta.TagsTable,
+			Columns: meta.TagsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if mu.mutation.HistoriesCleared() {
+	if _u.mutation.HistoriesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -613,7 +613,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.RemovedHistoriesIDs(); len(nodes) > 0 && !mu.mutation.HistoriesCleared() {
+	if nodes := _u.mutation.RemovedHistoriesIDs(); len(nodes) > 0 && !_u.mutation.HistoriesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -629,7 +629,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.HistoriesIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.HistoriesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -645,7 +645,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if mu.mutation.FavoriteOfUserCleared() {
+	if _u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -658,7 +658,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !mu.mutation.FavoriteOfUserCleared() {
+	if nodes := _u.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !_u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -674,7 +674,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -690,7 +690,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if mu.mutation.ProgressCleared() {
+	if _u.mutation.ProgressCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -703,7 +703,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.RemovedProgressIDs(); len(nodes) > 0 && !mu.mutation.ProgressCleared() {
+	if nodes := _u.mutation.RemovedProgressIDs(); len(nodes) > 0 && !_u.mutation.ProgressCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -719,7 +719,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.ProgressIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ProgressIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -735,7 +735,7 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{meta.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -743,8 +743,8 @@ func (mu *MetaUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	mu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // MetaUpdateOne is the builder for updating a single Meta entity.
@@ -756,420 +756,420 @@ type MetaUpdateOne struct {
 }
 
 // SetName sets the "name" field.
-func (muo *MetaUpdateOne) SetName(s string) *MetaUpdateOne {
-	muo.mutation.SetName(s)
-	return muo
+func (_u *MetaUpdateOne) SetName(v string) *MetaUpdateOne {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableName(s *string) *MetaUpdateOne {
-	if s != nil {
-		muo.SetName(*s)
+func (_u *MetaUpdateOne) SetNillableName(v *string) *MetaUpdateOne {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetCreateTime sets the "create_time" field.
-func (muo *MetaUpdateOne) SetCreateTime(t time.Time) *MetaUpdateOne {
-	muo.mutation.SetCreateTime(t)
-	return muo
+func (_u *MetaUpdateOne) SetCreateTime(v time.Time) *MetaUpdateOne {
+	_u.mutation.SetCreateTime(v)
+	return _u
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableCreateTime(t *time.Time) *MetaUpdateOne {
-	if t != nil {
-		muo.SetCreateTime(*t)
+func (_u *MetaUpdateOne) SetNillableCreateTime(v *time.Time) *MetaUpdateOne {
+	if v != nil {
+		_u.SetCreateTime(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetFavorite sets the "favorite" field.
-func (muo *MetaUpdateOne) SetFavorite(b bool) *MetaUpdateOne {
-	muo.mutation.SetFavorite(b)
-	return muo
+func (_u *MetaUpdateOne) SetFavorite(v bool) *MetaUpdateOne {
+	_u.mutation.SetFavorite(v)
+	return _u
 }
 
 // SetNillableFavorite sets the "favorite" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableFavorite(b *bool) *MetaUpdateOne {
-	if b != nil {
-		muo.SetFavorite(*b)
+func (_u *MetaUpdateOne) SetNillableFavorite(v *bool) *MetaUpdateOne {
+	if v != nil {
+		_u.SetFavorite(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetFileIndices sets the "file_indices" field.
-func (muo *MetaUpdateOne) SetFileIndices(i []int) *MetaUpdateOne {
-	muo.mutation.SetFileIndices(i)
-	return muo
+func (_u *MetaUpdateOne) SetFileIndices(v []int) *MetaUpdateOne {
+	_u.mutation.SetFileIndices(v)
+	return _u
 }
 
-// AppendFileIndices appends i to the "file_indices" field.
-func (muo *MetaUpdateOne) AppendFileIndices(i []int) *MetaUpdateOne {
-	muo.mutation.AppendFileIndices(i)
-	return muo
+// AppendFileIndices appends value to the "file_indices" field.
+func (_u *MetaUpdateOne) AppendFileIndices(v []int) *MetaUpdateOne {
+	_u.mutation.AppendFileIndices(v)
+	return _u
 }
 
 // SetRead sets the "read" field.
-func (muo *MetaUpdateOne) SetRead(b bool) *MetaUpdateOne {
-	muo.mutation.SetRead(b)
-	return muo
+func (_u *MetaUpdateOne) SetRead(v bool) *MetaUpdateOne {
+	_u.mutation.SetRead(v)
+	return _u
 }
 
 // SetNillableRead sets the "read" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableRead(b *bool) *MetaUpdateOne {
-	if b != nil {
-		muo.SetRead(*b)
+func (_u *MetaUpdateOne) SetNillableRead(v *bool) *MetaUpdateOne {
+	if v != nil {
+		_u.SetRead(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetActive sets the "active" field.
-func (muo *MetaUpdateOne) SetActive(b bool) *MetaUpdateOne {
-	muo.mutation.SetActive(b)
-	return muo
+func (_u *MetaUpdateOne) SetActive(v bool) *MetaUpdateOne {
+	_u.mutation.SetActive(v)
+	return _u
 }
 
 // SetNillableActive sets the "active" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableActive(b *bool) *MetaUpdateOne {
-	if b != nil {
-		muo.SetActive(*b)
+func (_u *MetaUpdateOne) SetNillableActive(v *bool) *MetaUpdateOne {
+	if v != nil {
+		_u.SetActive(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetHidden sets the "hidden" field.
-func (muo *MetaUpdateOne) SetHidden(b bool) *MetaUpdateOne {
-	muo.mutation.SetHidden(b)
-	return muo
+func (_u *MetaUpdateOne) SetHidden(v bool) *MetaUpdateOne {
+	_u.mutation.SetHidden(v)
+	return _u
 }
 
 // SetNillableHidden sets the "hidden" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableHidden(b *bool) *MetaUpdateOne {
-	if b != nil {
-		muo.SetHidden(*b)
+func (_u *MetaUpdateOne) SetNillableHidden(v *bool) *MetaUpdateOne {
+	if v != nil {
+		_u.SetHidden(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetContainerType sets the "container_type" field.
-func (muo *MetaUpdateOne) SetContainerType(mt meta.ContainerType) *MetaUpdateOne {
-	muo.mutation.SetContainerType(mt)
-	return muo
+func (_u *MetaUpdateOne) SetContainerType(v meta.ContainerType) *MetaUpdateOne {
+	_u.mutation.SetContainerType(v)
+	return _u
 }
 
 // SetNillableContainerType sets the "container_type" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableContainerType(mt *meta.ContainerType) *MetaUpdateOne {
-	if mt != nil {
-		muo.SetContainerType(*mt)
+func (_u *MetaUpdateOne) SetNillableContainerType(v *meta.ContainerType) *MetaUpdateOne {
+	if v != nil {
+		_u.SetContainerType(*v)
 	}
-	return muo
+	return _u
 }
 
 // SetThumbnailIndex sets the "thumbnail_index" field.
-func (muo *MetaUpdateOne) SetThumbnailIndex(i int) *MetaUpdateOne {
-	muo.mutation.ResetThumbnailIndex()
-	muo.mutation.SetThumbnailIndex(i)
-	return muo
+func (_u *MetaUpdateOne) SetThumbnailIndex(v int) *MetaUpdateOne {
+	_u.mutation.ResetThumbnailIndex()
+	_u.mutation.SetThumbnailIndex(v)
+	return _u
 }
 
 // SetNillableThumbnailIndex sets the "thumbnail_index" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableThumbnailIndex(i *int) *MetaUpdateOne {
-	if i != nil {
-		muo.SetThumbnailIndex(*i)
+func (_u *MetaUpdateOne) SetNillableThumbnailIndex(v *int) *MetaUpdateOne {
+	if v != nil {
+		_u.SetThumbnailIndex(*v)
 	}
-	return muo
+	return _u
 }
 
-// AddThumbnailIndex adds i to the "thumbnail_index" field.
-func (muo *MetaUpdateOne) AddThumbnailIndex(i int) *MetaUpdateOne {
-	muo.mutation.AddThumbnailIndex(i)
-	return muo
+// AddThumbnailIndex adds value to the "thumbnail_index" field.
+func (_u *MetaUpdateOne) AddThumbnailIndex(v int) *MetaUpdateOne {
+	_u.mutation.AddThumbnailIndex(v)
+	return _u
 }
 
 // ClearThumbnailIndex clears the value of the "thumbnail_index" field.
-func (muo *MetaUpdateOne) ClearThumbnailIndex() *MetaUpdateOne {
-	muo.mutation.ClearThumbnailIndex()
-	return muo
+func (_u *MetaUpdateOne) ClearThumbnailIndex() *MetaUpdateOne {
+	_u.mutation.ClearThumbnailIndex()
+	return _u
 }
 
 // SetThumbnailX sets the "thumbnail_x" field.
-func (muo *MetaUpdateOne) SetThumbnailX(i int) *MetaUpdateOne {
-	muo.mutation.ResetThumbnailX()
-	muo.mutation.SetThumbnailX(i)
-	return muo
+func (_u *MetaUpdateOne) SetThumbnailX(v int) *MetaUpdateOne {
+	_u.mutation.ResetThumbnailX()
+	_u.mutation.SetThumbnailX(v)
+	return _u
 }
 
 // SetNillableThumbnailX sets the "thumbnail_x" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableThumbnailX(i *int) *MetaUpdateOne {
-	if i != nil {
-		muo.SetThumbnailX(*i)
+func (_u *MetaUpdateOne) SetNillableThumbnailX(v *int) *MetaUpdateOne {
+	if v != nil {
+		_u.SetThumbnailX(*v)
 	}
-	return muo
+	return _u
 }
 
-// AddThumbnailX adds i to the "thumbnail_x" field.
-func (muo *MetaUpdateOne) AddThumbnailX(i int) *MetaUpdateOne {
-	muo.mutation.AddThumbnailX(i)
-	return muo
+// AddThumbnailX adds value to the "thumbnail_x" field.
+func (_u *MetaUpdateOne) AddThumbnailX(v int) *MetaUpdateOne {
+	_u.mutation.AddThumbnailX(v)
+	return _u
 }
 
 // ClearThumbnailX clears the value of the "thumbnail_x" field.
-func (muo *MetaUpdateOne) ClearThumbnailX() *MetaUpdateOne {
-	muo.mutation.ClearThumbnailX()
-	return muo
+func (_u *MetaUpdateOne) ClearThumbnailX() *MetaUpdateOne {
+	_u.mutation.ClearThumbnailX()
+	return _u
 }
 
 // SetThumbnailY sets the "thumbnail_y" field.
-func (muo *MetaUpdateOne) SetThumbnailY(i int) *MetaUpdateOne {
-	muo.mutation.ResetThumbnailY()
-	muo.mutation.SetThumbnailY(i)
-	return muo
+func (_u *MetaUpdateOne) SetThumbnailY(v int) *MetaUpdateOne {
+	_u.mutation.ResetThumbnailY()
+	_u.mutation.SetThumbnailY(v)
+	return _u
 }
 
 // SetNillableThumbnailY sets the "thumbnail_y" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableThumbnailY(i *int) *MetaUpdateOne {
-	if i != nil {
-		muo.SetThumbnailY(*i)
+func (_u *MetaUpdateOne) SetNillableThumbnailY(v *int) *MetaUpdateOne {
+	if v != nil {
+		_u.SetThumbnailY(*v)
 	}
-	return muo
+	return _u
 }
 
-// AddThumbnailY adds i to the "thumbnail_y" field.
-func (muo *MetaUpdateOne) AddThumbnailY(i int) *MetaUpdateOne {
-	muo.mutation.AddThumbnailY(i)
-	return muo
+// AddThumbnailY adds value to the "thumbnail_y" field.
+func (_u *MetaUpdateOne) AddThumbnailY(v int) *MetaUpdateOne {
+	_u.mutation.AddThumbnailY(v)
+	return _u
 }
 
 // ClearThumbnailY clears the value of the "thumbnail_y" field.
-func (muo *MetaUpdateOne) ClearThumbnailY() *MetaUpdateOne {
-	muo.mutation.ClearThumbnailY()
-	return muo
+func (_u *MetaUpdateOne) ClearThumbnailY() *MetaUpdateOne {
+	_u.mutation.ClearThumbnailY()
+	return _u
 }
 
 // SetThumbnailWidth sets the "thumbnail_width" field.
-func (muo *MetaUpdateOne) SetThumbnailWidth(i int) *MetaUpdateOne {
-	muo.mutation.ResetThumbnailWidth()
-	muo.mutation.SetThumbnailWidth(i)
-	return muo
+func (_u *MetaUpdateOne) SetThumbnailWidth(v int) *MetaUpdateOne {
+	_u.mutation.ResetThumbnailWidth()
+	_u.mutation.SetThumbnailWidth(v)
+	return _u
 }
 
 // SetNillableThumbnailWidth sets the "thumbnail_width" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableThumbnailWidth(i *int) *MetaUpdateOne {
-	if i != nil {
-		muo.SetThumbnailWidth(*i)
+func (_u *MetaUpdateOne) SetNillableThumbnailWidth(v *int) *MetaUpdateOne {
+	if v != nil {
+		_u.SetThumbnailWidth(*v)
 	}
-	return muo
+	return _u
 }
 
-// AddThumbnailWidth adds i to the "thumbnail_width" field.
-func (muo *MetaUpdateOne) AddThumbnailWidth(i int) *MetaUpdateOne {
-	muo.mutation.AddThumbnailWidth(i)
-	return muo
+// AddThumbnailWidth adds value to the "thumbnail_width" field.
+func (_u *MetaUpdateOne) AddThumbnailWidth(v int) *MetaUpdateOne {
+	_u.mutation.AddThumbnailWidth(v)
+	return _u
 }
 
 // ClearThumbnailWidth clears the value of the "thumbnail_width" field.
-func (muo *MetaUpdateOne) ClearThumbnailWidth() *MetaUpdateOne {
-	muo.mutation.ClearThumbnailWidth()
-	return muo
+func (_u *MetaUpdateOne) ClearThumbnailWidth() *MetaUpdateOne {
+	_u.mutation.ClearThumbnailWidth()
+	return _u
 }
 
 // SetThumbnailHeight sets the "thumbnail_height" field.
-func (muo *MetaUpdateOne) SetThumbnailHeight(i int) *MetaUpdateOne {
-	muo.mutation.ResetThumbnailHeight()
-	muo.mutation.SetThumbnailHeight(i)
-	return muo
+func (_u *MetaUpdateOne) SetThumbnailHeight(v int) *MetaUpdateOne {
+	_u.mutation.ResetThumbnailHeight()
+	_u.mutation.SetThumbnailHeight(v)
+	return _u
 }
 
 // SetNillableThumbnailHeight sets the "thumbnail_height" field if the given value is not nil.
-func (muo *MetaUpdateOne) SetNillableThumbnailHeight(i *int) *MetaUpdateOne {
-	if i != nil {
-		muo.SetThumbnailHeight(*i)
+func (_u *MetaUpdateOne) SetNillableThumbnailHeight(v *int) *MetaUpdateOne {
+	if v != nil {
+		_u.SetThumbnailHeight(*v)
 	}
-	return muo
+	return _u
 }
 
-// AddThumbnailHeight adds i to the "thumbnail_height" field.
-func (muo *MetaUpdateOne) AddThumbnailHeight(i int) *MetaUpdateOne {
-	muo.mutation.AddThumbnailHeight(i)
-	return muo
+// AddThumbnailHeight adds value to the "thumbnail_height" field.
+func (_u *MetaUpdateOne) AddThumbnailHeight(v int) *MetaUpdateOne {
+	_u.mutation.AddThumbnailHeight(v)
+	return _u
 }
 
 // ClearThumbnailHeight clears the value of the "thumbnail_height" field.
-func (muo *MetaUpdateOne) ClearThumbnailHeight() *MetaUpdateOne {
-	muo.mutation.ClearThumbnailHeight()
-	return muo
+func (_u *MetaUpdateOne) ClearThumbnailHeight() *MetaUpdateOne {
+	_u.mutation.ClearThumbnailHeight()
+	return _u
 }
 
 // AddTagIDs adds the "tags" edge to the Tag entity by IDs.
-func (muo *MetaUpdateOne) AddTagIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.AddTagIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) AddTagIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.AddTagIDs(ids...)
+	return _u
 }
 
 // AddTags adds the "tags" edges to the Tag entity.
-func (muo *MetaUpdateOne) AddTags(t ...*Tag) *MetaUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+func (_u *MetaUpdateOne) AddTags(v ...*Tag) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.AddTagIDs(ids...)
+	return _u.AddTagIDs(ids...)
 }
 
 // AddHistoryIDs adds the "histories" edge to the History entity by IDs.
-func (muo *MetaUpdateOne) AddHistoryIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.AddHistoryIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) AddHistoryIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.AddHistoryIDs(ids...)
+	return _u
 }
 
 // AddHistories adds the "histories" edges to the History entity.
-func (muo *MetaUpdateOne) AddHistories(h ...*History) *MetaUpdateOne {
-	ids := make([]int, len(h))
-	for i := range h {
-		ids[i] = h[i].ID
+func (_u *MetaUpdateOne) AddHistories(v ...*History) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.AddHistoryIDs(ids...)
+	return _u.AddHistoryIDs(ids...)
 }
 
 // AddFavoriteOfUserIDs adds the "favorite_of_user" edge to the User entity by IDs.
-func (muo *MetaUpdateOne) AddFavoriteOfUserIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.AddFavoriteOfUserIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) AddFavoriteOfUserIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.AddFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // AddFavoriteOfUser adds the "favorite_of_user" edges to the User entity.
-func (muo *MetaUpdateOne) AddFavoriteOfUser(u ...*User) *MetaUpdateOne {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *MetaUpdateOne) AddFavoriteOfUser(v ...*User) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.AddFavoriteOfUserIDs(ids...)
+	return _u.AddFavoriteOfUserIDs(ids...)
 }
 
 // AddProgresIDs adds the "progress" edge to the Progress entity by IDs.
-func (muo *MetaUpdateOne) AddProgresIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.AddProgresIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) AddProgresIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.AddProgresIDs(ids...)
+	return _u
 }
 
 // AddProgress adds the "progress" edges to the Progress entity.
-func (muo *MetaUpdateOne) AddProgress(p ...*Progress) *MetaUpdateOne {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *MetaUpdateOne) AddProgress(v ...*Progress) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.AddProgresIDs(ids...)
+	return _u.AddProgresIDs(ids...)
 }
 
 // Mutation returns the MetaMutation object of the builder.
-func (muo *MetaUpdateOne) Mutation() *MetaMutation {
-	return muo.mutation
+func (_u *MetaUpdateOne) Mutation() *MetaMutation {
+	return _u.mutation
 }
 
 // ClearTags clears all "tags" edges to the Tag entity.
-func (muo *MetaUpdateOne) ClearTags() *MetaUpdateOne {
-	muo.mutation.ClearTags()
-	return muo
+func (_u *MetaUpdateOne) ClearTags() *MetaUpdateOne {
+	_u.mutation.ClearTags()
+	return _u
 }
 
 // RemoveTagIDs removes the "tags" edge to Tag entities by IDs.
-func (muo *MetaUpdateOne) RemoveTagIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.RemoveTagIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) RemoveTagIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.RemoveTagIDs(ids...)
+	return _u
 }
 
 // RemoveTags removes "tags" edges to Tag entities.
-func (muo *MetaUpdateOne) RemoveTags(t ...*Tag) *MetaUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
+func (_u *MetaUpdateOne) RemoveTags(v ...*Tag) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.RemoveTagIDs(ids...)
+	return _u.RemoveTagIDs(ids...)
 }
 
 // ClearHistories clears all "histories" edges to the History entity.
-func (muo *MetaUpdateOne) ClearHistories() *MetaUpdateOne {
-	muo.mutation.ClearHistories()
-	return muo
+func (_u *MetaUpdateOne) ClearHistories() *MetaUpdateOne {
+	_u.mutation.ClearHistories()
+	return _u
 }
 
 // RemoveHistoryIDs removes the "histories" edge to History entities by IDs.
-func (muo *MetaUpdateOne) RemoveHistoryIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.RemoveHistoryIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) RemoveHistoryIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.RemoveHistoryIDs(ids...)
+	return _u
 }
 
 // RemoveHistories removes "histories" edges to History entities.
-func (muo *MetaUpdateOne) RemoveHistories(h ...*History) *MetaUpdateOne {
-	ids := make([]int, len(h))
-	for i := range h {
-		ids[i] = h[i].ID
+func (_u *MetaUpdateOne) RemoveHistories(v ...*History) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.RemoveHistoryIDs(ids...)
+	return _u.RemoveHistoryIDs(ids...)
 }
 
 // ClearFavoriteOfUser clears all "favorite_of_user" edges to the User entity.
-func (muo *MetaUpdateOne) ClearFavoriteOfUser() *MetaUpdateOne {
-	muo.mutation.ClearFavoriteOfUser()
-	return muo
+func (_u *MetaUpdateOne) ClearFavoriteOfUser() *MetaUpdateOne {
+	_u.mutation.ClearFavoriteOfUser()
+	return _u
 }
 
 // RemoveFavoriteOfUserIDs removes the "favorite_of_user" edge to User entities by IDs.
-func (muo *MetaUpdateOne) RemoveFavoriteOfUserIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.RemoveFavoriteOfUserIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) RemoveFavoriteOfUserIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.RemoveFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // RemoveFavoriteOfUser removes "favorite_of_user" edges to User entities.
-func (muo *MetaUpdateOne) RemoveFavoriteOfUser(u ...*User) *MetaUpdateOne {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *MetaUpdateOne) RemoveFavoriteOfUser(v ...*User) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.RemoveFavoriteOfUserIDs(ids...)
+	return _u.RemoveFavoriteOfUserIDs(ids...)
 }
 
 // ClearProgress clears all "progress" edges to the Progress entity.
-func (muo *MetaUpdateOne) ClearProgress() *MetaUpdateOne {
-	muo.mutation.ClearProgress()
-	return muo
+func (_u *MetaUpdateOne) ClearProgress() *MetaUpdateOne {
+	_u.mutation.ClearProgress()
+	return _u
 }
 
 // RemoveProgresIDs removes the "progress" edge to Progress entities by IDs.
-func (muo *MetaUpdateOne) RemoveProgresIDs(ids ...int) *MetaUpdateOne {
-	muo.mutation.RemoveProgresIDs(ids...)
-	return muo
+func (_u *MetaUpdateOne) RemoveProgresIDs(ids ...int) *MetaUpdateOne {
+	_u.mutation.RemoveProgresIDs(ids...)
+	return _u
 }
 
 // RemoveProgress removes "progress" edges to Progress entities.
-func (muo *MetaUpdateOne) RemoveProgress(p ...*Progress) *MetaUpdateOne {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *MetaUpdateOne) RemoveProgress(v ...*Progress) *MetaUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return muo.RemoveProgresIDs(ids...)
+	return _u.RemoveProgresIDs(ids...)
 }
 
 // Where appends a list predicates to the MetaUpdate builder.
-func (muo *MetaUpdateOne) Where(ps ...predicate.Meta) *MetaUpdateOne {
-	muo.mutation.Where(ps...)
-	return muo
+func (_u *MetaUpdateOne) Where(ps ...predicate.Meta) *MetaUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (muo *MetaUpdateOne) Select(field string, fields ...string) *MetaUpdateOne {
-	muo.fields = append([]string{field}, fields...)
-	return muo
+func (_u *MetaUpdateOne) Select(field string, fields ...string) *MetaUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Meta entity.
-func (muo *MetaUpdateOne) Save(ctx context.Context) (*Meta, error) {
-	return withHooks(ctx, muo.sqlSave, muo.mutation, muo.hooks)
+func (_u *MetaUpdateOne) Save(ctx context.Context) (*Meta, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (muo *MetaUpdateOne) SaveX(ctx context.Context) *Meta {
-	node, err := muo.Save(ctx)
+func (_u *MetaUpdateOne) SaveX(ctx context.Context) *Meta {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -1177,26 +1177,26 @@ func (muo *MetaUpdateOne) SaveX(ctx context.Context) *Meta {
 }
 
 // Exec executes the query on the entity.
-func (muo *MetaUpdateOne) Exec(ctx context.Context) error {
-	_, err := muo.Save(ctx)
+func (_u *MetaUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (muo *MetaUpdateOne) ExecX(ctx context.Context) {
-	if err := muo.Exec(ctx); err != nil {
+func (_u *MetaUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (muo *MetaUpdateOne) check() error {
-	if v, ok := muo.mutation.Name(); ok {
+func (_u *MetaUpdateOne) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := meta.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Meta.name": %w`, err)}
 		}
 	}
-	if v, ok := muo.mutation.ContainerType(); ok {
+	if v, ok := _u.mutation.ContainerType(); ok {
 		if err := meta.ContainerTypeValidator(v); err != nil {
 			return &ValidationError{Name: "container_type", err: fmt.Errorf(`ent: validator failed for field "Meta.container_type": %w`, err)}
 		}
@@ -1204,17 +1204,17 @@ func (muo *MetaUpdateOne) check() error {
 	return nil
 }
 
-func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) {
-	if err := muo.check(); err != nil {
+func (_u *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(meta.Table, meta.Columns, sqlgraph.NewFieldSpec(meta.FieldID, field.TypeInt))
-	id, ok := muo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Meta.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := muo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, meta.FieldID)
 		for _, f := range fields {
@@ -1226,88 +1226,88 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 			}
 		}
 	}
-	if ps := muo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := muo.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(meta.FieldName, field.TypeString, value)
 	}
-	if value, ok := muo.mutation.CreateTime(); ok {
+	if value, ok := _u.mutation.CreateTime(); ok {
 		_spec.SetField(meta.FieldCreateTime, field.TypeTime, value)
 	}
-	if value, ok := muo.mutation.Favorite(); ok {
+	if value, ok := _u.mutation.Favorite(); ok {
 		_spec.SetField(meta.FieldFavorite, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.FileIndices(); ok {
+	if value, ok := _u.mutation.FileIndices(); ok {
 		_spec.SetField(meta.FieldFileIndices, field.TypeJSON, value)
 	}
-	if value, ok := muo.mutation.AppendedFileIndices(); ok {
+	if value, ok := _u.mutation.AppendedFileIndices(); ok {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, meta.FieldFileIndices, value)
 		})
 	}
-	if value, ok := muo.mutation.Read(); ok {
+	if value, ok := _u.mutation.Read(); ok {
 		_spec.SetField(meta.FieldRead, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.Active(); ok {
+	if value, ok := _u.mutation.Active(); ok {
 		_spec.SetField(meta.FieldActive, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.Hidden(); ok {
+	if value, ok := _u.mutation.Hidden(); ok {
 		_spec.SetField(meta.FieldHidden, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.ContainerType(); ok {
+	if value, ok := _u.mutation.ContainerType(); ok {
 		_spec.SetField(meta.FieldContainerType, field.TypeEnum, value)
 	}
-	if value, ok := muo.mutation.ThumbnailIndex(); ok {
+	if value, ok := _u.mutation.ThumbnailIndex(); ok {
 		_spec.SetField(meta.FieldThumbnailIndex, field.TypeInt, value)
 	}
-	if value, ok := muo.mutation.AddedThumbnailIndex(); ok {
+	if value, ok := _u.mutation.AddedThumbnailIndex(); ok {
 		_spec.AddField(meta.FieldThumbnailIndex, field.TypeInt, value)
 	}
-	if muo.mutation.ThumbnailIndexCleared() {
+	if _u.mutation.ThumbnailIndexCleared() {
 		_spec.ClearField(meta.FieldThumbnailIndex, field.TypeInt)
 	}
-	if value, ok := muo.mutation.ThumbnailX(); ok {
+	if value, ok := _u.mutation.ThumbnailX(); ok {
 		_spec.SetField(meta.FieldThumbnailX, field.TypeInt, value)
 	}
-	if value, ok := muo.mutation.AddedThumbnailX(); ok {
+	if value, ok := _u.mutation.AddedThumbnailX(); ok {
 		_spec.AddField(meta.FieldThumbnailX, field.TypeInt, value)
 	}
-	if muo.mutation.ThumbnailXCleared() {
+	if _u.mutation.ThumbnailXCleared() {
 		_spec.ClearField(meta.FieldThumbnailX, field.TypeInt)
 	}
-	if value, ok := muo.mutation.ThumbnailY(); ok {
+	if value, ok := _u.mutation.ThumbnailY(); ok {
 		_spec.SetField(meta.FieldThumbnailY, field.TypeInt, value)
 	}
-	if value, ok := muo.mutation.AddedThumbnailY(); ok {
+	if value, ok := _u.mutation.AddedThumbnailY(); ok {
 		_spec.AddField(meta.FieldThumbnailY, field.TypeInt, value)
 	}
-	if muo.mutation.ThumbnailYCleared() {
+	if _u.mutation.ThumbnailYCleared() {
 		_spec.ClearField(meta.FieldThumbnailY, field.TypeInt)
 	}
-	if value, ok := muo.mutation.ThumbnailWidth(); ok {
+	if value, ok := _u.mutation.ThumbnailWidth(); ok {
 		_spec.SetField(meta.FieldThumbnailWidth, field.TypeInt, value)
 	}
-	if value, ok := muo.mutation.AddedThumbnailWidth(); ok {
+	if value, ok := _u.mutation.AddedThumbnailWidth(); ok {
 		_spec.AddField(meta.FieldThumbnailWidth, field.TypeInt, value)
 	}
-	if muo.mutation.ThumbnailWidthCleared() {
+	if _u.mutation.ThumbnailWidthCleared() {
 		_spec.ClearField(meta.FieldThumbnailWidth, field.TypeInt)
 	}
-	if value, ok := muo.mutation.ThumbnailHeight(); ok {
+	if value, ok := _u.mutation.ThumbnailHeight(); ok {
 		_spec.SetField(meta.FieldThumbnailHeight, field.TypeInt, value)
 	}
-	if value, ok := muo.mutation.AddedThumbnailHeight(); ok {
+	if value, ok := _u.mutation.AddedThumbnailHeight(); ok {
 		_spec.AddField(meta.FieldThumbnailHeight, field.TypeInt, value)
 	}
-	if muo.mutation.ThumbnailHeightCleared() {
+	if _u.mutation.ThumbnailHeightCleared() {
 		_spec.ClearField(meta.FieldThumbnailHeight, field.TypeInt)
 	}
-	if muo.mutation.TagsCleared() {
+	if _u.mutation.TagsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -1320,23 +1320,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.RemovedTagsIDs(); len(nodes) > 0 && !muo.mutation.TagsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   meta.TagsTable,
-			Columns: meta.TagsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := muo.mutation.TagsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RemovedTagsIDs(); len(nodes) > 0 && !_u.mutation.TagsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -1350,9 +1334,25 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.TagsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   meta.TagsTable,
+			Columns: meta.TagsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if muo.mutation.HistoriesCleared() {
+	if _u.mutation.HistoriesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -1365,7 +1365,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.RemovedHistoriesIDs(); len(nodes) > 0 && !muo.mutation.HistoriesCleared() {
+	if nodes := _u.mutation.RemovedHistoriesIDs(); len(nodes) > 0 && !_u.mutation.HistoriesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -1381,7 +1381,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.HistoriesIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.HistoriesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -1397,7 +1397,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if muo.mutation.FavoriteOfUserCleared() {
+	if _u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -1410,7 +1410,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !muo.mutation.FavoriteOfUserCleared() {
+	if nodes := _u.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !_u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -1426,7 +1426,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -1442,7 +1442,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if muo.mutation.ProgressCleared() {
+	if _u.mutation.ProgressCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -1455,7 +1455,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.RemovedProgressIDs(); len(nodes) > 0 && !muo.mutation.ProgressCleared() {
+	if nodes := _u.mutation.RemovedProgressIDs(); len(nodes) > 0 && !_u.mutation.ProgressCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -1471,7 +1471,7 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.ProgressIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ProgressIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -1487,10 +1487,10 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Meta{config: muo.config}
+	_node = &Meta{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, muo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{meta.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -1498,6 +1498,6 @@ func (muo *MetaUpdateOne) sqlSave(ctx context.Context) (_node *Meta, err error) 
 		}
 		return nil, err
 	}
-	muo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
