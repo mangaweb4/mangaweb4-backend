@@ -21,13 +21,13 @@ func init() {
 }
 
 func parseFirstLevelDirTag(name string) string {
-	seprator := strings.Index(name, string(os.PathSeparator))
+	before, _, ok := strings.Cut(name, string(os.PathSeparator))
 
-	if seprator == -1 {
+	if !ok {
 		return ""
 	}
 
-	return name[0:seprator]
+	return before
 }
 
 func ParseTag(name string) []string {

@@ -292,8 +292,8 @@ func (c *HistoryClient) Update() *HistoryUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *HistoryClient) UpdateOne(h *History) *HistoryUpdateOne {
-	mutation := newHistoryMutation(c.config, OpUpdateOne, withHistory(h))
+func (c *HistoryClient) UpdateOne(_m *History) *HistoryUpdateOne {
+	mutation := newHistoryMutation(c.config, OpUpdateOne, withHistory(_m))
 	return &HistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -310,8 +310,8 @@ func (c *HistoryClient) Delete() *HistoryDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *HistoryClient) DeleteOne(h *History) *HistoryDeleteOne {
-	return c.DeleteOneID(h.ID)
+func (c *HistoryClient) DeleteOne(_m *History) *HistoryDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -346,32 +346,32 @@ func (c *HistoryClient) GetX(ctx context.Context, id int) *History {
 }
 
 // QueryItem queries the item edge of a History.
-func (c *HistoryClient) QueryItem(h *History) *MetaQuery {
+func (c *HistoryClient) QueryItem(_m *History) *MetaQuery {
 	query := (&MetaClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := h.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(history.Table, history.FieldID, id),
 			sqlgraph.To(meta.Table, meta.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, history.ItemTable, history.ItemColumn),
 		)
-		fromV = sqlgraph.Neighbors(h.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryUser queries the user edge of a History.
-func (c *HistoryClient) QueryUser(h *History) *UserQuery {
+func (c *HistoryClient) QueryUser(_m *History) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := h.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(history.Table, history.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, history.UserTable, history.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(h.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -457,8 +457,8 @@ func (c *MetaClient) Update() *MetaUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *MetaClient) UpdateOne(m *Meta) *MetaUpdateOne {
-	mutation := newMetaMutation(c.config, OpUpdateOne, withMeta(m))
+func (c *MetaClient) UpdateOne(_m *Meta) *MetaUpdateOne {
+	mutation := newMetaMutation(c.config, OpUpdateOne, withMeta(_m))
 	return &MetaUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -475,8 +475,8 @@ func (c *MetaClient) Delete() *MetaDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *MetaClient) DeleteOne(m *Meta) *MetaDeleteOne {
-	return c.DeleteOneID(m.ID)
+func (c *MetaClient) DeleteOne(_m *Meta) *MetaDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -511,64 +511,64 @@ func (c *MetaClient) GetX(ctx context.Context, id int) *Meta {
 }
 
 // QueryTags queries the tags edge of a Meta.
-func (c *MetaClient) QueryTags(m *Meta) *TagQuery {
+func (c *MetaClient) QueryTags(_m *Meta) *TagQuery {
 	query := (&TagClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := m.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(meta.Table, meta.FieldID, id),
 			sqlgraph.To(tag.Table, tag.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, meta.TagsTable, meta.TagsPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryHistories queries the histories edge of a Meta.
-func (c *MetaClient) QueryHistories(m *Meta) *HistoryQuery {
+func (c *MetaClient) QueryHistories(_m *Meta) *HistoryQuery {
 	query := (&HistoryClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := m.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(meta.Table, meta.FieldID, id),
 			sqlgraph.To(history.Table, history.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, meta.HistoriesTable, meta.HistoriesColumn),
 		)
-		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryFavoriteOfUser queries the favorite_of_user edge of a Meta.
-func (c *MetaClient) QueryFavoriteOfUser(m *Meta) *UserQuery {
+func (c *MetaClient) QueryFavoriteOfUser(_m *Meta) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := m.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(meta.Table, meta.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, meta.FavoriteOfUserTable, meta.FavoriteOfUserPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryProgress queries the progress edge of a Meta.
-func (c *MetaClient) QueryProgress(m *Meta) *ProgressQuery {
+func (c *MetaClient) QueryProgress(_m *Meta) *ProgressQuery {
 	query := (&ProgressClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := m.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(meta.Table, meta.FieldID, id),
 			sqlgraph.To(progress.Table, progress.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, meta.ProgressTable, meta.ProgressColumn),
 		)
-		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -654,8 +654,8 @@ func (c *ProgressClient) Update() *ProgressUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ProgressClient) UpdateOne(pr *Progress) *ProgressUpdateOne {
-	mutation := newProgressMutation(c.config, OpUpdateOne, withProgress(pr))
+func (c *ProgressClient) UpdateOne(_m *Progress) *ProgressUpdateOne {
+	mutation := newProgressMutation(c.config, OpUpdateOne, withProgress(_m))
 	return &ProgressUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -672,8 +672,8 @@ func (c *ProgressClient) Delete() *ProgressDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ProgressClient) DeleteOne(pr *Progress) *ProgressDeleteOne {
-	return c.DeleteOneID(pr.ID)
+func (c *ProgressClient) DeleteOne(_m *Progress) *ProgressDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -708,32 +708,32 @@ func (c *ProgressClient) GetX(ctx context.Context, id int) *Progress {
 }
 
 // QueryItem queries the item edge of a Progress.
-func (c *ProgressClient) QueryItem(pr *Progress) *MetaQuery {
+func (c *ProgressClient) QueryItem(_m *Progress) *MetaQuery {
 	query := (&MetaClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(progress.Table, progress.FieldID, id),
 			sqlgraph.To(meta.Table, meta.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, progress.ItemTable, progress.ItemColumn),
 		)
-		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryUser queries the user edge of a Progress.
-func (c *ProgressClient) QueryUser(pr *Progress) *UserQuery {
+func (c *ProgressClient) QueryUser(_m *Progress) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(progress.Table, progress.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, progress.UserTable, progress.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -819,8 +819,8 @@ func (c *TagClient) Update() *TagUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *TagClient) UpdateOne(t *Tag) *TagUpdateOne {
-	mutation := newTagMutation(c.config, OpUpdateOne, withTag(t))
+func (c *TagClient) UpdateOne(_m *Tag) *TagUpdateOne {
+	mutation := newTagMutation(c.config, OpUpdateOne, withTag(_m))
 	return &TagUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -837,8 +837,8 @@ func (c *TagClient) Delete() *TagDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *TagClient) DeleteOne(t *Tag) *TagDeleteOne {
-	return c.DeleteOneID(t.ID)
+func (c *TagClient) DeleteOne(_m *Tag) *TagDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -873,32 +873,32 @@ func (c *TagClient) GetX(ctx context.Context, id int) *Tag {
 }
 
 // QueryMeta queries the meta edge of a Tag.
-func (c *TagClient) QueryMeta(t *Tag) *MetaQuery {
+func (c *TagClient) QueryMeta(_m *Tag) *MetaQuery {
 	query := (&MetaClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(tag.Table, tag.FieldID, id),
 			sqlgraph.To(meta.Table, meta.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, tag.MetaTable, tag.MetaPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryFavoriteOfUser queries the favorite_of_user edge of a Tag.
-func (c *TagClient) QueryFavoriteOfUser(t *Tag) *UserQuery {
+func (c *TagClient) QueryFavoriteOfUser(_m *Tag) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(tag.Table, tag.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, tag.FavoriteOfUserTable, tag.FavoriteOfUserPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -984,8 +984,8 @@ func (c *UserClient) Update() *UserUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
+func (c *UserClient) UpdateOne(_m *User) *UserUpdateOne {
+	mutation := newUserMutation(c.config, OpUpdateOne, withUser(_m))
 	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1002,8 +1002,8 @@ func (c *UserClient) Delete() *UserDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *UserClient) DeleteOne(_m *User) *UserDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1038,64 +1038,64 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 }
 
 // QueryFavoriteItems queries the favorite_items edge of a User.
-func (c *UserClient) QueryFavoriteItems(u *User) *MetaQuery {
+func (c *UserClient) QueryFavoriteItems(_m *User) *MetaQuery {
 	query := (&MetaClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(meta.Table, meta.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FavoriteItemsTable, user.FavoriteItemsPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryFavoriteTags queries the favorite_tags edge of a User.
-func (c *UserClient) QueryFavoriteTags(u *User) *TagQuery {
+func (c *UserClient) QueryFavoriteTags(_m *User) *TagQuery {
 	query := (&TagClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(tag.Table, tag.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FavoriteTagsTable, user.FavoriteTagsPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryHistories queries the histories edge of a User.
-func (c *UserClient) QueryHistories(u *User) *HistoryQuery {
+func (c *UserClient) QueryHistories(_m *User) *HistoryQuery {
 	query := (&HistoryClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(history.Table, history.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.HistoriesTable, user.HistoriesColumn),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryProgress queries the progress edge of a User.
-func (c *UserClient) QueryProgress(u *User) *ProgressQuery {
+func (c *UserClient) QueryProgress(_m *User) *ProgressQuery {
 	query := (&ProgressClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(progress.Table, progress.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ProgressTable, user.ProgressColumn),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query

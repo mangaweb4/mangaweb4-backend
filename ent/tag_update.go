@@ -25,158 +25,158 @@ type TagUpdate struct {
 }
 
 // Where appends a list predicates to the TagUpdate builder.
-func (tu *TagUpdate) Where(ps ...predicate.Tag) *TagUpdate {
-	tu.mutation.Where(ps...)
-	return tu
+func (_u *TagUpdate) Where(ps ...predicate.Tag) *TagUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetName sets the "name" field.
-func (tu *TagUpdate) SetName(s string) *TagUpdate {
-	tu.mutation.SetName(s)
-	return tu
+func (_u *TagUpdate) SetName(v string) *TagUpdate {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (tu *TagUpdate) SetNillableName(s *string) *TagUpdate {
-	if s != nil {
-		tu.SetName(*s)
+func (_u *TagUpdate) SetNillableName(v *string) *TagUpdate {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return tu
+	return _u
 }
 
 // SetFavorite sets the "favorite" field.
-func (tu *TagUpdate) SetFavorite(b bool) *TagUpdate {
-	tu.mutation.SetFavorite(b)
-	return tu
+func (_u *TagUpdate) SetFavorite(v bool) *TagUpdate {
+	_u.mutation.SetFavorite(v)
+	return _u
 }
 
 // SetNillableFavorite sets the "favorite" field if the given value is not nil.
-func (tu *TagUpdate) SetNillableFavorite(b *bool) *TagUpdate {
-	if b != nil {
-		tu.SetFavorite(*b)
+func (_u *TagUpdate) SetNillableFavorite(v *bool) *TagUpdate {
+	if v != nil {
+		_u.SetFavorite(*v)
 	}
-	return tu
+	return _u
 }
 
 // SetHidden sets the "hidden" field.
-func (tu *TagUpdate) SetHidden(b bool) *TagUpdate {
-	tu.mutation.SetHidden(b)
-	return tu
+func (_u *TagUpdate) SetHidden(v bool) *TagUpdate {
+	_u.mutation.SetHidden(v)
+	return _u
 }
 
 // SetNillableHidden sets the "hidden" field if the given value is not nil.
-func (tu *TagUpdate) SetNillableHidden(b *bool) *TagUpdate {
-	if b != nil {
-		tu.SetHidden(*b)
+func (_u *TagUpdate) SetNillableHidden(v *bool) *TagUpdate {
+	if v != nil {
+		_u.SetHidden(*v)
 	}
-	return tu
+	return _u
 }
 
 // SetLastUpdate sets the "last_update" field.
-func (tu *TagUpdate) SetLastUpdate(t time.Time) *TagUpdate {
-	tu.mutation.SetLastUpdate(t)
-	return tu
+func (_u *TagUpdate) SetLastUpdate(v time.Time) *TagUpdate {
+	_u.mutation.SetLastUpdate(v)
+	return _u
 }
 
 // SetNillableLastUpdate sets the "last_update" field if the given value is not nil.
-func (tu *TagUpdate) SetNillableLastUpdate(t *time.Time) *TagUpdate {
-	if t != nil {
-		tu.SetLastUpdate(*t)
+func (_u *TagUpdate) SetNillableLastUpdate(v *time.Time) *TagUpdate {
+	if v != nil {
+		_u.SetLastUpdate(*v)
 	}
-	return tu
+	return _u
 }
 
 // ClearLastUpdate clears the value of the "last_update" field.
-func (tu *TagUpdate) ClearLastUpdate() *TagUpdate {
-	tu.mutation.ClearLastUpdate()
-	return tu
+func (_u *TagUpdate) ClearLastUpdate() *TagUpdate {
+	_u.mutation.ClearLastUpdate()
+	return _u
 }
 
 // AddMetumIDs adds the "meta" edge to the Meta entity by IDs.
-func (tu *TagUpdate) AddMetumIDs(ids ...int) *TagUpdate {
-	tu.mutation.AddMetumIDs(ids...)
-	return tu
+func (_u *TagUpdate) AddMetumIDs(ids ...int) *TagUpdate {
+	_u.mutation.AddMetumIDs(ids...)
+	return _u
 }
 
 // AddMeta adds the "meta" edges to the Meta entity.
-func (tu *TagUpdate) AddMeta(m ...*Meta) *TagUpdate {
-	ids := make([]int, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+func (_u *TagUpdate) AddMeta(v ...*Meta) *TagUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tu.AddMetumIDs(ids...)
+	return _u.AddMetumIDs(ids...)
 }
 
 // AddFavoriteOfUserIDs adds the "favorite_of_user" edge to the User entity by IDs.
-func (tu *TagUpdate) AddFavoriteOfUserIDs(ids ...int) *TagUpdate {
-	tu.mutation.AddFavoriteOfUserIDs(ids...)
-	return tu
+func (_u *TagUpdate) AddFavoriteOfUserIDs(ids ...int) *TagUpdate {
+	_u.mutation.AddFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // AddFavoriteOfUser adds the "favorite_of_user" edges to the User entity.
-func (tu *TagUpdate) AddFavoriteOfUser(u ...*User) *TagUpdate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *TagUpdate) AddFavoriteOfUser(v ...*User) *TagUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tu.AddFavoriteOfUserIDs(ids...)
+	return _u.AddFavoriteOfUserIDs(ids...)
 }
 
 // Mutation returns the TagMutation object of the builder.
-func (tu *TagUpdate) Mutation() *TagMutation {
-	return tu.mutation
+func (_u *TagUpdate) Mutation() *TagMutation {
+	return _u.mutation
 }
 
 // ClearMeta clears all "meta" edges to the Meta entity.
-func (tu *TagUpdate) ClearMeta() *TagUpdate {
-	tu.mutation.ClearMeta()
-	return tu
+func (_u *TagUpdate) ClearMeta() *TagUpdate {
+	_u.mutation.ClearMeta()
+	return _u
 }
 
 // RemoveMetumIDs removes the "meta" edge to Meta entities by IDs.
-func (tu *TagUpdate) RemoveMetumIDs(ids ...int) *TagUpdate {
-	tu.mutation.RemoveMetumIDs(ids...)
-	return tu
+func (_u *TagUpdate) RemoveMetumIDs(ids ...int) *TagUpdate {
+	_u.mutation.RemoveMetumIDs(ids...)
+	return _u
 }
 
 // RemoveMeta removes "meta" edges to Meta entities.
-func (tu *TagUpdate) RemoveMeta(m ...*Meta) *TagUpdate {
-	ids := make([]int, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+func (_u *TagUpdate) RemoveMeta(v ...*Meta) *TagUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tu.RemoveMetumIDs(ids...)
+	return _u.RemoveMetumIDs(ids...)
 }
 
 // ClearFavoriteOfUser clears all "favorite_of_user" edges to the User entity.
-func (tu *TagUpdate) ClearFavoriteOfUser() *TagUpdate {
-	tu.mutation.ClearFavoriteOfUser()
-	return tu
+func (_u *TagUpdate) ClearFavoriteOfUser() *TagUpdate {
+	_u.mutation.ClearFavoriteOfUser()
+	return _u
 }
 
 // RemoveFavoriteOfUserIDs removes the "favorite_of_user" edge to User entities by IDs.
-func (tu *TagUpdate) RemoveFavoriteOfUserIDs(ids ...int) *TagUpdate {
-	tu.mutation.RemoveFavoriteOfUserIDs(ids...)
-	return tu
+func (_u *TagUpdate) RemoveFavoriteOfUserIDs(ids ...int) *TagUpdate {
+	_u.mutation.RemoveFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // RemoveFavoriteOfUser removes "favorite_of_user" edges to User entities.
-func (tu *TagUpdate) RemoveFavoriteOfUser(u ...*User) *TagUpdate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *TagUpdate) RemoveFavoriteOfUser(v ...*User) *TagUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tu.RemoveFavoriteOfUserIDs(ids...)
+	return _u.RemoveFavoriteOfUserIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (tu *TagUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, tu.sqlSave, tu.mutation, tu.hooks)
+func (_u *TagUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (tu *TagUpdate) SaveX(ctx context.Context) int {
-	affected, err := tu.Save(ctx)
+func (_u *TagUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -184,21 +184,21 @@ func (tu *TagUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (tu *TagUpdate) Exec(ctx context.Context) error {
-	_, err := tu.Save(ctx)
+func (_u *TagUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tu *TagUpdate) ExecX(ctx context.Context) {
-	if err := tu.Exec(ctx); err != nil {
+func (_u *TagUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (tu *TagUpdate) check() error {
-	if v, ok := tu.mutation.Name(); ok {
+func (_u *TagUpdate) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := tag.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Tag.name": %w`, err)}
 		}
@@ -206,34 +206,34 @@ func (tu *TagUpdate) check() error {
 	return nil
 }
 
-func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := tu.check(); err != nil {
-		return n, err
+func (_u *TagUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(tag.Table, tag.Columns, sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt))
-	if ps := tu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := tu.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(tag.FieldName, field.TypeString, value)
 	}
-	if value, ok := tu.mutation.Favorite(); ok {
+	if value, ok := _u.mutation.Favorite(); ok {
 		_spec.SetField(tag.FieldFavorite, field.TypeBool, value)
 	}
-	if value, ok := tu.mutation.Hidden(); ok {
+	if value, ok := _u.mutation.Hidden(); ok {
 		_spec.SetField(tag.FieldHidden, field.TypeBool, value)
 	}
-	if value, ok := tu.mutation.LastUpdate(); ok {
+	if value, ok := _u.mutation.LastUpdate(); ok {
 		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
 	}
-	if tu.mutation.LastUpdateCleared() {
+	if _u.mutation.LastUpdateCleared() {
 		_spec.ClearField(tag.FieldLastUpdate, field.TypeTime)
 	}
-	if tu.mutation.MetaCleared() {
+	if _u.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -246,7 +246,7 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.RemovedMetaIDs(); len(nodes) > 0 && !tu.mutation.MetaCleared() {
+	if nodes := _u.mutation.RemovedMetaIDs(); len(nodes) > 0 && !_u.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -262,7 +262,7 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.MetaIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.MetaIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -278,7 +278,7 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if tu.mutation.FavoriteOfUserCleared() {
+	if _u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -291,7 +291,7 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !tu.mutation.FavoriteOfUserCleared() {
+	if nodes := _u.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !_u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -307,7 +307,7 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -323,7 +323,7 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{tag.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -331,8 +331,8 @@ func (tu *TagUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	tu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // TagUpdateOne is the builder for updating a single Tag entity.
@@ -344,165 +344,165 @@ type TagUpdateOne struct {
 }
 
 // SetName sets the "name" field.
-func (tuo *TagUpdateOne) SetName(s string) *TagUpdateOne {
-	tuo.mutation.SetName(s)
-	return tuo
+func (_u *TagUpdateOne) SetName(v string) *TagUpdateOne {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (tuo *TagUpdateOne) SetNillableName(s *string) *TagUpdateOne {
-	if s != nil {
-		tuo.SetName(*s)
+func (_u *TagUpdateOne) SetNillableName(v *string) *TagUpdateOne {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return tuo
+	return _u
 }
 
 // SetFavorite sets the "favorite" field.
-func (tuo *TagUpdateOne) SetFavorite(b bool) *TagUpdateOne {
-	tuo.mutation.SetFavorite(b)
-	return tuo
+func (_u *TagUpdateOne) SetFavorite(v bool) *TagUpdateOne {
+	_u.mutation.SetFavorite(v)
+	return _u
 }
 
 // SetNillableFavorite sets the "favorite" field if the given value is not nil.
-func (tuo *TagUpdateOne) SetNillableFavorite(b *bool) *TagUpdateOne {
-	if b != nil {
-		tuo.SetFavorite(*b)
+func (_u *TagUpdateOne) SetNillableFavorite(v *bool) *TagUpdateOne {
+	if v != nil {
+		_u.SetFavorite(*v)
 	}
-	return tuo
+	return _u
 }
 
 // SetHidden sets the "hidden" field.
-func (tuo *TagUpdateOne) SetHidden(b bool) *TagUpdateOne {
-	tuo.mutation.SetHidden(b)
-	return tuo
+func (_u *TagUpdateOne) SetHidden(v bool) *TagUpdateOne {
+	_u.mutation.SetHidden(v)
+	return _u
 }
 
 // SetNillableHidden sets the "hidden" field if the given value is not nil.
-func (tuo *TagUpdateOne) SetNillableHidden(b *bool) *TagUpdateOne {
-	if b != nil {
-		tuo.SetHidden(*b)
+func (_u *TagUpdateOne) SetNillableHidden(v *bool) *TagUpdateOne {
+	if v != nil {
+		_u.SetHidden(*v)
 	}
-	return tuo
+	return _u
 }
 
 // SetLastUpdate sets the "last_update" field.
-func (tuo *TagUpdateOne) SetLastUpdate(t time.Time) *TagUpdateOne {
-	tuo.mutation.SetLastUpdate(t)
-	return tuo
+func (_u *TagUpdateOne) SetLastUpdate(v time.Time) *TagUpdateOne {
+	_u.mutation.SetLastUpdate(v)
+	return _u
 }
 
 // SetNillableLastUpdate sets the "last_update" field if the given value is not nil.
-func (tuo *TagUpdateOne) SetNillableLastUpdate(t *time.Time) *TagUpdateOne {
-	if t != nil {
-		tuo.SetLastUpdate(*t)
+func (_u *TagUpdateOne) SetNillableLastUpdate(v *time.Time) *TagUpdateOne {
+	if v != nil {
+		_u.SetLastUpdate(*v)
 	}
-	return tuo
+	return _u
 }
 
 // ClearLastUpdate clears the value of the "last_update" field.
-func (tuo *TagUpdateOne) ClearLastUpdate() *TagUpdateOne {
-	tuo.mutation.ClearLastUpdate()
-	return tuo
+func (_u *TagUpdateOne) ClearLastUpdate() *TagUpdateOne {
+	_u.mutation.ClearLastUpdate()
+	return _u
 }
 
 // AddMetumIDs adds the "meta" edge to the Meta entity by IDs.
-func (tuo *TagUpdateOne) AddMetumIDs(ids ...int) *TagUpdateOne {
-	tuo.mutation.AddMetumIDs(ids...)
-	return tuo
+func (_u *TagUpdateOne) AddMetumIDs(ids ...int) *TagUpdateOne {
+	_u.mutation.AddMetumIDs(ids...)
+	return _u
 }
 
 // AddMeta adds the "meta" edges to the Meta entity.
-func (tuo *TagUpdateOne) AddMeta(m ...*Meta) *TagUpdateOne {
-	ids := make([]int, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+func (_u *TagUpdateOne) AddMeta(v ...*Meta) *TagUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tuo.AddMetumIDs(ids...)
+	return _u.AddMetumIDs(ids...)
 }
 
 // AddFavoriteOfUserIDs adds the "favorite_of_user" edge to the User entity by IDs.
-func (tuo *TagUpdateOne) AddFavoriteOfUserIDs(ids ...int) *TagUpdateOne {
-	tuo.mutation.AddFavoriteOfUserIDs(ids...)
-	return tuo
+func (_u *TagUpdateOne) AddFavoriteOfUserIDs(ids ...int) *TagUpdateOne {
+	_u.mutation.AddFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // AddFavoriteOfUser adds the "favorite_of_user" edges to the User entity.
-func (tuo *TagUpdateOne) AddFavoriteOfUser(u ...*User) *TagUpdateOne {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *TagUpdateOne) AddFavoriteOfUser(v ...*User) *TagUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tuo.AddFavoriteOfUserIDs(ids...)
+	return _u.AddFavoriteOfUserIDs(ids...)
 }
 
 // Mutation returns the TagMutation object of the builder.
-func (tuo *TagUpdateOne) Mutation() *TagMutation {
-	return tuo.mutation
+func (_u *TagUpdateOne) Mutation() *TagMutation {
+	return _u.mutation
 }
 
 // ClearMeta clears all "meta" edges to the Meta entity.
-func (tuo *TagUpdateOne) ClearMeta() *TagUpdateOne {
-	tuo.mutation.ClearMeta()
-	return tuo
+func (_u *TagUpdateOne) ClearMeta() *TagUpdateOne {
+	_u.mutation.ClearMeta()
+	return _u
 }
 
 // RemoveMetumIDs removes the "meta" edge to Meta entities by IDs.
-func (tuo *TagUpdateOne) RemoveMetumIDs(ids ...int) *TagUpdateOne {
-	tuo.mutation.RemoveMetumIDs(ids...)
-	return tuo
+func (_u *TagUpdateOne) RemoveMetumIDs(ids ...int) *TagUpdateOne {
+	_u.mutation.RemoveMetumIDs(ids...)
+	return _u
 }
 
 // RemoveMeta removes "meta" edges to Meta entities.
-func (tuo *TagUpdateOne) RemoveMeta(m ...*Meta) *TagUpdateOne {
-	ids := make([]int, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+func (_u *TagUpdateOne) RemoveMeta(v ...*Meta) *TagUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tuo.RemoveMetumIDs(ids...)
+	return _u.RemoveMetumIDs(ids...)
 }
 
 // ClearFavoriteOfUser clears all "favorite_of_user" edges to the User entity.
-func (tuo *TagUpdateOne) ClearFavoriteOfUser() *TagUpdateOne {
-	tuo.mutation.ClearFavoriteOfUser()
-	return tuo
+func (_u *TagUpdateOne) ClearFavoriteOfUser() *TagUpdateOne {
+	_u.mutation.ClearFavoriteOfUser()
+	return _u
 }
 
 // RemoveFavoriteOfUserIDs removes the "favorite_of_user" edge to User entities by IDs.
-func (tuo *TagUpdateOne) RemoveFavoriteOfUserIDs(ids ...int) *TagUpdateOne {
-	tuo.mutation.RemoveFavoriteOfUserIDs(ids...)
-	return tuo
+func (_u *TagUpdateOne) RemoveFavoriteOfUserIDs(ids ...int) *TagUpdateOne {
+	_u.mutation.RemoveFavoriteOfUserIDs(ids...)
+	return _u
 }
 
 // RemoveFavoriteOfUser removes "favorite_of_user" edges to User entities.
-func (tuo *TagUpdateOne) RemoveFavoriteOfUser(u ...*User) *TagUpdateOne {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *TagUpdateOne) RemoveFavoriteOfUser(v ...*User) *TagUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return tuo.RemoveFavoriteOfUserIDs(ids...)
+	return _u.RemoveFavoriteOfUserIDs(ids...)
 }
 
 // Where appends a list predicates to the TagUpdate builder.
-func (tuo *TagUpdateOne) Where(ps ...predicate.Tag) *TagUpdateOne {
-	tuo.mutation.Where(ps...)
-	return tuo
+func (_u *TagUpdateOne) Where(ps ...predicate.Tag) *TagUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (tuo *TagUpdateOne) Select(field string, fields ...string) *TagUpdateOne {
-	tuo.fields = append([]string{field}, fields...)
-	return tuo
+func (_u *TagUpdateOne) Select(field string, fields ...string) *TagUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Tag entity.
-func (tuo *TagUpdateOne) Save(ctx context.Context) (*Tag, error) {
-	return withHooks(ctx, tuo.sqlSave, tuo.mutation, tuo.hooks)
+func (_u *TagUpdateOne) Save(ctx context.Context) (*Tag, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (tuo *TagUpdateOne) SaveX(ctx context.Context) *Tag {
-	node, err := tuo.Save(ctx)
+func (_u *TagUpdateOne) SaveX(ctx context.Context) *Tag {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -510,21 +510,21 @@ func (tuo *TagUpdateOne) SaveX(ctx context.Context) *Tag {
 }
 
 // Exec executes the query on the entity.
-func (tuo *TagUpdateOne) Exec(ctx context.Context) error {
-	_, err := tuo.Save(ctx)
+func (_u *TagUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tuo *TagUpdateOne) ExecX(ctx context.Context) {
-	if err := tuo.Exec(ctx); err != nil {
+func (_u *TagUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (tuo *TagUpdateOne) check() error {
-	if v, ok := tuo.mutation.Name(); ok {
+func (_u *TagUpdateOne) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := tag.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Tag.name": %w`, err)}
 		}
@@ -532,17 +532,17 @@ func (tuo *TagUpdateOne) check() error {
 	return nil
 }
 
-func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
-	if err := tuo.check(); err != nil {
+func (_u *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(tag.Table, tag.Columns, sqlgraph.NewFieldSpec(tag.FieldID, field.TypeInt))
-	id, ok := tuo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Tag.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := tuo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, tag.FieldID)
 		for _, f := range fields {
@@ -554,29 +554,29 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 			}
 		}
 	}
-	if ps := tuo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := tuo.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(tag.FieldName, field.TypeString, value)
 	}
-	if value, ok := tuo.mutation.Favorite(); ok {
+	if value, ok := _u.mutation.Favorite(); ok {
 		_spec.SetField(tag.FieldFavorite, field.TypeBool, value)
 	}
-	if value, ok := tuo.mutation.Hidden(); ok {
+	if value, ok := _u.mutation.Hidden(); ok {
 		_spec.SetField(tag.FieldHidden, field.TypeBool, value)
 	}
-	if value, ok := tuo.mutation.LastUpdate(); ok {
+	if value, ok := _u.mutation.LastUpdate(); ok {
 		_spec.SetField(tag.FieldLastUpdate, field.TypeTime, value)
 	}
-	if tuo.mutation.LastUpdateCleared() {
+	if _u.mutation.LastUpdateCleared() {
 		_spec.ClearField(tag.FieldLastUpdate, field.TypeTime)
 	}
-	if tuo.mutation.MetaCleared() {
+	if _u.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -589,7 +589,7 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.RemovedMetaIDs(); len(nodes) > 0 && !tuo.mutation.MetaCleared() {
+	if nodes := _u.mutation.RemovedMetaIDs(); len(nodes) > 0 && !_u.mutation.MetaCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -605,7 +605,7 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.MetaIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.MetaIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -621,7 +621,7 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if tuo.mutation.FavoriteOfUserCleared() {
+	if _u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -634,7 +634,7 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !tuo.mutation.FavoriteOfUserCleared() {
+	if nodes := _u.mutation.RemovedFavoriteOfUserIDs(); len(nodes) > 0 && !_u.mutation.FavoriteOfUserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -650,7 +650,7 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.FavoriteOfUserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -666,10 +666,10 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Tag{config: tuo.config}
+	_node = &Tag{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, tuo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{tag.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -677,6 +677,6 @@ func (tuo *TagUpdateOne) sqlSave(ctx context.Context) (_node *Tag, err error) {
 		}
 		return nil, err
 	}
-	tuo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
