@@ -2,8 +2,8 @@ package server
 
 import (
 	"context"
+	"runtime/debug"
 
-	"github.com/mangaweb4/mangaweb4-backend/configuration"
 	"github.com/mangaweb4/mangaweb4-backend/database"
 	"github.com/mangaweb4/mangaweb4-backend/ent/meta"
 	"github.com/mangaweb4/mangaweb4-backend/ent/tag"
@@ -35,10 +35,13 @@ func (s *SystemServer) Info(
 		return
 	}
 
-	config := configuration.Get()
+	versionStr := "unknown"
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		versionStr = buildInfo.Main.Version
+	}
 
 	resp = &grpc.SystemInfoResponse{
-		Version:   config.VersionString,
+		Version:   versionStr,
 		ItemCount: int32(countManga),
 		TagCount:  int32(countTag),
 	}

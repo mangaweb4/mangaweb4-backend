@@ -1,7 +1,6 @@
 package configuration
 
 type Config struct {
-	VersionString      string
 	DebugMode          bool
 	DataPath           string
 	CachePath          string
