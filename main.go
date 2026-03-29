@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"runtime/debug"
 	"strconv"
 
 	"entgo.io/ent/dialect"
@@ -24,6 +25,11 @@ import (
 func main() {
 	ctx := context.Background()
 
+	versionStr := "unknown"
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		versionStr = buildInfo.Main.Version
+	}
+
 	flag.Usage = func() {
 
 		_, err := fmt.Fprint(os.Stderr, "Usage: mangaweb4-backend [options]\n\n")
@@ -32,7 +38,7 @@ func main() {
 		}
 		flag.PrintDefaults()
 
-		_, err = fmt.Fprintf(os.Stderr, "MangaWeb 4 version %s.\n", Version)
+		_, err = fmt.Fprintf(os.Stderr, "MangaWeb 4 version %s.\n", versionStr)
 		if err != nil {
 			return
 		}
@@ -105,7 +111,7 @@ func main() {
 
 	log.Info().
 		Bool("debugMode", debugMode).
-		Str("version", Version).
+		Str("version", versionStr).
 		Str("dataPath", dataPath).
 		Str("cachePath", cachePath).
 		Bool("firstLevelDirAsTag", firstLevelDirAsTag).
@@ -113,7 +119,6 @@ func main() {
 
 	configuration.Init(configuration.Config{
 		DebugMode:          debugMode,
-		VersionString:      Version,
 		DataPath:           dataPath,
 		CachePath:          cachePath,
 		FirstLevelDirAsTag: firstLevelDirAsTag,
