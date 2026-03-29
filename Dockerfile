@@ -1,5 +1,5 @@
 #Stage 1 -- building executable
-FROM golang:1.24-alpine AS builder1
+FROM golang:1.26-alpine AS builder1
 
 WORKDIR /go/src/mangaweb
 COPY . .
